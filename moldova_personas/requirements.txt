@@ -1,0 +1,20 @@
+# Core dependencies (required)
+numpy>=1.24.0
+pandas>=2.0.0
+pyarrow>=14.0.0
+pydantic>=2.0.0
+tqdm>=4.65.0
+
+# Optional: For OpenAI API
+# openai>=1.0.0
+
+# Optional: For Alibaba DashScope API (Qwen)
+# dashscope>=1.0.0
+
+# Optional: For local models (Qwen, Mistral, etc.)
+# transformers>=4.35.0
+# torch>=2.0.0
+# accelerate>=0.20.0
+
+# Optional: For 4-bit quantization (saves VRAM)
+# bitsandbytes>=0.41.0
