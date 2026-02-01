@@ -1,0 +1,60 @@
+{
+  "report_date": "2026-01-29",
+  "data_sources": {
+    "age_distribution": "NBS PxWeb API - POP010200rcl.px",
+    "workforce_stats": "NBS PxWeb API - MUN110200.px",
+    "ethnicity": "Date_Comunicat_Etnoculturale_20_10_25.xlsx (NBS 2024 Census)"
+  },
+  "total_population_2024": 2423287,
+  "age_distribution": {
+    "pgm_targets": {
+      "0-14": 19.2,
+      "15-24": 13.1,
+      "25-34": 14.4,
+      "35-44": 13.8,
+      "45-54": 13.1,
+      "55-64": 10.9,
+      "65+": 15.5
+    },
+    "nbs_2024_actual": {
+      "0-14": 16.6,
+      "15-24": 9.8,
+      "25-34": 12.4,
+      "35-44": 15.4,
+      "45-54": 13.1,
+      "55-64": 14.4,
+      "65+": 18.3
+    },
+    "correction_needed": true,
+    "notes": "PGM targets were significantly off from actual NBS 2024 data"
+  },
+  "ethnicity": {
+    "pgm_targets": {
+      "Moldovean": 77.2,
+      "Român": 7.9,
+      "Ucrainean": 5.0,
+      "Rus": 3.0,
+      "Găgăuz": 4.3,
+      "Bulgar": 1.6,
+      "Rrom": 0.4,
+      "Altele": 0.6
+    },
+    "nbs_2024_actual": {
+      "Moldovean": 76.73,
+      "Român": 8.02,
+      "Ucrainean": 5.13,
+      "Rus": 3.39,
+      "Găgăuz": 4.03,
+      "Bulgar": 1.59,
+      "Rrom": 0.39,
+      "Altele": 0.72
+    },
+    "correction_needed": false,
+    "notes": "PGM targets are accurate within 0.5% for all ethnicities"
+  },
+  "workforce": {
+    "activity_rate": 44.5,
+    "employment_rate": 42.7,
+    "unemployment_rate": 4.0
+  }
+}

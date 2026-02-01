@@ -1,0 +1,53 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project-specific (not needed in Docker)
+test_cache/
+nbs_cache/
+.pytest_cache/
+*.log
+output/
+output_500/
+generation_*.log
+monitor_*.log
+
+# Documentation (not needed for runtime)
+docs/*.pdf
+*.md
+!README.md
+
+# Large test fixtures (if any)
+# tests/fixtures/large/

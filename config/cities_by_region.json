@@ -1,0 +1,48 @@
+{
+  "Chisinau": [
+    "Chișinău",
+    "Bubuieci",
+    "Budești",
+    "Cruzești",
+    "Tohatin"
+  ],
+  "Centru": [
+    "Ungheni",
+    "Călărași",
+    "Nisporeni",
+    "Strășeni",
+    "Criuleni",
+    "Dubăsari",
+    "Orhei",
+    "Rezina",
+    "Telenești"
+  ],
+  "Nord": [
+    "Bălți",
+    "Soroca",
+    "Edineț",
+    "Ocnița",
+    "Dondușeni",
+    "Drochia",
+    "Fălești",
+    "Florești",
+    "Glodeni",
+    "Rîșcani",
+    "Sîngerei"
+  ],
+  "Sud": [
+    "Cahul",
+    "Cantemir",
+    "Cimișlia",
+    "Leova",
+    "Taraclia",
+    "Basarabeasca"
+  ],
+  "Gagauzia": [
+    "Comrat",
+    "Ceadîr-Lunga",
+    "Vulcănești",
+    "Bugeac",
+    "Chirsova"
+  ]
+}

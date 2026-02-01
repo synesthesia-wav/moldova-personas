@@ -1,0 +1,64 @@
+{
+  "total_count": 500,
+  "sex_distribution": {
+    "Feminin": 0.506,
+    "Masculin": 0.494
+  },
+  "age_distribution": {
+    "25-34": 0.146,
+    "55-64": 0.182,
+    "35-44": 0.222,
+    "45-54": 0.154,
+    "65+": 0.194,
+    "15-24": 0.102
+  },
+  "region_distribution": {
+    "Centru": 0.27,
+    "Sud": 0.154,
+    "Nord": 0.232,
+    "Gagauzia": 0.04,
+    "Chisinau": 0.304
+  },
+  "ethnicity_distribution": {
+    "Moldovean": 0.784,
+    "Găgăuz": 0.046,
+    "Român": 0.068,
+    "Ucrainean": 0.046,
+    "Rus": 0.024,
+    "Bulgar": 0.02,
+    "Altele": 0.008,
+    "Rrom": 0.004
+  },
+  "education_distribution": {
+    "Liceal": 0.164,
+    "Gimnazial": 0.208,
+    "Superior (Licență/Master)": 0.232,
+    "Doctorat": 0.026,
+    "Primar": 0.096,
+    "Profesional/Tehnic": 0.254,
+    "Fără studii": 0.02
+  },
+  "marital_status_distribution": {
+    "Necăsătorit": 0.244,
+    "Căsătorit": 0.566,
+    "Văduv": 0.11,
+    "Divorțat": 0.06,
+    "Separat": 0.02
+  },
+  "urban_rural_distribution": {
+    "Rural": 0.554,
+    "Urban": 0.446
+  },
+  "employment_status_distribution": {
+    "employed": 0.396,
+    "retired": 0.256,
+    "other_inactive": 0.138,
+    "homemaker": 0.082,
+    "student": 0.102,
+    "unemployed": 0.026
+  },
+  "validation_errors": 0,
+  "validation_warnings": 0,
+  "generation_duration_seconds": null,
+  "llm_tokens_used": null
+}

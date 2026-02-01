@@ -1,0 +1,135 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "moldova-personas"
+version = "1.0.0"
+description = "Scientifically rigorous synthetic population generator for Moldova based on 2024 Census data"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Moldova Personas Team", email = "team@example.com"}
+]
+keywords = ["synthetic-data", "census", "moldova", "population", "pgm", "ipf"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "numpy>=1.24.0,<2.0.0",
+    "pandas>=2.0.0,<3.0.0",
+    "pydantic>=2.0.0,<3.0.0",
+    "tqdm>=4.65.0",
+    "pyarrow>=12.0.0",
+]
+
+[project.optional-dependencies]
+# LLM narrative generation
+narratives = [
+    "openai>=1.0.0",
+]
+# Network data fetching
+network = [
+    "requests>=2.28.0",
+]
+# All optional features
+all = [
+    "openai>=1.0.0",
+    "requests>=2.28.0",
+]
+# Development dependencies
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "mypy>=1.5.0",
+    "ruff>=0.1.0",
+    "types-requests>=2.28.0",
+]
+# Testing with network
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "requests>=2.28.0",
+    "responses>=0.23.0",
+]
+
+[project.scripts]
+moldova-personas = "moldova_personas.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/example/moldova-personas"
+Documentation = "https://github.com/example/moldova-personas/docs"
+Repository = "https://github.com/example/moldova-personas.git"
+Issues = "https://github.com/example/moldova-personas/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["moldova_personas*"]
+exclude = ["tests*", "benchmarks*", "docs*", "test_cache*", "nbs_cache*"]
+
+[tool.setuptools.package-data]
+moldova_personas = ["py.typed"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = [
+    "openai.*",
+    "transformers.*",
+    "torch.*",
+    "dashscope.*",
+    "tqdm.*",
+    "pyarrow.*",
+]
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "D", "UP", "B", "C4", "SIM"]
+ignore = ["D100", "D104", "D203", "D213", "D401"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"
+markers = [
+    "slow: marks tests as slow (deselect with '-m not slow')",
+    "network: marks tests as requiring network access",
+]
+
+[tool.coverage.run]
+source = ["moldova_personas"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]

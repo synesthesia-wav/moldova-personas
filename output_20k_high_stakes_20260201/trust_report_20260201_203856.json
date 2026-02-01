@@ -1,0 +1,434 @@
+{
+  "report_id": "20260201_203856",
+  "generation_timestamp": "2026-02-01T20:38:56.817987",
+  "persona_count": 20000,
+  "provenance_coverage_all": {
+    "From NBS 2024 final report (static)": 0.4375,
+    "Fetched from NBS PxWeb API": 0.25,
+    "Derived via IPF from marginal distributions": 0.1875,
+    "Demographic estimate (documented assumptions)": 0.125
+  },
+  "provenance_coverage_critical": {
+    "From NBS 2024 final report (static)": 0.6364,
+    "Fetched from NBS PxWeb API": 0.3636
+  },
+  "provenance_coverage_super_critical": {
+    "From NBS 2024 final report (static)": 1.0
+  },
+  "fallback_fields": [
+    "region",
+    "ethnicity",
+    "education",
+    "marital_status",
+    "religion",
+    "language",
+    "employment_status"
+  ],
+  "fallback_fields_critical": [
+    "region",
+    "ethnicity",
+    "education",
+    "marital_status",
+    "religion",
+    "language",
+    "employment_status"
+  ],
+  "fallback_fields_super_critical": [
+    "region",
+    "ethnicity",
+    "education",
+    "employment_status"
+  ],
+  "cached_fields": [],
+  "ethnocultural_fallbacks": {
+    "language:national_totals:Rrom": 240
+  },
+  "estimated_fields": [
+    "occupation_sector",
+    "occupation"
+  ],
+  "estimated_fields_critical": [],
+  "marginal_errors": [
+    {
+      "field": "sex",
+      "l1_distance": 0.0065,
+      "tv_distance": 0.0032,
+      "max_error": 0.0032,
+      "target_source": "mixed",
+      "target": {
+        "Masculin": 0.46609790751157415,
+        "Feminin": 0.5339020924884258
+      },
+      "actual": {
+        "Feminin": 0.53715,
+        "Masculin": 0.46285
+      }
+    },
+    {
+      "field": "age_group",
+      "l1_distance": 0.0141,
+      "tv_distance": 0.0071,
+      "max_error": 0.0041,
+      "target_source": "mixed",
+      "target": {
+        "15-24": 0.07882706256075922,
+        "25-34": 0.15475885012976592,
+        "35-44": 0.19292299384237788,
+        "45-54": 0.16418656350786726,
+        "55-64": 0.18037129526900295,
+        "65+": 0.22893323469022675
+      },
+      "actual": {
+        "35-44": 0.19075,
+        "25-34": 0.154,
+        "65+": 0.2326,
+        "45-54": 0.1663,
+        "55-64": 0.18165,
+        "15-24": 0.0747
+      }
+    },
+    {
+      "field": "region",
+      "l1_distance": 0.0148,
+      "tv_distance": 0.0074,
+      "max_error": 0.0066,
+      "target_source": "mixed",
+      "target": {
+        "Chisinau": 0.25093256166636385,
+        "Nord": 0.2760114243863958,
+        "Centru": 0.28845138501230205,
+        "Sud": 0.13951865578325046,
+        "Gagauzia": 0.04508597315168785
+      },
+      "actual": {
+        "Chisinau": 0.2477,
+        "Centru": 0.28575,
+        "Sud": 0.14035,
+        "Nord": 0.2826,
+        "Gagauzia": 0.0436
+      }
+    },
+    {
+      "field": "residence_type",
+      "l1_distance": 0.0013,
+      "tv_distance": 0.0006,
+      "max_error": 0.0006,
+      "target_source": "mixed",
+      "target": {
+        "Urban": 0.4351647163542742,
+        "Rural": 0.5648352836457258
+      },
+      "actual": {
+        "Urban": 0.4358,
+        "Rural": 0.5642
+      }
+    },
+    {
+      "field": "ethnicity",
+      "l1_distance": 0.0088,
+      "tv_distance": 0.0044,
+      "max_error": 0.0038,
+      "target_source": "mixed",
+      "target": {
+        "Moldovean": 0.772,
+        "Român": 0.079,
+        "Ucrainean": 0.05,
+        "Găgăuz": 0.043,
+        "Rus": 0.03,
+        "Bulgar": 0.016,
+        "Rrom": 0.004,
+        "Altele": 0.006
+      },
+      "actual": {
+        "Ucrainean": 0.04955,
+        "Bulgar": 0.0152,
+        "Moldovean": 0.7758,
+        "Găgăuz": 0.04165,
+        "Rus": 0.0305,
+        "Român": 0.0775,
+        "Altele": 0.0057,
+        "Rrom": 0.0041
+      }
+    },
+    {
+      "field": "education",
+      "l1_distance": 0.0684,
+      "tv_distance": 0.0342,
+      "max_error": 0.0231,
+      "target_source": "mixed",
+      "target": {
+        "Fără studii": 0.024,
+        "Primar": 0.092,
+        "Gimnazial": 0.227,
+        "Liceal": 0.128,
+        "Profesional/Tehnic": 0.336,
+        "Superior (Licență/Master)": 0.181,
+        "Doctorat": 0.012
+      },
+      "actual": {
+        "Profesional/Tehnic": 0.32445,
+        "Gimnazial": 0.2147,
+        "Superior (Licență/Master)": 0.2041,
+        "Liceal": 0.13835,
+        "Primar": 0.08335,
+        "Doctorat": 0.01275,
+        "Fără studii": 0.0223
+      }
+    },
+    {
+      "field": "marital_status",
+      "l1_distance": 0.012,
+      "tv_distance": 0.006,
+      "max_error": 0.0047,
+      "target_source": "mixed",
+      "target": {
+        "Necăsătorit": 0.236,
+        "Căsătorit": 0.558,
+        "Divorțat": 0.085,
+        "Văduv": 0.1,
+        "Separat": 0.021
+      },
+      "actual": {
+        "Divorțat": 0.08125,
+        "Căsătorit": 0.55855,
+        "Necăsătorit": 0.24065,
+        "Văduv": 0.09775,
+        "Separat": 0.0218
+      }
+    },
+    {
+      "field": "religion",
+      "l1_distance": 0.0038,
+      "tv_distance": 0.0019,
+      "max_error": 0.0015,
+      "target_source": "mixed",
+      "target": {
+        "Ortodox": 0.9646686786009324,
+        "Baptist": 0.011139687845779643,
+        "Martor al lui Iehova": 0.0070106210590479695,
+        "Penticostal": 0.005354491915804803,
+        "Adventist": 0.0029656562395802867,
+        "Creștină după Evanghelie": 0.0027031561599382744,
+        "Staroveri (Ortodoxă Rusă de rit vechi)": 0.0017215417844484338,
+        "Islam": 0.0013328887539104852,
+        "Catolic": 0.0010984226633564402,
+        "Altă religie": 0.002004854977201235
+      },
+      "actual": {
+        "Adventist": 0.00295,
+        "Ortodox": 0.9632,
+        "Altă religie": 0.003,
+        "Martor al lui Iehova": 0.00765,
+        "Creștină după Evanghelie": 0.00285,
+        "Penticostal": 0.00525,
+        "Catolic": 0.0008,
+        "Baptist": 0.01115,
+        "Staroveri (Ortodoxă Rusă de rit vechi)": 0.00175,
+        "Islam": 0.0014
+      }
+    },
+    {
+      "field": "language",
+      "l1_distance": 0.0127,
+      "tv_distance": 0.0064,
+      "max_error": 0.0051,
+      "target_source": "mixed",
+      "target": {
+        "Română": 0.7998317844348648,
+        "Ucraineană": 0.029854317013654836,
+        "Rusă": 0.11631794818545484,
+        "Găgăuză": 0.036304241731997866,
+        "Bulgară": 0.011978194278594277,
+        "Rromani": 0.0031732516484087644,
+        "Alta": 0.002540262707024607
+      },
+      "actual": {
+        "Rusă": 0.1137,
+        "Bulgară": 0.0117,
+        "Română": 0.80495,
+        "Ucraineană": 0.029,
+        "Găgăuză": 0.0368,
+        "Alta": 0.0033,
+        "Rromani": 0.00055
+      }
+    },
+    {
+      "field": "employment_status",
+      "l1_distance": 0.3034,
+      "tv_distance": 0.1517,
+      "max_error": 0.1382,
+      "target_source": "mixed",
+      "target": {
+        "employed": 0.427,
+        "unemployed": 0.018,
+        "student": 0.08,
+        "retired": 0.183,
+        "homemaker": 0.06,
+        "other_inactive": 0.232
+      },
+      "actual": {
+        "employed": 0.3426,
+        "other_inactive": 0.17935,
+        "student": 0.0935,
+        "retired": 0.3212,
+        "homemaker": 0.0486,
+        "unemployed": 0.01475
+      }
+    },
+    {
+      "field": "district",
+      "l1_distance": 0.0326,
+      "tv_distance": 0.0163,
+      "max_error": 0.0032,
+      "target_source": "mixed",
+      "target": {
+        "Mun. Chisinau": 0.25093256166636385,
+        "Mun. Balti": 0.036474035471201025,
+        "Briceni": 0.021564564821814024,
+        "Donduseni": 0.012765640988469239,
+        "Drochia": 0.024561646281441932,
+        "Edinet": 0.023262125466798584,
+        "Falesti": 0.026618274311416196,
+        "Floresti": 0.02546654755281598,
+        "Glodeni": 0.0172006864422017,
+        "Ocnita": 0.01578892372979481,
+        "Riscani": 0.019924490102661955,
+        "Singerei": 0.026490217508292627,
+        "Soroca": 0.02589427170948772,
+        "Anenii Noi": 0.02457871633802101,
+        "Calarasi": 0.019389481895541922,
+        "Criuleni": 0.022764458008445284,
+        "Dubasari": 0.009794133234929477,
+        "Hincesti": 0.030367065836133106,
+        "Ialoveni": 0.029284278258239205,
+        "Nisporeni": 0.01596608832436371,
+        "Orhei": 0.03241710432220736,
+        "Rezina": 0.014052108230434467,
+        "Straseni": 0.025934656199960653,
+        "Soldanesti": 0.011973138508761113,
+        "Telenesti": 0.01855568494072705,
+        "Ungheni": 0.03337447091453769,
+        "Basarabeasca": 0.006698647919728059,
+        "Cahul": 0.032348918232232474,
+        "Cantemir": 0.015141077428082189,
+        "Causeni": 0.025968325631411666,
+        "Cimislia": 0.013793264670285896,
+        "Leova": 0.013746541666156761,
+        "Stefan Voda": 0.01955855076474795,
+        "Taraclia": 0.012263329470605457,
+        "U.T.A. Gagauzia": 0.04508597315168785
+      },
+      "actual": {
+        "Mun. Chisinau": 0.2477,
+        "Anenii Noi": 0.0241,
+        "Cahul": 0.03045,
+        "Soroca": 0.0257,
+        "U.T.A. Gagauzia": 0.0436,
+        "Stefan Voda": 0.0192,
+        "Falesti": 0.0272,
+        "Nisporeni": 0.0167,
+        "Mun. Balti": 0.03595,
+        "Drochia": 0.02595,
+        "Telenesti": 0.0174,
+        "Leova": 0.0138,
+        "Causeni": 0.0271,
+        "Straseni": 0.028,
+        "Cantemir": 0.01555,
+        "Glodeni": 0.01725,
+        "Taraclia": 0.01295,
+        "Floresti": 0.02565,
+        "Ungheni": 0.03125,
+        "Singerei": 0.02645,
+        "Riscani": 0.02085,
+        "Criuleni": 0.0224,
+        "Donduseni": 0.0121,
+        "Orhei": 0.0328,
+        "Edinet": 0.0261,
+        "Dubasari": 0.0094,
+        "Ocnita": 0.01705,
+        "Ialoveni": 0.0286,
+        "Basarabeasca": 0.00795,
+        "Rezina": 0.0155,
+        "Hincesti": 0.0288,
+        "Calarasi": 0.0195,
+        "Cimislia": 0.01335,
+        "Soldanesti": 0.0113,
+        "Briceni": 0.02235
+      }
+    }
+  ],
+  "marginal_checks_skipped": {},
+  "mean_l1_error": 0.0435,
+  "max_l1_error": 0.3034,
+  "max_category_error": 0.1382,
+  "targets_source": "mixed",
+  "metric_interpretation": "L1 error measures fit to mixed sources (some uncertainty from fallbacks)",
+  "uncertainty_penalty_applied": false,
+  "structured_quality_tier": "A",
+  "narrative_quality_tier": "A",
+  "overall_quality_tier": "A",
+  "overall_tier_reasoning": "min(structured=A, narrative=A)",
+  "trust_decision": {
+    "decision": "PASS_WITH_WARNINGS",
+    "decision_basis": [
+      "Ethnocultural fallback used: language:national_totals:Rrom=240"
+    ],
+    "confidence": "medium",
+    "confidence_factors": [
+      "mixed_target_sources"
+    ],
+    "tier_mapping_coherent": true,
+    "coherence_notes": ""
+  },
+  "use_case_profile": "high_stakes",
+  "hard_gate_triggered": false,
+  "gate_reasons": [
+    "Ethnocultural fallback used: language:national_totals:Rrom=240"
+  ],
+  "narrative_mock_count": 0,
+  "narrative_mock_ratio": 0.0,
+  "narrative_generated_count": 0,
+  "narrative_failed_count": 0,
+  "narrative_quality_metrics": {
+    "total_personas": 20000,
+    "generated_count": 0,
+    "mock_count": 0,
+    "failed_count": 0,
+    "too_short_count": 0,
+    "too_long_count": 0,
+    "length_valid_ratio": 1.0,
+    "schema_valid_count": 0,
+    "schema_invalid_count": 0,
+    "schema_valid_ratio_overall": 0.0,
+    "schema_valid_ratio_attempted": 1.0,
+    "parse_attempted_count": 0,
+    "parse_failed_count": 0,
+    "parse_failure_ratio": 0.0,
+    "romanian_valid_count": 0,
+    "romanian_invalid_count": 0,
+    "romanian_valid_ratio": 1.0,
+    "potential_pii_count": 0
+  },
+  "ipf_metrics": {
+    "original_sample_size": 60000,
+    "effective_sample_size": 59991.8,
+    "resampling_ratio": 0.3333,
+    "information_loss": 0.0001,
+    "ess_ratio": 0.9999,
+    "pre_correction_drift": {
+      "ethnicity": 0.0072333333333333034
+    },
+    "post_correction_drift": {
+      "ethnicity": 0.00880000000000003
+    },
+    "correction_iterations": 1,
+    "weight_concentration": 1.0087
+  },
+  "pxweb_cache_age_days": 2,
+  "data_reference_year": 2024,
+  "census_reference_year": 2024,
+  "random_seed": 42,
+  "generator_version": "1.0.0",
+  "generator_config_hash": "38cb32071289602f33a149be2530168e3f6098ba80069830abb101682644c3e3",
+  "pxweb_snapshot_timestamp": "2026-01-29T21:56:11.283656"
+}

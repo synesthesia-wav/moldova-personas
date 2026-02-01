@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "format": "Nemotron-Moldova",
+    "count": 0,
+    "generated_at": "2026-01-31T14:11:17.157707",
+    "provider": "mock",
+    "model": "qwen-turbo"
+  },
+  "metrics": {
+    "total_personas": 10,
+    "successful": 0,
+    "failed": 10,
+    "total_duration_seconds": 0.04,
+    "personas_per_minute": 0.0,
+    "stage_times": {
+      "structured_generation": 0.02,
+      "nemotron_pipeline": 0.04
+    },
+    "cost_estimate_usd": 0,
+    "average_validation_score": null
+  },
+  "personas": []
+}

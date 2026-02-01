@@ -1,0 +1,27 @@
+{
+  "_description": "Golden fixture: PxWeb POP010200rcl.px response for sex distribution",
+  "_schema_version": "1.0",
+  "_recorded_at": "2026-01-29T12:00:00Z",
+  "_dataset": "POP010200rcl.px",
+  "columns": [
+    {"code": "Ani", "text": "Years", "type": "t"},
+    {"code": "Sexe", "text": "Sex", "type": "t"},
+    {"code": "Varste", "text": "Age", "type": "t"},
+    {"code": "Medii", "text": "Residence", "type": "t"},
+    {"code": "Population", "text": "Population", "type": "c"}
+  ],
+  "data": [
+    {"key": ["2024", "1", "0", "1"], "values": ["100"]},
+    {"key": ["2024", "1", "0", "2"], "values": ["120"]},
+    {"key": ["2024", "2", "0", "1"], "values": ["110"]},
+    {"key": ["2024", "2", "0", "2"], "values": ["130"]},
+    {"key": ["2024", "1", "1", "1"], "values": ["200"]},
+    {"key": ["2024", "1", "1", "2"], "values": ["220"]},
+    {"key": ["2024", "2", "1", "1"], "values": ["210"]},
+    {"key": ["2024", "2", "1", "2"], "values": ["240"]}
+  ],
+  "_expected_parsed": {
+    "Masculin": 640,
+    "Feminin": 690
+  }
+}

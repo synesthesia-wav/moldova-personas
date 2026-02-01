@@ -1,0 +1,280 @@
+{
+  "report_id": "20260201_194142",
+  "generation_timestamp": "2026-02-01T19:41:42.490260",
+  "persona_count": 10000,
+  "provenance_coverage_all": {
+    "From NBS 2024 final report (static)": 0.6364,
+    "Fetched from NBS PxWeb API": 0.3636
+  },
+  "provenance_coverage_critical": {
+    "From NBS 2024 final report (static)": 0.6364,
+    "Fetched from NBS PxWeb API": 0.3636
+  },
+  "provenance_coverage_super_critical": {
+    "From NBS 2024 final report (static)": 1.0
+  },
+  "fallback_fields": [],
+  "fallback_fields_critical": [],
+  "fallback_fields_super_critical": [],
+  "cached_fields": [],
+  "ethnocultural_fallbacks": {
+    "language:national_totals:Rrom": 120
+  },
+  "marginal_errors": [
+    {
+      "field": "sex",
+      "l1_distance": 0.0002,
+      "tv_distance": 0.0001,
+      "max_error": 0.0001,
+      "target_source": "mixed",
+      "target": {
+        "Masculin": 0.46609790751157415,
+        "Feminin": 0.5339020924884258
+      },
+      "actual": {
+        "Feminin": 0.5338,
+        "Masculin": 0.4662
+      }
+    },
+    {
+      "field": "age_group",
+      "l1_distance": 0.0176,
+      "tv_distance": 0.0088,
+      "max_error": 0.0061,
+      "target_source": "mixed",
+      "target": {
+        "15-24": 0.07882706256075922,
+        "25-34": 0.15475885012976592,
+        "35-44": 0.19292299384237788,
+        "45-54": 0.16418656350786726,
+        "55-64": 0.18037129526900295,
+        "65+": 0.22893323469022675
+      },
+      "actual": {
+        "35-44": 0.1868,
+        "25-34": 0.1576,
+        "45-54": 0.1615,
+        "65+": 0.23,
+        "55-64": 0.1829,
+        "15-24": 0.0812
+      }
+    },
+    {
+      "field": "region",
+      "l1_distance": 0.1026,
+      "tv_distance": 0.0513,
+      "max_error": 0.0513,
+      "target_source": "mixed",
+      "target": {
+        "Chisinau": 0.299,
+        "Centru": 0.278,
+        "Nord": 0.253,
+        "Sud": 0.127,
+        "Gagauzia": 0.043
+      },
+      "actual": {
+        "Chisinau": 0.2477,
+        "Sud": 0.1402,
+        "Centru": 0.2862,
+        "Nord": 0.2815,
+        "Gagauzia": 0.0444
+      }
+    },
+    {
+      "field": "residence_type",
+      "l1_distance": 0.0117,
+      "tv_distance": 0.0059,
+      "max_error": 0.0059,
+      "target_source": "mixed",
+      "target": {
+        "Urban": 0.4351647163542742,
+        "Rural": 0.5648352836457258
+      },
+      "actual": {
+        "Rural": 0.5707,
+        "Urban": 0.4293
+      }
+    },
+    {
+      "field": "ethnicity",
+      "l1_distance": 0.0078,
+      "tv_distance": 0.0039,
+      "max_error": 0.0032,
+      "target_source": "mixed",
+      "target": {
+        "Moldovean": 0.772,
+        "Român": 0.079,
+        "Ucrainean": 0.05,
+        "Găgăuz": 0.043,
+        "Rus": 0.03,
+        "Bulgar": 0.016,
+        "Rrom": 0.004,
+        "Altele": 0.006
+      },
+      "actual": {
+        "Rrom": 0.0037,
+        "Moldovean": 0.7688,
+        "Găgăuz": 0.043,
+        "Ucrainean": 0.0506,
+        "Român": 0.0818,
+        "Rus": 0.0302,
+        "Altele": 0.0056,
+        "Bulgar": 0.0163
+      }
+    },
+    {
+      "field": "district",
+      "l1_distance": 0.0364,
+      "tv_distance": 0.0182,
+      "max_error": 0.0037,
+      "target_source": "mixed",
+      "target": {
+        "Mun. Chisinau": 0.25093256166636385,
+        "Mun. Balti": 0.036474035471201025,
+        "Briceni": 0.021564564821814024,
+        "Donduseni": 0.012765640988469239,
+        "Drochia": 0.024561646281441932,
+        "Edinet": 0.023262125466798584,
+        "Falesti": 0.026618274311416196,
+        "Floresti": 0.02546654755281598,
+        "Glodeni": 0.0172006864422017,
+        "Ocnita": 0.01578892372979481,
+        "Riscani": 0.019924490102661955,
+        "Singerei": 0.026490217508292627,
+        "Soroca": 0.02589427170948772,
+        "Anenii Noi": 0.02457871633802101,
+        "Calarasi": 0.019389481895541922,
+        "Criuleni": 0.022764458008445284,
+        "Dubasari": 0.009794133234929477,
+        "Hincesti": 0.030367065836133106,
+        "Ialoveni": 0.029284278258239205,
+        "Nisporeni": 0.01596608832436371,
+        "Orhei": 0.03241710432220736,
+        "Rezina": 0.014052108230434467,
+        "Straseni": 0.025934656199960653,
+        "Soldanesti": 0.011973138508761113,
+        "Telenesti": 0.01855568494072705,
+        "Ungheni": 0.03337447091453769,
+        "Basarabeasca": 0.006698647919728059,
+        "Cahul": 0.032348918232232474,
+        "Cantemir": 0.015141077428082189,
+        "Causeni": 0.025968325631411666,
+        "Cimislia": 0.013793264670285896,
+        "Leova": 0.013746541666156761,
+        "Stefan Voda": 0.01955855076474795,
+        "Taraclia": 0.012263329470605457,
+        "U.T.A. Gagauzia": 0.04508597315168785
+      },
+      "actual": {
+        "Mun. Chisinau": 0.2477,
+        "Basarabeasca": 0.0075,
+        "Hincesti": 0.0304,
+        "Ocnita": 0.0155,
+        "Singerei": 0.0243,
+        "Ialoveni": 0.0274,
+        "Anenii Noi": 0.0283,
+        "Orhei": 0.0317,
+        "Mun. Balti": 0.0401,
+        "Cimislia": 0.0143,
+        "Stefan Voda": 0.0193,
+        "Criuleni": 0.0227,
+        "Straseni": 0.0261,
+        "Nisporeni": 0.0165,
+        "U.T.A. Gagauzia": 0.0444,
+        "Telenesti": 0.0181,
+        "Riscani": 0.0197,
+        "Ungheni": 0.0317,
+        "Soroca": 0.025,
+        "Cahul": 0.0309,
+        "Falesti": 0.0266,
+        "Soldanesti": 0.013,
+        "Edinet": 0.0247,
+        "Glodeni": 0.0177,
+        "Drochia": 0.0247,
+        "Floresti": 0.0277,
+        "Causeni": 0.0282,
+        "Briceni": 0.0219,
+        "Leova": 0.0127,
+        "Calarasi": 0.0188,
+        "Donduseni": 0.0136,
+        "Cantemir": 0.0152,
+        "Rezina": 0.0126,
+        "Dubasari": 0.0089,
+        "Taraclia": 0.0121
+      }
+    }
+  ],
+  "mean_l1_error": 0.0294,
+  "max_l1_error": 0.1026,
+  "max_category_error": 0.0513,
+  "targets_source": "mixed",
+  "metric_interpretation": "L1 error measures fit to mixed sources (some uncertainty from fallbacks)",
+  "uncertainty_penalty_applied": false,
+  "structured_quality_tier": "A",
+  "narrative_quality_tier": "A",
+  "overall_quality_tier": "A",
+  "overall_tier_reasoning": "structured_only (ANALYSIS_ONLY profile ignores narrative quality)",
+  "trust_decision": {
+    "decision": "PASS_WITH_WARNINGS",
+    "decision_basis": [
+      "Ethnocultural fallback used: language:national_totals:Rrom=120"
+    ],
+    "confidence": "medium",
+    "confidence_factors": [
+      "mixed_target_sources"
+    ],
+    "tier_mapping_coherent": true,
+    "coherence_notes": ""
+  },
+  "use_case_profile": "analysis_only",
+  "hard_gate_triggered": false,
+  "gate_reasons": [
+    "Ethnocultural fallback used: language:national_totals:Rrom=120"
+  ],
+  "narrative_mock_count": 0,
+  "narrative_mock_ratio": 0.0,
+  "narrative_generated_count": 0,
+  "narrative_failed_count": 0,
+  "narrative_quality_metrics": {
+    "total_personas": 10000,
+    "generated_count": 0,
+    "mock_count": 0,
+    "failed_count": 0,
+    "too_short_count": 0,
+    "too_long_count": 0,
+    "length_valid_ratio": 1.0,
+    "schema_valid_count": 0,
+    "schema_invalid_count": 0,
+    "schema_valid_ratio_overall": 0.0,
+    "schema_valid_ratio_attempted": 1.0,
+    "parse_attempted_count": 0,
+    "parse_failed_count": 0,
+    "parse_failure_ratio": 0.0,
+    "romanian_valid_count": 0,
+    "romanian_invalid_count": 0,
+    "romanian_valid_ratio": 1.0,
+    "potential_pii_count": 0
+  },
+  "ipf_metrics": {
+    "original_sample_size": 30000,
+    "effective_sample_size": 29985.56,
+    "resampling_ratio": 0.3333,
+    "information_loss": 0.0005,
+    "ess_ratio": 0.9995,
+    "pre_correction_drift": {
+      "ethnicity": 0.0061333333333333595
+    },
+    "post_correction_drift": {
+      "ethnicity": 0.0077999999999999745
+    },
+    "correction_iterations": 1,
+    "weight_concentration": 1.5844
+  },
+  "pxweb_cache_age_days": 2,
+  "data_reference_year": 2024,
+  "census_reference_year": 2024,
+  "random_seed": 42,
+  "generator_version": "1.0.0",
+  "generator_config_hash": "44f436742075221c6c69938270f30aaeb12eeeae3b83a3b047155d1c335833a8",
+  "pxweb_snapshot_timestamp": "2026-01-29T21:56:11.283656"
+}

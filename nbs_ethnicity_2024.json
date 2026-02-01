@@ -1,0 +1,37 @@
+{
+  "source": "Recensământul Populației și Locuințelor 2024",
+  "date_published": "20 Oct 2025",
+  "national": {
+    "total": {
+      "Moldoveni": 76.73,
+      "Români": 8.02,
+      "Ucraineni": 5.13,
+      "Ruși": 3.39,
+      "Găgăuzi": 4.03,
+      "Bulgari": 1.59,
+      "Romi/Țigani": 0.39,
+      "Alte etnii": 0.58
+    },
+    "urban": {
+      "Moldoveni": 70.45,
+      "Români": 9.81,
+      "Ucraineni": 6.27,
+      "Ruși": 5.9,
+      "Găgăuzi": 3.7,
+      "Bulgari": 2.03,
+      "Romi/Țigani": 0.55,
+      "Alte etnii": 1.04
+    },
+    "rural": {
+      "Moldoveni": 82.19,
+      "Români": 6.46,
+      "Ucraineni": 4.14,
+      "Ruși": 1.21,
+      "Găgăuzi": 4.33,
+      "Bulgari": 1.2,
+      "Romi/Țigani": 0.25,
+      "Alte etnii": 0.17
+    }
+  },
+  "total_population_2024": 2423287
+}

@@ -1,0 +1,265 @@
+{
+  "source": {
+    "file": "Date_Comunicat_Etnoculturale_20_10_25.xlsx",
+    "extracted_on": "2026-01-31T15:31:46.241424",
+    "sheets": {
+      "language_by_ethnicity": "Figura 16",
+      "religion_by_ethnicity": "Figura 17"
+    }
+  },
+  "mappings": {
+    "ethnicity": {
+      "Moldoveni": "Moldovean",
+      "Români": "Român",
+      "Ucraineni": "Ucrainean",
+      "Ruși": "Rus",
+      "Găgăuzi": "Găgăuz",
+      "Bulgari": "Bulgar",
+      "Romi/Țigani": "Rrom",
+      "Romi/ Tigani": "Rrom",
+      "Romi / Țigani": "Rrom",
+      "Romi / Tigani": "Rrom",
+      "Alte etnii": "Altele",
+      "Alte etnii ": "Altele",
+      "Nu au declarat etnia": null,
+      "Populația totală": null,
+      "Total": null
+    },
+    "language": {
+      "Moldovenească": "Română",
+      "Română": "Română",
+      "Ucraineană": "Ucraineană",
+      "Rusă": "Rusă",
+      "Găgăuză": "Găgăuză",
+      "Bulgară": "Bulgară",
+      "Romani (Țigănească)": "Rromani",
+      "Belorusă": "Alta",
+      "Germană": "Alta",
+      "Poloneză": "Alta",
+      "Altă limbă": "Alta",
+      "Nu au declarat limba maternă": null
+    },
+    "religion": {
+      "Ortodoxă": "Ortodox",
+      "Baptistă": "Baptist",
+      "Martorii lui Iehova": "Martor al lui Iehova",
+      "Penticostală": "Penticostal",
+      "Adventistă": "Adventist",
+      "Creștină după Evanghelie": "Creștină după Evanghelie",
+      "Staroveri (Ortodoxă Rusă de rit vechi)": "Staroveri (Ortodoxă Rusă de rit vechi)",
+      "Islam": "Islam",
+      "Romano-catolică": "Catolic",
+      "Altă religie": "Altă religie"
+    },
+    "language_total": {
+      "Moldovenească": "Română",
+      "Română": "Română",
+      "Ucraineană": "Ucraineană",
+      "Rusă": "Rusă",
+      "Găgăuză": "Găgăuză",
+      "Bulgară": "Bulgară",
+      "Romani (Țigănească)": "Rromani",
+      "Belorusă": "Alta",
+      "Germană": "Alta",
+      "Poloneză": "Alta",
+      "Altă limbă": "Alta",
+      "Nu au declarat limba maternă": null
+    },
+    "religion_total": {
+      "Ortodoxă": "Ortodox",
+      "Baptistă": "Baptist",
+      "Martorii lui Iehova": "Martor al lui Iehova",
+      "Penticostală": "Penticostal",
+      "Adventistă": "Adventist",
+      "Creștină după Evanghelie": "Creștină după Evanghelie",
+      "Staroveri (Ortodoxă Rusă de rit vechi)": "Staroveri (Ortodoxă Rusă de rit vechi)",
+      "Islam": "Islam",
+      "Romano-catolică": "Catolic",
+      "Altă religie": "Altă religie"
+    }
+  },
+  "language_by_ethnicity": {
+    "Moldovean": {
+      "Română": 0.929620219179685,
+      "Ucraineană": 0.004637784083220244,
+      "Rusă": 0.06465562504533204,
+      "Găgăuză": 0.0004487305094525658,
+      "Bulgară": 0.00037836263704142756,
+      "Rromani": 0.00014831382338962966,
+      "Alta": 0.00011096472187910249
+    },
+    "Român": {
+      "Română": 0.9914034624367558,
+      "Ucraineană": 0.0013982320132987546,
+      "Rusă": 0.006820265042646146,
+      "Găgăuză": 0.00015535911258875067,
+      "Bulgară": 8.803683046695875e-05,
+      "Rromani": 5.696500794920858e-05,
+      "Alta": 7.767955629437534e-05
+    },
+    "Ucrainean": {
+      "Română": 0.05371388769650593,
+      "Ucraineană": 0.5017939725761131,
+      "Rusă": 0.44139014651450975,
+      "Găgăuză": 0.0012553758433290773,
+      "Bulgară": 0.0009071102867926235,
+      "Rromani": 0.0008423166948788647,
+      "Alta": 9.719038787063825e-05
+    },
+    "Rus": {
+      "Română": 0.03262188768067071,
+      "Ucraineană": 0.0072574812126858295,
+      "Rusă": 0.952826372117542,
+      "Găgăuză": 0.005798629414865532,
+      "Bulgară": 0.0010052592220274295,
+      "Rromani": 0.00014711110566255066,
+      "Alta": 0.0003432592465459517
+    },
+    "Găgăuz": {
+      "Română": 0.013612587009349565,
+      "Ucraineană": 0.000720787511841505,
+      "Rusă": 0.10292845669096704,
+      "Găgăuză": 0.8783310680011538,
+      "Bulgară": 0.004273240248774637,
+      "Rromani": 7.20787511841505e-05,
+      "Alta": 6.178178672927185e-05
+    },
+    "Bulgar": {
+      "Română": 0.058420143432968294,
+      "Ucraineană": 0.002355650944877755,
+      "Rusă": 0.20774223943883147,
+      "Găgăuză": 0.011516515730513469,
+      "Bulgară": 0.7171386693189556,
+      "Rromani": 0.002407998743652816,
+      "Alta": 0.00041878239020048984
+    },
+    "Altele": {
+      "Română": 0.10722311396468699,
+      "Ucraineană": 0.0070626003210272886,
+      "Rusă": 0.3174959871589081,
+      "Găgăuză": 0.009630818619582666,
+      "Bulgară": 0.0012841091492776888,
+      "Rromani": 0.0003210272873194222,
+      "Alta": 0.556982343499198
+    }
+  },
+  "religion_by_ethnicity": {
+    "Moldovean": {
+      "Ortodox": 0.9708297860858325,
+      "Baptist": 0.0097265251145122,
+      "Martor al lui Iehova": 0.007403789286339643,
+      "Penticostal": 0.0051333673281708965,
+      "Adventist": 0.00254796080534723,
+      "Creștină după Evanghelie": 0.002236280274587226,
+      "Staroveri (Ortodoxă Rusă de rit vechi)": 0.00025661329917696303,
+      "Islam": 0.00041135221992530396,
+      "Catolic": 0.00042566970013689404,
+      "Altă religie": 0.0010286558859711745
+    },
+    "Român": {
+      "Ortodox": 0.9739546468124507,
+      "Baptist": 0.01046816708620955,
+      "Martor al lui Iehova": 0.004225584477097284,
+      "Penticostal": 0.003134596041574687,
+      "Adventist": 0.0027141663517879304,
+      "Creștină după Evanghelie": 0.002400174558149718,
+      "Staroveri (Ortodoxă Rusă de rit vechi)": 3.7253263651991167e-05,
+      "Islam": 0.00039914211055704833,
+      "Catolic": 0.0010484132770631795,
+      "Altă religie": 0.0016178560214579012
+    },
+    "Ucrainean": {
+      "Ortodox": 0.9300933381674679,
+      "Baptist": 0.027622026795727325,
+      "Martor al lui Iehova": 0.008507516800027136,
+      "Penticostal": 0.01238606757109996,
+      "Adventist": 0.006922369963153887,
+      "Creștină după Evanghelie": 0.006214112865827549,
+      "Staroveri (Ortodoxă Rusă de rit vechi)": 0.0013406295056534337,
+      "Islam": 0.0007841417863255927,
+      "Catolic": 0.003650896704075072,
+      "Altă religie": 0.002478899840642196
+    },
+    "Rus": {
+      "Ortodox": 0.9206163655685451,
+      "Baptist": 0.009511158342189064,
+      "Martor al lui Iehova": 0.007465462274176328,
+      "Penticostal": 0.004317215727948941,
+      "Adventist": 0.002098831030818255,
+      "Creștină după Evanghelie": 0.0037194473963867787,
+      "Staroveri (Ortodoxă Rusă de rit vechi)": 0.04501859723698134,
+      "Islam": 0.001288522848033992,
+      "Catolic": 0.002577045696067984,
+      "Altă religie": 0.003387353878852244
+    },
+    "Găgăuz": {
+      "Ortodox": 0.9614662046507744,
+      "Baptist": 0.018285809710683405,
+      "Martor al lui Iehova": 0.0021709180478436986,
+      "Penticostal": 0.004707134805661093,
+      "Adventist": 0.00750427921345972,
+      "Creștină după Evanghelie": 0.004268776353692655,
+      "Staroveri (Ortodoxă Rusă de rit vechi)": 7.305974199473981e-05,
+      "Islam": 0.0006471005719534099,
+      "Catolic": 4.174842399699418e-05,
+      "Altă religie": 0.0008349684799398837
+    },
+    "Bulgar": {
+      "Ortodox": 0.970976888508453,
+      "Baptist": 0.013989942221271007,
+      "Martor al lui Iehova": 0.004012411726941974,
+      "Penticostal": 0.00205970468649688,
+      "Adventist": 0.0017387117483415218,
+      "Creștină după Evanghelie": 0.005028889364433938,
+      "Staroveri (Ortodoxă Rusă de rit vechi)": 0.00013374705756473247,
+      "Islam": 0.0003477423496683044,
+      "Catolic": 0.0003744917611812509,
+      "Altă religie": 0.0013374705756473257
+    },
+    "Rrom": {
+      "Ortodox": 0.9161325366648561,
+      "Baptist": 0.012384573601303654,
+      "Martor al lui Iehova": 0.024877783813145034,
+      "Penticostal": 0.03041825095057038,
+      "Adventist": 0.0016295491580662698,
+      "Creștină după Evanghelie": 0.01042911461162412,
+      "Staroveri (Ortodoxă Rusă de rit vechi)": 0.0001086366105377513,
+      "Islam": 0.0006518196632265079,
+      "Catolic": 0.001520912547528518,
+      "Altă religie": 0.0018468223791417724
+    },
+    "Altele": {
+      "Ortodox": 0.4328032429061426,
+      "Baptist": 0.0215154349859682,
+      "Martor al lui Iehova": 0.0049890863735578455,
+      "Penticostal": 0.011225444340505148,
+      "Adventist": 0.0031181789834736524,
+      "Creștină după Evanghelie": 0.016838166510757722,
+      "Staroveri (Ortodoxă Rusă de rit vechi)": 0.00031181789834736523,
+      "Islam": 0.19675709385718743,
+      "Catolic": 0.0732772061116309,
+      "Altă religie": 0.23916432803242912
+    }
+  },
+  "language_distribution": {
+    "Română": 0.7998317844348648,
+    "Ucraineană": 0.029854317013654836,
+    "Rusă": 0.11631794818545484,
+    "Găgăuză": 0.036304241731997866,
+    "Bulgară": 0.011978194278594277,
+    "Rromani": 0.0031732516484087644,
+    "Alta": 0.002540262707024607
+  },
+  "religion_distribution": {
+    "Ortodox": 0.9646686786009324,
+    "Baptist": 0.011139687845779643,
+    "Martor al lui Iehova": 0.0070106210590479695,
+    "Penticostal": 0.005354491915804803,
+    "Adventist": 0.0029656562395802867,
+    "Creștină după Evanghelie": 0.0027031561599382744,
+    "Staroveri (Ortodoxă Rusă de rit vechi)": 0.0017215417844484338,
+    "Islam": 0.0013328887539104852,
+    "Catolic": 0.0010984226633564402,
+    "Altă religie": 0.002004854977201235
+  }
+}

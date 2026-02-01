@@ -1,0 +1,50 @@
+{
+  "run_id": "20260131_120751",
+  "manifest_version": "1.0.0",
+  "generation_start_time": "2026-01-31T12:07:51.274826",
+  "generation_end_time": "2026-01-31T12:07:51.298210",
+  "duration_seconds": 0.03599479200056521,
+  "software": {
+    "generator_version": "1.0.0",
+    "python_version": "3.14.0",
+    "platform": "macOS-26.2-arm64-arm-64bit-Mach-O"
+  },
+  "configuration": {
+    "config_hash": "c48e4b17ff304dd5d33aceb41c0136021f31e09405e61326759510d55b036dc7",
+    "config_hash_short": "c48e4b17ff304dd5",
+    "config_summary": {
+      "strict_mode": true,
+      "profile": "high_stakes"
+    }
+  },
+  "randomization": {
+    "random_seed": 42,
+    "np_random_seed": null
+  },
+  "targets": {
+    "target_persona_count": 5,
+    "census_reference_year": 2024,
+    "data_reference_year": 2024
+  },
+  "data_provenance": {
+    "pxweb_snapshot_timestamp": null,
+    "pxweb_base_url": "https://statbank.statistica.md/PxWeb/api/v1/en",
+    "fields": []
+  },
+  "distribution_mappings": {},
+  "ipf_metrics": {
+    "applied": true,
+    "original_sample_size": 15,
+    "effective_sample_size": 13.44412002330964,
+    "ess_ratio": 0.8962746682206427,
+    "information_loss": 0.10372533177935728,
+    "weight_concentration": null
+  },
+  "quality_gates": {
+    "use_case_profile": "high_stakes",
+    "quality_tier_achieved": "A",
+    "hard_gate_triggered": false,
+    "gate_reasons": []
+  },
+  "output_files": {}
+}

@@ -1,0 +1,60 @@
+{
+  "_description": "Examples of schema drift for contract testing",
+  "_schema_version": "1.0",
+  
+  "renamed_dimension_code": {
+    "_description": "PxWeb renamed 'Sexe' to 'Sex'",
+    "columns": [
+      {"code": "Ani", "text": "Years", "type": "t"},
+      {"code": "Sex", "text": "Sex", "type": "t"},
+      {"code": "Population", "text": "Population", "type": "c"}
+    ],
+    "data": [
+      {"key": ["2024", "1"], "values": ["1000"]},
+      {"key": ["2024", "2"], "values": ["1100"]}
+    ],
+    "_should_fail": true,
+    "_expected_error": "Dimension 'Sexe' not found"
+  },
+  
+  "changed_code_values": {
+    "_description": "PxWeb changed sex codes from '1'/'2' to 'M'/'F'",
+    "columns": [
+      {"code": "Ani", "text": "Years", "type": "t"},
+      {"code": "Sexe", "text": "Sex", "type": "t"},
+      {"code": "Population", "text": "Population", "type": "c"}
+    ],
+    "data": [
+      {"key": ["2024", "M"], "values": ["1000"]},
+      {"key": ["2024", "F"], "values": ["1100"]}
+    ],
+    "_should_fail": true,
+    "_expected_behavior": "Codes should not be mapped - values should appear as 'M' and 'F'"
+  },
+  
+  "missing_value_column": {
+    "_description": "No column with type 'c' (count)",
+    "columns": [
+      {"code": "Ani", "text": "Years", "type": "t"},
+      {"code": "Sexe", "text": "Sex", "type": "t"}
+    ],
+    "data": [
+      {"key": ["2024", "1"], "values": []},
+      {"key": ["2024", "2"], "values": []}
+    ],
+    "_should_fail": true,
+    "_expected_error": "No value column found"
+  },
+  
+  "empty_response": {
+    "_description": "PxWeb returns empty data",
+    "columns": [
+      {"code": "Ani", "text": "Years", "type": "t"},
+      {"code": "Sexe", "text": "Sex", "type": "t"},
+      {"code": "Population", "text": "Population", "type": "c"}
+    ],
+    "data": [],
+    "_should_fail": true,
+    "_expected_behavior": "Should raise ValueError or return empty distribution"
+  }
+}

@@ -1,0 +1,1 @@
+It is really important that this project is statistically and scientifically rigorous. Made-up data is prohibited. Use only scientifically robust methods and mindset. Ground everything in 2024 Moldova census data, if you need something you cannot find on the NBS stat bank via PxWeb - explicitly say it. If you ever need to use wikipedia - don't - use Grokipedia instead.

@@ -1,0 +1,23 @@
+{
+  "_description": "Golden fixture: PxWeb POP010200rcl.px response for residence distribution",
+  "_schema_version": "1.0",
+  "_recorded_at": "2026-01-29T12:00:00Z",
+  "_dataset": "POP010200rcl.px",
+  "columns": [
+    {"code": "Ani", "text": "Years", "type": "t"},
+    {"code": "Medii", "text": "Residence", "type": "t"},
+    {"code": "Sexe", "text": "Sex", "type": "t"},
+    {"code": "Varste", "text": "Age", "type": "t"},
+    {"code": "Population", "text": "Population", "type": "c"}
+  ],
+  "data": [
+    {"key": ["2024", "1", "1", "0"], "values": ["500"]},
+    {"key": ["2024", "1", "2", "0"], "values": ["520"]},
+    {"key": ["2024", "2", "1", "0"], "values": ["600"]},
+    {"key": ["2024", "2", "2", "0"], "values": ["620"]}
+  ],
+  "_expected_parsed": {
+    "Urban": 1020,
+    "Rural": 1220
+  }
+}

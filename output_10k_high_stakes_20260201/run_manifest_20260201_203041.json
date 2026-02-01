@@ -1,0 +1,192 @@
+{
+  "run_id": "20260201_203041",
+  "manifest_version": "1.0.0",
+  "generation_start_time": "2026-02-01T20:30:41.601341",
+  "generation_end_time": "2026-02-01T20:30:41.662827",
+  "duration_seconds": 19.640372791996924,
+  "software": {
+    "generator_version": "1.0.0",
+    "python_version": "3.14.0",
+    "platform": "macOS-26.2-arm64-arm-64bit-Mach-O"
+  },
+  "configuration": {
+    "config_hash": "f03bc0ffcf19339eec7ab0becf07b308d6b3cc846c61f5e1c7ab478e368e3930",
+    "config_hash_short": "f03bc0ffcf19339e",
+    "config_summary": {
+      "n": 10000,
+      "profile": "high_stakes",
+      "seed": 42,
+      "use_ipf": true,
+      "oversample_factor": 3,
+      "generate_narratives": false,
+      "llm_provider": "mock",
+      "llm_model": null,
+      "strict": true,
+      "raise_on_reject": false,
+      "strict_mode": true
+    }
+  },
+  "randomization": {
+    "random_seed": 42,
+    "np_random_seed": null
+  },
+  "targets": {
+    "target_persona_count": 10000,
+    "census_reference_year": 2024,
+    "data_reference_year": 2024
+  },
+  "data_provenance": {
+    "pxweb_snapshot_timestamp": "2026-01-29T21:56:11.283656",
+    "pxweb_base_url": "https://statbank.statistica.md/PxWeb/api/v1/en",
+    "fields": [
+      {
+        "field_name": "region",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "POP010200rcl.px",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.95
+      },
+      {
+        "field_name": "residence_type",
+        "source_type": "PXWEB_DIRECT",
+        "source_table": "POP010200rcl.px",
+        "source_timestamp": "2026-01-29T21:56:14.761594",
+        "cache_age_days": 2,
+        "confidence": 0.99
+      },
+      {
+        "field_name": "sex",
+        "source_type": "PXWEB_DIRECT",
+        "source_table": "POP010200rcl.px",
+        "source_timestamp": "2026-01-29T21:56:11.283656",
+        "cache_age_days": 2,
+        "confidence": 0.99
+      },
+      {
+        "field_name": "age_group",
+        "source_type": "PXWEB_DIRECT",
+        "source_table": "POP010200rcl.px",
+        "source_timestamp": "2026-01-29T21:56:11.350176",
+        "cache_age_days": 2,
+        "confidence": 0.99
+      },
+      {
+        "field_name": "ethnicity",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "POP010500.px",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.95
+      },
+      {
+        "field_name": "education",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "EDU010100.px",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.9
+      },
+      {
+        "field_name": "marital_status",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "POP030100.px",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.9
+      },
+      {
+        "field_name": "religion",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "Date_Comunicat_Etnoculturale_20_10_25.xlsx (Figura 17)",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.98
+      },
+      {
+        "field_name": "language",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "Date_Comunicat_Etnoculturale_20_10_25.xlsx (Figura 8)",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.98
+      },
+      {
+        "field_name": "employment_status",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "MUN110200.px",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.9
+      },
+      {
+        "field_name": "district",
+        "source_type": "PXWEB_DIRECT",
+        "source_table": "20 Populatia si procesele demografice/POP010/POPro/POP010400rclreg.px",
+        "source_timestamp": "2026-02-01T19:15:47.902299",
+        "cache_age_days": 0,
+        "confidence": 0.99
+      },
+      {
+        "field_name": "education_by_age_group",
+        "source_type": "ESTIMATED",
+        "source_table": "heuristic: EDUCATION_BY_AGE_GROUP",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.6
+      },
+      {
+        "field_name": "marital_status_by_age",
+        "source_type": "ESTIMATED",
+        "source_table": "heuristic: MARITAL_STATUS_BY_AGE",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.6
+      },
+      {
+        "field_name": "employment_status_by_age",
+        "source_type": "ESTIMATED",
+        "source_table": "heuristic: EMPLOYMENT_STATUS_BY_AGE",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.6
+      },
+      {
+        "field_name": "occupation_sector",
+        "source_type": "ESTIMATED",
+        "source_table": "heuristic: OCCUPATION_SECTOR",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.5
+      },
+      {
+        "field_name": "occupation",
+        "source_type": "ESTIMATED",
+        "source_table": "heuristic: OCCUPATION_LISTS",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.5
+      }
+    ]
+  },
+  "distribution_mappings": {},
+  "ipf_metrics": {
+    "applied": true,
+    "original_sample_size": 30000,
+    "effective_sample_size": 29984.044967310918,
+    "ess_ratio": 0.9994681655770306,
+    "information_loss": 0.000531834422969446,
+    "weight_concentration": 1.5844295564575288
+  },
+  "quality_gates": {
+    "use_case_profile": "high_stakes",
+    "quality_tier_achieved": "B",
+    "hard_gate_triggered": true,
+    "gate_reasons": [
+      "Mean L1 error 5.99% > threshold 5%",
+      "Ethnocultural fallback used: language:national_totals:Rrom=126",
+      "Estimated field used: education_by_age_group, marital_status_by_age, employment_status_by_age, occupation_sector, occupation"
+    ]
+  },
+  "output_files": {}
+}

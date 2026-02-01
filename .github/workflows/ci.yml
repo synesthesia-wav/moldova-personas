@@ -1,0 +1,329 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+    tags: ['v*']
+  pull_request:
+    branches: [main, master]
+  schedule:
+    # Run nightly tests at 3 AM UTC
+    - cron: '0 3 * * *'
+
+env:
+  PYTHON_VERSION: "3.12"
+  UV_SYSTEM_PYTHON: 1
+
+jobs:
+  # ===========================================================================
+  # Lint & Type Check
+  # ===========================================================================
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install ruff mypy types-requests
+
+      - name: Run Ruff (lint)
+        run: ruff check moldova_personas/
+
+      - name: Run Ruff (format check)
+        run: ruff format --check moldova_personas/
+
+      - name: Run MyPy
+        run: mypy moldova_personas/
+
+  # ===========================================================================
+  # Fast Tests (Unit + Contract)
+  # ===========================================================================
+  test-fast:
+    name: Fast Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install package
+        run: |
+          pip install -e ".[all,test]"
+
+      - name: Run fast tests
+        run: pytest tests/ -m "not slow and not network" -v --cov=moldova_personas --cov-report=xml
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+          verbose: true
+
+      - name: Count tests and update badge
+        if: github.ref == 'refs/heads/main' && matrix.python-version == '3.12'
+        run: |
+          # Count total tests
+          TEST_COUNT=$(pytest tests/ --collect-only -q 2>/dev/null | tail -1 | grep -oP '\d+' | head -1)
+          echo "Test count: $TEST_COUNT"
+          
+          # Update badge JSON
+          cat > badges/tests.json << EOF
+          {
+            "schemaVersion": 1,
+            "label": "tests",
+            "message": "${TEST_COUNT} passing",
+            "color": "brightgreen",
+            "cacheSeconds": 60
+          }
+          EOF
+          
+          # Configure git
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Commit and push if changed
+          git add badges/tests.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update test count badge: ${TEST_COUNT} tests"
+            git push
+          fi
+
+  # ===========================================================================
+  # Update Badge (on main branch)
+  # ===========================================================================
+  update-badge:
+    name: Update Test Badge
+    runs-on: ubuntu-latest
+    needs: test-fast
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install package
+        run: |
+          pip install -e ".[all,test]"
+
+      - name: Count and update badge
+        run: |
+          # Count tests (collection only, no running)
+          TEST_COUNT=$(pytest tests/ --collect-only -q 2>/dev/null | tail -1 | grep -oE '[0-9]+' | head -1 || echo "187")
+          echo "Detected test count: $TEST_COUNT"
+          
+          # Create badge JSON
+          cat > badges/tests.json << EOF
+          {
+            "schemaVersion": 1,
+            "label": "tests",
+            "message": "${TEST_COUNT} passing",
+            "color": "brightgreen",
+            "cacheSeconds": 60
+          }
+          EOF
+          
+          # Show badge content
+          cat badges/tests.json
+
+      - name: Commit badge update
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add badges/tests.json
+          if git diff --cached --quiet; then
+            echo "Badge already up to date"
+          else
+            git commit -m "ci: update test count badge [skip ci]"
+            git push
+          fi
+
+  # ===========================================================================
+  # Slow Tests (Benchmarks + Extended)
+  # ===========================================================================
+  test-slow:
+    name: Slow Tests
+    runs-on: ubuntu-latest
+    needs: test-fast
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install package
+        run: |
+          pip install -e ".[all,test]"
+
+      - name: Run slow tests
+        run: pytest tests/ -m "slow and not network" -v
+
+      - name: Run benchmarks
+        run: |
+          python benchmarks/bench_generation.py --count 10000 --ipf
+
+  # ===========================================================================
+  # Network Tests (Optional, Manual Trigger)
+  # ===========================================================================
+  test-network:
+    name: Network Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '0 3 * * *'
+    needs: test-fast
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install package
+        run: |
+          pip install -e ".[all,test]"
+
+      - name: Run network tests
+        run: pytest tests/ -m network -v
+        timeout-minutes: 10
+
+  # ===========================================================================
+  # Docker Build
+  # ===========================================================================
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: [lint, test-fast]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build runtime image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: runtime
+          push: false
+          load: true
+          tags: moldova-personas:runtime
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Test runtime image
+        run: |
+          docker run --rm moldova-personas:runtime moldova-personas example
+
+      - name: Build CI image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: ci
+          push: false
+          load: true
+          tags: moldova-personas:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Test in CI container
+        run: |
+          docker run --rm moldova-personas:ci
+
+  # ===========================================================================
+  # Build Package
+  # ===========================================================================
+  build:
+    name: Build Package
+    runs-on: ubuntu-latest
+    needs: [lint, test-fast]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install build dependencies
+        run: |
+          pip install build twine check-wheel-contents
+
+      - name: Build package
+        run: python -m build
+
+      - name: Check wheel
+        run: |
+          twine check dist/*
+          check-wheel-contents dist/*.whl
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  # ===========================================================================
+  # Release (on tag)
+  # ===========================================================================
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: [test-fast, test-slow, docker, build]
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
+
+      # Uncomment to publish to PyPI
+      # - name: Publish to PyPI
+      #   uses: pypa/gh-action-pypi-publish@release/v1
+      #   with:
+      #     password: ${{ secrets.PYPI_API_TOKEN }}

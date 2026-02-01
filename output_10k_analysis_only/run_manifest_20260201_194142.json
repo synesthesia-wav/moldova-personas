@@ -1,0 +1,149 @@
+{
+  "run_id": "20260201_194142",
+  "manifest_version": "1.0.0",
+  "generation_start_time": "2026-02-01T19:41:42.490260",
+  "generation_end_time": "2026-02-01T19:41:42.556088",
+  "duration_seconds": 22.47042029199656,
+  "software": {
+    "generator_version": "1.0.0",
+    "python_version": "3.14.0",
+    "platform": "macOS-26.2-arm64-arm-64bit-Mach-O"
+  },
+  "configuration": {
+    "config_hash": "44f436742075221c6c69938270f30aaeb12eeeae3b83a3b047155d1c335833a8",
+    "config_hash_short": "44f436742075221c",
+    "config_summary": {
+      "n": 10000,
+      "profile": "analysis_only",
+      "seed": 42,
+      "use_ipf": true,
+      "oversample_factor": 3,
+      "generate_narratives": false,
+      "llm_provider": "mock",
+      "llm_model": null,
+      "strict": false,
+      "strict_mode": false
+    }
+  },
+  "randomization": {
+    "random_seed": 42,
+    "np_random_seed": null
+  },
+  "targets": {
+    "target_persona_count": 10000,
+    "census_reference_year": 2024,
+    "data_reference_year": 2024
+  },
+  "data_provenance": {
+    "pxweb_snapshot_timestamp": "2026-01-29T21:56:11.283656",
+    "pxweb_base_url": "https://statbank.statistica.md/PxWeb/api/v1/en",
+    "fields": [
+      {
+        "field_name": "region",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "POP010200rcl.px",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.95
+      },
+      {
+        "field_name": "residence_type",
+        "source_type": "PXWEB_DIRECT",
+        "source_table": "POP010200rcl.px",
+        "source_timestamp": "2026-01-29T21:56:14.761594",
+        "cache_age_days": 2,
+        "confidence": 0.99
+      },
+      {
+        "field_name": "sex",
+        "source_type": "PXWEB_DIRECT",
+        "source_table": "POP010200rcl.px",
+        "source_timestamp": "2026-01-29T21:56:11.283656",
+        "cache_age_days": 2,
+        "confidence": 0.99
+      },
+      {
+        "field_name": "age_group",
+        "source_type": "PXWEB_DIRECT",
+        "source_table": "POP010200rcl.px",
+        "source_timestamp": "2026-01-29T21:56:11.350176",
+        "cache_age_days": 2,
+        "confidence": 0.99
+      },
+      {
+        "field_name": "ethnicity",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "POP010500.px",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.95
+      },
+      {
+        "field_name": "education",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "EDU010100.px",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.9
+      },
+      {
+        "field_name": "marital_status",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "POP030100.px",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.9
+      },
+      {
+        "field_name": "religion",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "Date_Comunicat_Etnoculturale_20_10_25.xlsx (Figura 17)",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.98
+      },
+      {
+        "field_name": "language",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "Date_Comunicat_Etnoculturale_20_10_25.xlsx (Figura 8)",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.98
+      },
+      {
+        "field_name": "employment_status",
+        "source_type": "CENSUS_HARDCODED",
+        "source_table": "MUN110200.px",
+        "source_timestamp": null,
+        "cache_age_days": null,
+        "confidence": 0.9
+      },
+      {
+        "field_name": "district",
+        "source_type": "PXWEB_DIRECT",
+        "source_table": "20 Populatia si procesele demografice/POP010/POPro/POP010400rclreg.px",
+        "source_timestamp": "2026-02-01T19:15:47.902299",
+        "cache_age_days": 0,
+        "confidence": 0.99
+      }
+    ]
+  },
+  "distribution_mappings": {},
+  "ipf_metrics": {
+    "applied": true,
+    "original_sample_size": 30000,
+    "effective_sample_size": 29985.558251202463,
+    "ess_ratio": 0.9995186083734154,
+    "information_loss": 0.0004813916265845597,
+    "weight_concentration": 1.5844295564575284
+  },
+  "quality_gates": {
+    "use_case_profile": "analysis_only",
+    "quality_tier_achieved": "A",
+    "hard_gate_triggered": false,
+    "gate_reasons": [
+      "Ethnocultural fallback used: language:national_totals:Rrom=120"
+    ]
+  },
+  "output_files": {}
+}

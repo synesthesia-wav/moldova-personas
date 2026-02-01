@@ -1,0 +1,169 @@
+{
+  "metadata": {
+    "format": "Nemotron-Moldova-Feel-Patched",
+    "count": 2,
+    "features": [
+      "implicit_ocean",
+      "varied_openings",
+      "realism_constraints",
+      "moldova_anchors"
+    ]
+  },
+  "personas": [
+    {
+      "uuid": "16639661-4cf4-4b52-9f4d-085962b98939",
+      "name": "Ion Cojocaru",
+      "demographics": {
+        "age": 50,
+        "sex": "Masculin",
+        "occupation": "Învățător",
+        "education_level": "Profesional/Tehnic",
+        "locality": "Leova",
+        "district": "Taraclia",
+        "region": "Sud"
+      },
+      "ocean_scores": {
+        "openness": 56,
+        "conscientiousness": 72,
+        "extraversion": 20,
+        "agreeableness": 50,
+        "neuroticism": 70
+      },
+      "behavioral_cues": "COMPORTAMENT OBSERVABIL (fără a menționa trăsături de personalitate):\n\n- Planificare: planifică cu săptămâni/luni în avans, liste și reminder-e\n- Rutină: rutină strictă, aceleași ore pentru masă/somn\n- Inițiere socială: așteaptă să fie invitat, preferă să fie abordat\n- Stil conflict: retrage-se din conflict, ruminează după\n- Noutate: echilibrat între vechi și nou\n- Semnale stres: insomnie ocazională, ruminație, întreabă pe alții dacă totul e ok\n- Decizii: cântărește pro/contra, se bazează pe experiență proprie\n- Energie socială: interacțiunile sociale îl/o obosesc, preferă solitudinea\n",
+      "constraints": [
+        "responsabil de nepoți frecvent",
+        "program supraîncărcat, rareori timp liber"
+      ],
+      "anchors": {
+        "place": "Comrat",
+        "routine": "câmpul de viță"
+      },
+      "context": {
+        "cultural_background": "Ion Cojocaru trăiește în Leova, un oraș din sudul Moldovei, unde viața se desfășoară pe ritmul vremii și al obiceiurilor. În fiecare dimineață, după ce ia o cafea cu zacuscă de gogosari, merge la școală, unde predă copiii. În weekenduri, când nu e ocupat cu treburile de la părinți, își face cumpărături la piața din Cahul, unde se întâlnește cu vecinii și discută despre lucrurile de la muncă. Locul este plin de amintiri, dar și de responsabilități, iar Ion a învățat să-și gestioneze timpul ca să poată să-și îndeplinească toate obligațiile fără a-i afecta echilibrul.",
+        "skills_and_expertise": "Ion are o bună organizare a timpului, planificând activitățile zilnice cu atenție. Învață copiii cu răbdare, folosind metode clare și structurate. Cunoaște bine regulile școlare și se adaptează ușor la noile cerințe. Are abilități practice de gospodărie, fiind capabil să-și organizeze munca casnică eficient. De asemenea, știe să-și gestioneze stresul prin reflexii personale și conversații scurte cu ceilalți.",
+        "skills_list": [
+          "Planificare detaliată a activităților zilnice",
+          "Organizare eficientă a timpului",
+          "Predare structurată și clară",
+          "Gestionarea responsabilităților familiale",
+          "Cumpărături eficiente și economisire",
+          "Răbdare în interacțiunile cu copiii",
+          "Reflexii introspective în perioadele de stres",
+          "Abilități practice de gospodărie"
+        ],
+        "hobbies_and_interests": "În timpul liber, Ion preferă să stea singur, citind cărți sau ascultând muzică liniștită. Uneori, merge la piața din Cahul pentru a face cumpărături, dar mai ales pentru a vedea oamenii și a vorbi puțin. În weekenduri, când nu e ocupat cu treburi gospodărești, petrece timpul în grădină sau în curte, pregătind mâncare pentru familia lui. Nu are multe pasiuni excesive, dar apreciază ordinea și calmele dintr-o zi obișnuită.",
+        "hobbies_list": [
+          "Citirea unor cărți simple",
+          "Ascultarea muzicii liniștite",
+          "Vizite la piața locală",
+          "Gospodărie casnică",
+          "Pregătirea mesei în weekend",
+          "Stare solo în spațiul personal"
+        ],
+        "career_goals": "Ion dorește să-și mențină locul de muncă și să continue să învețe din experiență, adaptându-se la schimbările din sistemul educațional. Așteaptă o ocazie de a-și îmbunătăți competențele profesionale, dar nu este dispus să facă modificări mari în viața sa actuală. Obiectivul său este să-și păstreze stabilitatea și să-și asigure siguranța financiară pentru familia sa.",
+        "behavioral_cues_summary": "Ion planifică activitățile cu anticipare, urmând o rutină stricte. Evită conflictele, dar le ruminează ulterior. Preferă să fie abordat în loc să inițieze contactele. Stresul îl face să insomnieze ocazional, dar reușește să-și gestioneze emoțiile prin dialog simplu cu alții. Alege echilibru între tradiție și noutate, iar interacțiunile sociale îl obosesc, deși le acceptă ca parte a vieții."
+      },
+      "personas": {
+        "persona": "Mirosul de zacuscă proaspăt gătită îi aduce aminte de diminețile din copilărie, când mama lui punea farfurii la cuptor înainte să plece la școală.",
+        "professional_persona": "Sâmbăta trecută, a fost la școală mai devreme ca de obicei, pentru a verifica listele de absență și să-și organizeze lecțiile pentru luni, dar totuși s-a simțit ușor obosit după ce a terminat.",
+        "sports_persona": "Preferă să stea pe terasa casei decât să meargă la sală, dar uneori se ducă la piață pe jos, doar ca să-și ia un pic de mișcare.",
+        "arts_persona": "Chiar dacă nu are timp pentru lucruri de artă, Ion citește zilnic o pagină dintr-un jurnal de memorii, numai ca să-și mențină mintea trează.",
+        "travel_persona": "În weekenduri, merge la Cahul doar când e sigur că va avea suficient timp să se întoarcă acasă, dar îi e greu să facă plăceri fără să planifice în avans.",
+        "culinary_persona": "Pretuiește zăcuscă de gogosari gătită de mămica lui, dar nu poate suporta mâncarea prea picantă sau excesiv de sărată."
+      },
+      "validation": {
+        "passed": true,
+        "checks": {
+          "trait_leak": {
+            "passed": true,
+            "found_words": []
+          },
+          "opening_variation": {
+            "passed": true,
+            "failing_indices": []
+          },
+          "pollyanna": {
+            "passed": true,
+            "friction_ratio": 5.095541401273885
+          },
+          "anchor_specificity": {
+            "passed": true,
+            "anchor_count": 2
+          }
+        },
+        "repairs": []
+      },
+      "passed_validation": true
+    },
+    {
+      "uuid": "afa77519-0ac0-4e43-99fe-8c561e4b1251",
+      "name": "Sofia Popescu",
+      "demographics": {
+        "age": 58,
+        "sex": "Feminin",
+        "occupation": "Ospătar",
+        "education_level": "Profesional/Tehnic",
+        "locality": "Dondușeni",
+        "district": "Drochia",
+        "region": "Nord"
+      },
+      "ocean_scores": {
+        "openness": 39,
+        "conscientiousness": 73,
+        "extraversion": 67,
+        "agreeableness": 62,
+        "neuroticism": 35
+      },
+      "behavioral_cues": "COMPORTAMENT OBSERVABIL (fără a menționa trăsături de personalitate):\n\n- Planificare: planifică cu săptămâni/luni în avans, liste și reminder-e\n- Rutină: rutină strictă, aceleași ore pentru masă/somn\n- Inițiere socială: contactează primul, propune ieșiri, inițiază conversații\n- Stil conflict: negociază pragmatic, dă și ia\n- Noutate: echilibrat între vechi și nou\n- Semnale stres: păstrează calm aparent, rezolvă pas cu pas\n- Decizii: cântărește pro/contra, se bazează pe experiență proprie\n- Energie socială: echilibrat, socializează dar are nevoie și de timp singur\n",
+      "constraints": [
+        "trebuie să ajute la gospodărie rurală",
+        "timp limitat între job și familie"
+      ],
+      "anchors": {
+        "place": "parcul Pușkin",
+        "routine": "borș de burechi"
+      },
+      "context": {},
+      "personas": {
+        "persona": "Mirosul de mătâlc și pâine proaspătă din bucătărie o trezește la ora 6:30, dar totuși își dorește mai mult timp în pat.",
+        "professional_persona": "Sâmbăta trecută, Sofia a pregătit un meniu complet pentru o întâlnire de familie, dar nu a reușit să-și ia ziua liberă după ce s-a răcit la cap.",
+        "sports_persona": "După turele lungi pe jos prin pădure, Sofia se oprește mereu la marginea drumului să-și ia un pic de aer, dar își dorește mai multă energie zilnică.",
+        "arts_persona": "Ține mult la caietele vechi cu note și recenzii, dar uneori îi e greu să le păstreze toate într-un singur loc.",
+        "travel_persona": "Deși a vizitat deja toate localitățile din apropiere, îi e greu să facă planuri noi fără să le verifice cu cineva înainte.",
+        "culinary_persona": "Preferă sosurile casnice și mâncarea gata de acasă, dar evită să se implice prea mult în prepararea altor feluri."
+      },
+      "validation": {
+        "passed": false,
+        "checks": {
+          "trait_leak": {
+            "passed": true,
+            "found_words": []
+          },
+          "opening_variation": {
+            "passed": true,
+            "failing_indices": []
+          },
+          "pollyanna": {
+            "passed": true,
+            "friction_ratio": 7.971014492753622
+          },
+          "anchor_specificity": {
+            "passed": false,
+            "anchor_count": 0
+          }
+        },
+        "repairs": [
+          {
+            "type": "weak_anchors",
+            "fields": [
+              "cultural_background",
+              "persona"
+            ],
+            "details": "Only 0 anchors found"
+          }
+        ]
+      },
+      "passed_validation": false
+    }
+  ]
+}

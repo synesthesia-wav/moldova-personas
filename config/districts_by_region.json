@@ -1,0 +1,47 @@
+{
+  "Chisinau": [
+    "Mun. Chisinau"
+  ],
+  "Nord": [
+    "Mun. Balti",
+    "Briceni",
+    "Donduseni",
+    "Drochia",
+    "Edinet",
+    "Falesti",
+    "Floresti",
+    "Glodeni",
+    "Ocnita",
+    "Riscani",
+    "Singerei",
+    "Soroca"
+  ],
+  "Centru": [
+    "Anenii Noi",
+    "Calarasi",
+    "Criuleni",
+    "Dubasari",
+    "Hincesti",
+    "Ialoveni",
+    "Nisporeni",
+    "Orhei",
+    "Rezina",
+    "Straseni",
+    "Soldanesti",
+    "Telenesti",
+    "Ungheni"
+  ],
+  "Sud": [
+    "Basarabeasca",
+    "Cahul",
+    "Cantemir",
+    "Causeni",
+    "Cimislia",
+    "Leova",
+    "Stefan Voda",
+    "Taraclia"
+  ],
+  "Gagauzia": [
+    "U.T.A. Gagauzia"
+  ]
+}

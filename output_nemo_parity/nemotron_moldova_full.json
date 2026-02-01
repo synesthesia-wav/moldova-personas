@@ -1,0 +1,5227 @@
+{
+  "metadata": {
+    "format": "Nemotron-Moldova-NeMo",
+    "version": "2.0.0",
+    "count": 100,
+    "schema": {
+      "ocean": "NeMo (t_score, label, description)",
+      "demographics": "NBS 2024 grounded",
+      "narrative": "Two-layer with OCEAN consistency"
+    }
+  },
+  "population_qa": {
+    "total_personas": 100,
+    "checks": {
+      "ocean_distributions": {},
+      "ocean_stability": {
+        "drift_detected": false,
+        "drifted_traits": [],
+        "stable_traits": [],
+        "overall_stable": true
+      }
+    },
+    "overall_acceptable": true
+  },
+  "personas": [
+    {
+      "uuid": "16dd32e5-e59f-458f-9cee-209eed363b96",
+      "name": "Alexandru Lungu",
+      "sex": "Masculin",
+      "age": 77,
+      "age_group": "65+",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Pensionar (fost: contabil)",
+      "region": "Centru",
+      "district": "Dubăsari",
+      "locality": "Șoldănești",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 27,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 42,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 42,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 48,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 7,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 27,
+        "conscientiousness": 42,
+        "extraversion": 42,
+        "agreeableness": 48,
+        "neuroticism": 7
+      }
+    },
+    {
+      "uuid": "4b45bba2-e98c-4e0d-90b0-9abd93f9c99c",
+      "name": "Maria Cazacu",
+      "sex": "Feminin",
+      "age": 68,
+      "age_group": "65+",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Pensionar (fost: muncitor)",
+      "region": "Centru",
+      "district": "Strășeni",
+      "locality": "Șoldănești",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 67,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 71,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 63,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 45,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 67,
+        "conscientiousness": 71,
+        "extraversion": 44,
+        "agreeableness": 63,
+        "neuroticism": 45
+      }
+    },
+    {
+      "uuid": "71556e87-dedb-4928-a712-dc33f898e9e0",
+      "name": "Nicolae Buza",
+      "sex": "Masculin",
+      "age": 85,
+      "age_group": "65+",
+      "marital_status": "Văduv",
+      "education_level": "Gimnazial",
+      "occupation": "Pensionar (fost: inginer)",
+      "region": "Gagauzia",
+      "district": "UTA Găgăuzia",
+      "locality": "Avdarma",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 20,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 52,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 47,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 49,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 42,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 20,
+        "conscientiousness": 52,
+        "extraversion": 47,
+        "agreeableness": 49,
+        "neuroticism": 42
+      }
+    },
+    {
+      "uuid": "510beec1-b985-40d8-9e28-4e8c8f9600f6",
+      "name": "Valentina Bologa",
+      "sex": "Feminin",
+      "age": 35,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Economist",
+      "region": "Centru",
+      "district": "Criuleni",
+      "locality": "Orhei",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 71,
+          "label": "high",
+          "description": "Curios, creativ, deschis la experiențe noi și idei abstracte"
+        },
+        "conscientiousness": {
+          "t_score": 68,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 35,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 37,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 47,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 71,
+        "conscientiousness": 68,
+        "extraversion": 35,
+        "agreeableness": 37,
+        "neuroticism": 47
+      }
+    },
+    {
+      "uuid": "5e140f0e-b2c0-40fb-876a-7a33a4ca90e0",
+      "name": "Cristina Radu",
+      "sex": "Feminin",
+      "age": 59,
+      "age_group": "55-64",
+      "marital_status": "Divorțat",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Consultant IT",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Român",
+      "religion": "Baptist",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 54,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 34,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 68,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 15,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 56,
+        "conscientiousness": 54,
+        "extraversion": 34,
+        "agreeableness": 68,
+        "neuroticism": 15
+      }
+    },
+    {
+      "uuid": "43b54557-c7de-49ea-90d9-ddd2237d3537",
+      "name": "Liubov Topal",
+      "sex": "Feminin",
+      "age": 78,
+      "age_group": "65+",
+      "marital_status": "Căsătorit",
+      "education_level": "Fără studii",
+      "occupation": "Meșteșugar",
+      "region": "Sud",
+      "district": "Cantemir",
+      "locality": "Cantemir",
+      "residence_type": "Rural",
+      "ethnicity": "Găgăuz",
+      "religion": "Musulman",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 43,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 29,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 43,
+        "conscientiousness": 61,
+        "extraversion": 57,
+        "agreeableness": 61,
+        "neuroticism": 29
+      }
+    },
+    {
+      "uuid": "900d77cc-97f2-4134-81e4-e54e27615ed1",
+      "name": "Andrii Boyko",
+      "sex": "Masculin",
+      "age": 42,
+      "age_group": "35-44",
+      "marital_status": "Necăsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Învățător",
+      "region": "Nord",
+      "district": "Mun. Bălți",
+      "locality": "Soroca",
+      "residence_type": "Urban",
+      "ethnicity": "Ucrainean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 47,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 71,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 32,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 15,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 51,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 47,
+        "conscientiousness": 71,
+        "extraversion": 32,
+        "agreeableness": 15,
+        "neuroticism": 51
+      }
+    },
+    {
+      "uuid": "a3ada23f-de0f-4351-930a-3e4f56f7a7f4",
+      "name": "Ion Melnic",
+      "sex": "Masculin",
+      "age": 35,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Profesor",
+      "region": "Centru",
+      "district": "Rezina",
+      "locality": "Nisporeni",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 66,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 60,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 72,
+          "label": "high",
+          "description": "Sociabil, energic, asertiv, caută stimulare externă"
+        },
+        "agreeableness": {
+          "t_score": 65,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 30,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 66,
+        "conscientiousness": 60,
+        "extraversion": 72,
+        "agreeableness": 65,
+        "neuroticism": 30
+      }
+    },
+    {
+      "uuid": "5b1e6bb4-0a61-412d-9f15-c586c68e25a4",
+      "name": "Gheorghe Rotaru",
+      "sex": "Masculin",
+      "age": 42,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Îngrijitor",
+      "region": "Centru",
+      "district": "Călărași",
+      "locality": "Șoldănești",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 66,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 46,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 74,
+          "label": "high",
+          "description": "Sociabil, energic, asertiv, caută stimulare externă"
+        },
+        "agreeableness": {
+          "t_score": 60,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 45,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 66,
+        "conscientiousness": 46,
+        "extraversion": 74,
+        "agreeableness": 60,
+        "neuroticism": 45
+      }
+    },
+    {
+      "uuid": "9a0bb4d5-ede0-45a4-bc28-35f0e076c6cd",
+      "name": "Oleksandr Kovalenko",
+      "sex": "Masculin",
+      "age": 39,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Tehnician",
+      "region": "Nord",
+      "district": "Dondușeni",
+      "locality": "Florești",
+      "residence_type": "Urban",
+      "ethnicity": "Ucrainean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 20,
+          "label": "low",
+          "description": "Spontan, preferă flexibilitatea și improvizația"
+        },
+        "extraversion": {
+          "t_score": 52,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 38,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 40,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 61,
+        "conscientiousness": 20,
+        "extraversion": 52,
+        "agreeableness": 38,
+        "neuroticism": 40
+      }
+    },
+    {
+      "uuid": "aeb6fd34-838d-4cea-b6ae-48ed6c9c4a1c",
+      "name": "Vitalie Balan",
+      "sex": "Masculin",
+      "age": 41,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Preot",
+      "region": "Centru",
+      "district": "Dubăsari",
+      "locality": "Criuleni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 80,
+          "label": "high",
+          "description": "Curios, creativ, deschis la experiențe noi și idei abstracte"
+        },
+        "conscientiousness": {
+          "t_score": 45,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 64,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 7,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 80,
+        "conscientiousness": 45,
+        "extraversion": 56,
+        "agreeableness": 64,
+        "neuroticism": 7
+      }
+    },
+    {
+      "uuid": "0a3d82ce-93a0-4d84-9a79-834d83730424",
+      "name": "Vlad Ilie",
+      "sex": "Masculin",
+      "age": 20,
+      "age_group": "18-24",
+      "marital_status": "Necăsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Economist",
+      "region": "Sud",
+      "district": "Taraclia",
+      "locality": "Cantemir",
+      "residence_type": "Urban",
+      "ethnicity": "Român",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 71,
+          "label": "high",
+          "description": "Curios, creativ, deschis la experiențe noi și idei abstracte"
+        },
+        "conscientiousness": {
+          "t_score": 64,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 52,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 31,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 71,
+        "conscientiousness": 64,
+        "extraversion": 55,
+        "agreeableness": 52,
+        "neuroticism": 31
+      }
+    },
+    {
+      "uuid": "3a8f004b-7b1e-4283-aec5-bedea14a5d8a",
+      "name": "Irina Ciobanu",
+      "sex": "Feminin",
+      "age": 49,
+      "age_group": "45-54",
+      "marital_status": "Separat",
+      "education_level": "Primar",
+      "occupation": "Asistent medical",
+      "region": "Nord",
+      "district": "Glodeni",
+      "locality": "Glodeni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 21,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 73,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 26,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 44,
+        "conscientiousness": 55,
+        "extraversion": 21,
+        "agreeableness": 73,
+        "neuroticism": 26
+      }
+    },
+    {
+      "uuid": "73118fc9-44a1-4665-9bfa-df12d43bb96b",
+      "name": "Dmytro Polishchuk",
+      "sex": "Masculin",
+      "age": 26,
+      "age_group": "25-34",
+      "marital_status": "Necăsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Paznic",
+      "region": "Nord",
+      "district": "Sîngerei",
+      "locality": "Briceni",
+      "residence_type": "Rural",
+      "ethnicity": "Ucrainean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 65,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 85,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 70,
+          "label": "high",
+          "description": "Sociabil, energic, asertiv, caută stimulare externă"
+        },
+        "agreeableness": {
+          "t_score": 66,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 30,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 65,
+        "conscientiousness": 85,
+        "extraversion": 70,
+        "agreeableness": 66,
+        "neuroticism": 30
+      }
+    },
+    {
+      "uuid": "761691be-0b50-4383-8f3a-9ce53a007d61",
+      "name": "Natalia Grosu",
+      "sex": "Feminin",
+      "age": 37,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Lăcătuș",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 40,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 41,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 32,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 50,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 55,
+        "conscientiousness": 40,
+        "extraversion": 41,
+        "agreeableness": 32,
+        "neuroticism": 50
+      }
+    },
+    {
+      "uuid": "c440de6f-ee36-4836-b074-1e5c7d2ef259",
+      "name": "Daria Morozov",
+      "sex": "Feminin",
+      "age": 77,
+      "age_group": "65+",
+      "marital_status": "Văduv",
+      "education_level": "Primar",
+      "occupation": "Pensionar (fost: medic)",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Durlești",
+      "residence_type": "Urban",
+      "ethnicity": "Rus",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 28,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 80,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 47,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 28,
+        "conscientiousness": 80,
+        "extraversion": 56,
+        "agreeableness": 55,
+        "neuroticism": 47
+      }
+    },
+    {
+      "uuid": "7749aa39-47d6-445b-a22a-36fd211d3177",
+      "name": "Radu Munteanu",
+      "sex": "Masculin",
+      "age": 87,
+      "age_group": "65+",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Pensionar (fost: muncitor)",
+      "region": "Nord",
+      "district": "Fălești",
+      "locality": "Ocnița",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 35,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 85,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 23,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 50,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 25,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 35,
+        "conscientiousness": 85,
+        "extraversion": 23,
+        "agreeableness": 50,
+        "neuroticism": 25
+      }
+    },
+    {
+      "uuid": "f2522f59-bf3c-40a4-8914-fbe06ab2160e",
+      "name": "Lidia Popa",
+      "sex": "Feminin",
+      "age": 36,
+      "age_group": "35-44",
+      "marital_status": "Văduv",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Vânzător",
+      "region": "Sud",
+      "district": "Taraclia",
+      "locality": "Basarabeasca",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 54,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 52,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 59,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 68,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 35,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 54,
+        "conscientiousness": 52,
+        "extraversion": 59,
+        "agreeableness": 68,
+        "neuroticism": 35
+      }
+    },
+    {
+      "uuid": "71713264-77b4-46db-8641-a3a2d84dd90c",
+      "name": "Vitalie Lungu",
+      "sex": "Masculin",
+      "age": 74,
+      "age_group": "65+",
+      "marital_status": "Văduv",
+      "education_level": "Gimnazial",
+      "occupation": "Lăcătuș",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 21,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 68,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 49,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 66,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 39,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 21,
+        "conscientiousness": 68,
+        "extraversion": 49,
+        "agreeableness": 66,
+        "neuroticism": 39
+      }
+    },
+    {
+      "uuid": "144cba47-ad5e-4d07-97b1-44e6509d21a8",
+      "name": "Tatiana Rotaru",
+      "sex": "Feminin",
+      "age": 48,
+      "age_group": "45-54",
+      "marital_status": "Căsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Farmacist",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Durlești",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 48,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 46,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 33,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 34,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 40,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 48,
+        "conscientiousness": 46,
+        "extraversion": 33,
+        "agreeableness": 34,
+        "neuroticism": 40
+      }
+    },
+    {
+      "uuid": "686c443c-6d1a-4b0f-a838-af5db3706a6a",
+      "name": "Galina Guțu",
+      "sex": "Feminin",
+      "age": 74,
+      "age_group": "65+",
+      "marital_status": "Divorțat",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Pensionar (fost: medic)",
+      "region": "Centru",
+      "district": "Ungheni",
+      "locality": "Telenești",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 64,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 36,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 78,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 36,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 57,
+        "conscientiousness": 64,
+        "extraversion": 36,
+        "agreeableness": 78,
+        "neuroticism": 36
+      }
+    },
+    {
+      "uuid": "2884ee50-802f-4fc7-a9b6-9cec1080336e",
+      "name": "Mihaela Donciu",
+      "sex": "Feminin",
+      "age": 84,
+      "age_group": "65+",
+      "marital_status": "Văduv",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Pensionar (fost: medic)",
+      "region": "Nord",
+      "district": "Mun. Bălți",
+      "locality": "Dondușeni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 64,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 80,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 35,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 42,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 38,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 64,
+        "conscientiousness": 80,
+        "extraversion": 35,
+        "agreeableness": 42,
+        "neuroticism": 38
+      }
+    },
+    {
+      "uuid": "0a350107-be1d-4856-a4e2-1d0c52a067b5",
+      "name": "Ecaterina Popa",
+      "sex": "Feminin",
+      "age": 59,
+      "age_group": "55-64",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Tehnician",
+      "region": "Sud",
+      "district": "Taraclia",
+      "locality": "Leova",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 62,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 89,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 59,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 62,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 62,
+        "conscientiousness": 89,
+        "extraversion": 59,
+        "agreeableness": 62,
+        "neuroticism": 61
+      }
+    },
+    {
+      "uuid": "5891866a-1d90-4cff-9612-3ef920d3321e",
+      "name": "Ghenadie Ciobanu",
+      "sex": "Masculin",
+      "age": 75,
+      "age_group": "65+",
+      "marital_status": "Văduv",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Pensionar (fost: medic)",
+      "region": "Centru",
+      "district": "Criuleni",
+      "locality": "Criuleni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 83,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 49,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 63,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 52,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 56,
+        "conscientiousness": 83,
+        "extraversion": 49,
+        "agreeableness": 63,
+        "neuroticism": 52
+      }
+    },
+    {
+      "uuid": "f0fc8dfd-93c4-436f-a0a9-37ff1b72375d",
+      "name": "Irina Lungu",
+      "sex": "Feminin",
+      "age": 40,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Contabil",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 60,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 34,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 62,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 60,
+        "conscientiousness": 44,
+        "extraversion": 55,
+        "agreeableness": 34,
+        "neuroticism": 62
+      }
+    },
+    {
+      "uuid": "f9cfc747-a302-45df-b2ba-6a00462be274",
+      "name": "Natalia Ivanov",
+      "sex": "Feminin",
+      "age": 58,
+      "age_group": "55-64",
+      "marital_status": "Separat",
+      "education_level": "Liceal",
+      "occupation": "Croitoreasă",
+      "region": "Gagauzia",
+      "district": "UTA Găgăuzia",
+      "locality": "Vulcănești",
+      "residence_type": "Urban",
+      "ethnicity": "Rus",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 75,
+          "label": "high",
+          "description": "Curios, creativ, deschis la experiențe noi și idei abstracte"
+        },
+        "conscientiousness": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 100,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 41,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 75,
+        "conscientiousness": 56,
+        "extraversion": 44,
+        "agreeableness": 100,
+        "neuroticism": 41
+      }
+    },
+    {
+      "uuid": "444fe75e-f2d4-486e-8be5-97c60fee4d4b",
+      "name": "Nicolae Cojocari",
+      "sex": "Masculin",
+      "age": 26,
+      "age_group": "25-34",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Instalator",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Durlești",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 45,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 68,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 78,
+          "label": "high",
+          "description": "Sociabil, energic, asertiv, caută stimulare externă"
+        },
+        "agreeableness": {
+          "t_score": 50,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 47,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 45,
+        "conscientiousness": 68,
+        "extraversion": 78,
+        "agreeableness": 50,
+        "neuroticism": 47
+      }
+    },
+    {
+      "uuid": "f6a8f1ff-29e5-4067-a4f5-756e1ea2f365",
+      "name": "Dumitru Rotaru",
+      "sex": "Masculin",
+      "age": 49,
+      "age_group": "45-54",
+      "marital_status": "Căsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Profesor",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Durlești",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 70,
+          "label": "high",
+          "description": "Curios, creativ, deschis la experiențe noi și idei abstracte"
+        },
+        "conscientiousness": {
+          "t_score": 60,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 50,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 43,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 36,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 70,
+        "conscientiousness": 60,
+        "extraversion": 50,
+        "agreeableness": 43,
+        "neuroticism": 36
+      }
+    },
+    {
+      "uuid": "b2223bc0-d6d9-4c93-aee8-945668fcb767",
+      "name": "Valentina Bologa",
+      "sex": "Feminin",
+      "age": 22,
+      "age_group": "18-24",
+      "marital_status": "Necăsătorit",
+      "education_level": "Liceal",
+      "occupation": "Asistent medical",
+      "region": "Nord",
+      "district": "Soroca",
+      "locality": "Dondușeni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 18,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 54,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 57,
+        "conscientiousness": 44,
+        "extraversion": 18,
+        "agreeableness": 55,
+        "neuroticism": 54
+      }
+    },
+    {
+      "uuid": "23c25d67-912a-43b7-aa97-b4ce76fadef8",
+      "name": "Elena Popa",
+      "sex": "Feminin",
+      "age": 29,
+      "age_group": "25-34",
+      "marital_status": "Necăsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Preot",
+      "region": "Centru",
+      "district": "Călărași",
+      "locality": "Anenii Noi",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 51,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 48,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 27,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 53,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 35,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 51,
+        "conscientiousness": 48,
+        "extraversion": 27,
+        "agreeableness": 53,
+        "neuroticism": 35
+      }
+    },
+    {
+      "uuid": "b2b3a552-850d-4f89-b4c7-2316255c9ae4",
+      "name": "Oleg Buza",
+      "sex": "Masculin",
+      "age": 59,
+      "age_group": "55-64",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Șofer",
+      "region": "Centru",
+      "district": "Nisporeni",
+      "locality": "Orhei",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 42,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 59,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 61,
+        "conscientiousness": 56,
+        "extraversion": 42,
+        "agreeableness": 59,
+        "neuroticism": 56
+      }
+    },
+    {
+      "uuid": "0bcc03b5-e2b1-4e6e-9b3e-748a0aa343f6",
+      "name": "Boris Gheorghe",
+      "sex": "Masculin",
+      "age": 48,
+      "age_group": "45-54",
+      "marital_status": "Necăsătorit",
+      "education_level": "Liceal",
+      "occupation": "Fermier",
+      "region": "Sud",
+      "district": "Cantemir",
+      "locality": "Taraclia",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 67,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 50,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 51,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 49,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 38,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 67,
+        "conscientiousness": 50,
+        "extraversion": 51,
+        "agreeableness": 49,
+        "neuroticism": 38
+      }
+    },
+    {
+      "uuid": "53af4f19-37bd-4523-89dc-1c087c107928",
+      "name": "Ludmila Gheorghe",
+      "sex": "Feminin",
+      "age": 52,
+      "age_group": "45-54",
+      "marital_status": "Separat",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Fermier",
+      "region": "Nord",
+      "district": "Florești",
+      "locality": "Glodeni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 62,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 74,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 56,
+        "conscientiousness": 62,
+        "extraversion": 44,
+        "agreeableness": 74,
+        "neuroticism": 44
+      }
+    },
+    {
+      "uuid": "eb9b6677-efa1-4251-b8e3-fbbddf9ecc57",
+      "name": "Svetlana Balan",
+      "sex": "Feminin",
+      "age": 50,
+      "age_group": "45-54",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Fermier",
+      "region": "Centru",
+      "district": "Nisporeni",
+      "locality": "Criuleni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 43,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 75,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 59,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 68,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 43,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 43,
+        "conscientiousness": 75,
+        "extraversion": 59,
+        "agreeableness": 68,
+        "neuroticism": 43
+      }
+    },
+    {
+      "uuid": "b7c0639e-6d62-4d52-b4c8-5fbeeb882e49",
+      "name": "Constantin Rotaru",
+      "sex": "Masculin",
+      "age": 48,
+      "age_group": "45-54",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Agricultor",
+      "region": "Nord",
+      "district": "Drochia",
+      "locality": "Rîșcani",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 28,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 58,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 51,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 29,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 28,
+        "conscientiousness": 58,
+        "extraversion": 61,
+        "agreeableness": 51,
+        "neuroticism": 29
+      }
+    },
+    {
+      "uuid": "b67957ff-c3f7-4966-824e-83104dc65f4f",
+      "name": "Ana Cojocaru",
+      "sex": "Feminin",
+      "age": 79,
+      "age_group": "65+",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Pensionar (fost: inginer)",
+      "region": "Nord",
+      "district": "Sîngerei",
+      "locality": "Soroca",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 54,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 82,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 41,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 67,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 37,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 54,
+        "conscientiousness": 82,
+        "extraversion": 41,
+        "agreeableness": 67,
+        "neuroticism": 37
+      }
+    },
+    {
+      "uuid": "ea6ae033-919d-494f-b762-62beb3f61c8b",
+      "name": "Rodica Gheorghe",
+      "sex": "Feminin",
+      "age": 28,
+      "age_group": "25-34",
+      "marital_status": "Necăsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Muncitor agricol",
+      "region": "Sud",
+      "district": "Cahul",
+      "locality": "Cantemir",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 66,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 41,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 45,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 77,
+          "label": "high",
+          "description": "Emoțional, anxios, sensibil la stres, precaut"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 66,
+        "conscientiousness": 41,
+        "extraversion": 45,
+        "agreeableness": 55,
+        "neuroticism": 77
+      }
+    },
+    {
+      "uuid": "e59f24f0-ff15-44ff-8170-d12322be361b",
+      "name": "Roman Popov",
+      "sex": "Masculin",
+      "age": 36,
+      "age_group": "35-44",
+      "marital_status": "Necăsătorit",
+      "education_level": "Liceal",
+      "occupation": "Ospătar",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Rus",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 53,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 43,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 59,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 43,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 41,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 53,
+        "conscientiousness": 43,
+        "extraversion": 59,
+        "agreeableness": 43,
+        "neuroticism": 41
+      }
+    },
+    {
+      "uuid": "bb9a05a4-d23d-4887-8bbd-48857ea3ec76",
+      "name": "Vasile Donciu",
+      "sex": "Masculin",
+      "age": 59,
+      "age_group": "55-64",
+      "marital_status": "Văduv",
+      "education_level": "Primar",
+      "occupation": "Preot",
+      "region": "Centru",
+      "district": "Criuleni",
+      "locality": "Șoldănești",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 49,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 98,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 75,
+          "label": "high",
+          "description": "Sociabil, energic, asertiv, caută stimulare externă"
+        },
+        "agreeableness": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 51,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 49,
+        "conscientiousness": 98,
+        "extraversion": 75,
+        "agreeableness": 56,
+        "neuroticism": 51
+      }
+    },
+    {
+      "uuid": "b7ed6a8f-3dc5-4c23-92da-6fd784dc2525",
+      "name": "Daria Alexeev",
+      "sex": "Feminin",
+      "age": 40,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Farmacist",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Rus",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 58,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 69,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 66,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 89,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 24,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 58,
+        "conscientiousness": 69,
+        "extraversion": 66,
+        "agreeableness": 89,
+        "neuroticism": 24
+      }
+    },
+    {
+      "uuid": "f08af973-3b2a-4436-a3d8-b4d8284c1767",
+      "name": "Serghei Rotaru",
+      "sex": "Masculin",
+      "age": 70,
+      "age_group": "65+",
+      "marital_status": "Văduv",
+      "education_level": "Doctorat",
+      "occupation": "Tâmplar",
+      "region": "Sud",
+      "district": "Leova",
+      "locality": "Taraclia",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 70,
+          "label": "high",
+          "description": "Curios, creativ, deschis la experiențe noi și idei abstracte"
+        },
+        "conscientiousness": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 62,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 54,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 53,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 70,
+        "conscientiousness": 57,
+        "extraversion": 62,
+        "agreeableness": 54,
+        "neuroticism": 53
+      }
+    },
+    {
+      "uuid": "2972ed1f-3edf-422d-a672-4b632a39de16",
+      "name": "Tatiana Cojocari",
+      "sex": "Feminin",
+      "age": 61,
+      "age_group": "55-64",
+      "marital_status": "Căsătorit",
+      "education_level": "Primar",
+      "occupation": "Vânzător",
+      "region": "Sud",
+      "district": "Cahul",
+      "locality": "Cimișlia",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 46,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 63,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 68,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 38,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 52,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 46,
+        "conscientiousness": 63,
+        "extraversion": 68,
+        "agreeableness": 38,
+        "neuroticism": 52
+      }
+    },
+    {
+      "uuid": "1d341694-ebbe-4914-8723-c2da15448fd4",
+      "name": "Viorica Ciobanu",
+      "sex": "Feminin",
+      "age": 30,
+      "age_group": "25-34",
+      "marital_status": "Necăsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Psiholog",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 42,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 47,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 69,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 56,
+        "conscientiousness": 42,
+        "extraversion": 47,
+        "agreeableness": 69,
+        "neuroticism": 57
+      }
+    },
+    {
+      "uuid": "57fa2d2c-deaa-4831-beaf-7e20cc786a2c",
+      "name": "Ion Melnic",
+      "sex": "Masculin",
+      "age": 46,
+      "age_group": "45-54",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Coafor",
+      "region": "Nord",
+      "district": "Florești",
+      "locality": "Fălești",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 54,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 33,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 81,
+          "label": "high",
+          "description": "Emoțional, anxios, sensibil la stres, precaut"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 55,
+        "conscientiousness": 54,
+        "extraversion": 33,
+        "agreeableness": 56,
+        "neuroticism": 81
+      }
+    },
+    {
+      "uuid": "55fbc3f7-4da7-444e-8eac-8df0ec1c817b",
+      "name": "Maria Sandu",
+      "sex": "Feminin",
+      "age": 79,
+      "age_group": "65+",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Bucătar",
+      "region": "Centru",
+      "district": "Ungheni",
+      "locality": "Strășeni",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 33,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 82,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 82,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 45,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 33,
+        "conscientiousness": 82,
+        "extraversion": 44,
+        "agreeableness": 82,
+        "neuroticism": 45
+      }
+    },
+    {
+      "uuid": "a2473df7-c219-4401-bc77-357b1f3e93d3",
+      "name": "Grigore Popa",
+      "sex": "Masculin",
+      "age": 85,
+      "age_group": "65+",
+      "marital_status": "Văduv",
+      "education_level": "Gimnazial",
+      "occupation": "Pensionar (fost: contabil)",
+      "region": "Sud",
+      "district": "Leova",
+      "locality": "Basarabeasca",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 37,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 74,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 27,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 45,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 26,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 37,
+        "conscientiousness": 74,
+        "extraversion": 27,
+        "agreeableness": 45,
+        "neuroticism": 26
+      }
+    },
+    {
+      "uuid": "8f2c3a86-c2ed-425d-8949-453ae804a3b3",
+      "name": "Mariana Rusu",
+      "sex": "Feminin",
+      "age": 27,
+      "age_group": "25-34",
+      "marital_status": "Separat",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Învățător",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 75,
+          "label": "high",
+          "description": "Curios, creativ, deschis la experiențe noi și idei abstracte"
+        },
+        "conscientiousness": {
+          "t_score": 47,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 47,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 67,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 66,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 75,
+        "conscientiousness": 47,
+        "extraversion": 47,
+        "agreeableness": 67,
+        "neuroticism": 66
+      }
+    },
+    {
+      "uuid": "55cc5038-861e-43c1-b9bd-3ca1276ca87c",
+      "name": "Andrei Rotaru",
+      "sex": "Masculin",
+      "age": 74,
+      "age_group": "65+",
+      "marital_status": "Văduv",
+      "education_level": "Gimnazial",
+      "occupation": "Asistent medical",
+      "region": "Centru",
+      "district": "Rezina",
+      "locality": "Anenii Noi",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 48,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 48,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 66,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 21,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 48,
+        "conscientiousness": 61,
+        "extraversion": 48,
+        "agreeableness": 66,
+        "neuroticism": 21
+      }
+    },
+    {
+      "uuid": "acf93bc9-5fa6-4ef2-ba6c-36de8e1c3391",
+      "name": "Petru Cojocaru",
+      "sex": "Masculin",
+      "age": 42,
+      "age_group": "35-44",
+      "marital_status": "Divorțat",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Asistent medical",
+      "region": "Centru",
+      "district": "Nisporeni",
+      "locality": "Strășeni",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 59,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 62,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 33,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 65,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 59,
+        "conscientiousness": 62,
+        "extraversion": 33,
+        "agreeableness": 55,
+        "neuroticism": 65
+      }
+    },
+    {
+      "uuid": "d2640f87-58b1-4158-93c4-dc683f57978e",
+      "name": "Ana Chirila",
+      "sex": "Feminin",
+      "age": 67,
+      "age_group": "65+",
+      "marital_status": "Văduv",
+      "education_level": "Fără studii",
+      "occupation": "Pensionar (fost: contabil)",
+      "region": "Centru",
+      "district": "Nisporeni",
+      "locality": "Anenii Noi",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 45,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 65,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 62,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 69,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 32,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 45,
+        "conscientiousness": 65,
+        "extraversion": 62,
+        "agreeableness": 69,
+        "neuroticism": 32
+      }
+    },
+    {
+      "uuid": "0560cd8f-47d0-457d-af57-365156e777cc",
+      "name": "Lidia Ursu",
+      "sex": "Feminin",
+      "age": 56,
+      "age_group": "55-64",
+      "marital_status": "Căsătorit",
+      "education_level": "Primar",
+      "occupation": "Vânzător",
+      "region": "Centru",
+      "district": "Rezina",
+      "locality": "Anenii Noi",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 41,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 51,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 39,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 65,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 41,
+        "conscientiousness": 51,
+        "extraversion": 39,
+        "agreeableness": 65,
+        "neuroticism": 44
+      }
+    },
+    {
+      "uuid": "b78921ed-89f9-4782-8325-3f86344f1b4b",
+      "name": "Sergiu Cazac",
+      "sex": "Masculin",
+      "age": 18,
+      "age_group": "18-24",
+      "marital_status": "Necăsătorit",
+      "education_level": "Liceal",
+      "occupation": "Asistent medical",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 52,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 47,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 65,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 44,
+        "conscientiousness": 52,
+        "extraversion": 47,
+        "agreeableness": 55,
+        "neuroticism": 65
+      }
+    },
+    {
+      "uuid": "316ff147-2e55-42df-8250-f8d3fa3f1e32",
+      "name": "Serghei Donciu",
+      "sex": "Masculin",
+      "age": 84,
+      "age_group": "65+",
+      "marital_status": "Văduv",
+      "education_level": "Primar",
+      "occupation": "Tâmplar",
+      "region": "Centru",
+      "district": "Orhei",
+      "locality": "Criuleni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 51,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 85,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 75,
+          "label": "high",
+          "description": "Sociabil, energic, asertiv, caută stimulare externă"
+        },
+        "agreeableness": {
+          "t_score": 71,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 65,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 51,
+        "conscientiousness": 85,
+        "extraversion": 75,
+        "agreeableness": 71,
+        "neuroticism": 65
+      }
+    },
+    {
+      "uuid": "5fcd7bea-0b68-47f4-b486-dad45abf3d39",
+      "name": "Grigore Rusu",
+      "sex": "Masculin",
+      "age": 75,
+      "age_group": "65+",
+      "marital_status": "Văduv",
+      "education_level": "Liceal",
+      "occupation": "Pensionar (fost: medic)",
+      "region": "Nord",
+      "district": "Mun. Bălți",
+      "locality": "Glodeni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 67,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 90,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 63,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 83,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 43,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 67,
+        "conscientiousness": 90,
+        "extraversion": 63,
+        "agreeableness": 83,
+        "neuroticism": 43
+      }
+    },
+    {
+      "uuid": "dc160c85-7d8b-452b-a3d0-244f7bc7295a",
+      "name": "Sergiu Rusu",
+      "sex": "Masculin",
+      "age": 47,
+      "age_group": "45-54",
+      "marital_status": "Necăsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Fermier",
+      "region": "Sud",
+      "district": "Cantemir",
+      "locality": "Leova",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 40,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 39,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 48,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 36,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 40,
+        "conscientiousness": 61,
+        "extraversion": 39,
+        "agreeableness": 48,
+        "neuroticism": 36
+      }
+    },
+    {
+      "uuid": "21676c2b-8097-4344-b7e1-2534e77993bd",
+      "name": "Galina Ciobanu",
+      "sex": "Feminin",
+      "age": 30,
+      "age_group": "25-34",
+      "marital_status": "Separat",
+      "education_level": "Primar",
+      "occupation": "Ospătar",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 65,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 48,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 66,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 57,
+        "conscientiousness": 65,
+        "extraversion": 61,
+        "agreeableness": 48,
+        "neuroticism": 66
+      }
+    },
+    {
+      "uuid": "ed1cf7b6-10f2-4185-825e-80e4502c3d57",
+      "name": "Adrian Bologa",
+      "sex": "Masculin",
+      "age": 38,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Liceal",
+      "occupation": "Tâmplar",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 27,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 87,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 91,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 40,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 27,
+        "conscientiousness": 87,
+        "extraversion": 44,
+        "agreeableness": 91,
+        "neuroticism": 40
+      }
+    },
+    {
+      "uuid": "ede0f917-ea94-4c39-b1f3-b12f4957e6d6",
+      "name": "Viorica Ciobanu",
+      "sex": "Feminin",
+      "age": 39,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Zidar",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 41,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 60,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 38,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 35,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 52,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 41,
+        "conscientiousness": 60,
+        "extraversion": 38,
+        "agreeableness": 35,
+        "neuroticism": 52
+      }
+    },
+    {
+      "uuid": "7dcdbb60-138c-4321-9a48-448b4b1de385",
+      "name": "Lidia Popa",
+      "sex": "Feminin",
+      "age": 39,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Învățător",
+      "region": "Centru",
+      "district": "Călărași",
+      "locality": "Criuleni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 69,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 52,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 45,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 69,
+        "conscientiousness": 57,
+        "extraversion": 52,
+        "agreeableness": 45,
+        "neuroticism": 61
+      }
+    },
+    {
+      "uuid": "9c28219f-687d-4558-ab0b-d0fd219be941",
+      "name": "Tamara Ursu",
+      "sex": "Feminin",
+      "age": 32,
+      "age_group": "25-34",
+      "marital_status": "Necăsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Profesor",
+      "region": "Sud",
+      "district": "Basarabeasca",
+      "locality": "Basarabeasca",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 59,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 58,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 53,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 62,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 30,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 59,
+        "conscientiousness": 58,
+        "extraversion": 53,
+        "agreeableness": 62,
+        "neuroticism": 30
+      }
+    },
+    {
+      "uuid": "abd7fc30-605d-4e2c-abb0-85afb8aa2a3d",
+      "name": "Cristina Cebotari",
+      "sex": "Feminin",
+      "age": 59,
+      "age_group": "55-64",
+      "marital_status": "Divorțat",
+      "education_level": "Liceal",
+      "occupation": "Bucătar",
+      "region": "Nord",
+      "district": "Mun. Bălți",
+      "locality": "Fălești",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 21,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 58,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 76,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 54,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 21,
+        "conscientiousness": 61,
+        "extraversion": 58,
+        "agreeableness": 76,
+        "neuroticism": 54
+      }
+    },
+    {
+      "uuid": "44fcbdbe-6379-49ae-803a-e32355ec2594",
+      "name": "Valeriu Cazacu",
+      "sex": "Masculin",
+      "age": 27,
+      "age_group": "25-34",
+      "marital_status": "Căsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Arhitect",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 46,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 48,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 49,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 46,
+        "conscientiousness": 48,
+        "extraversion": 49,
+        "agreeableness": 57,
+        "neuroticism": 44
+      }
+    },
+    {
+      "uuid": "8d59e840-d11b-4e76-9b11-f80f69758a2e",
+      "name": "Irina Popa",
+      "sex": "Feminin",
+      "age": 79,
+      "age_group": "65+",
+      "marital_status": "Văduv",
+      "education_level": "Gimnazial",
+      "occupation": "Pensionar (fost: inginer)",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 53,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 86,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 63,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 29,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 53,
+        "conscientiousness": 86,
+        "extraversion": 63,
+        "agreeableness": 57,
+        "neuroticism": 29
+      }
+    },
+    {
+      "uuid": "3f65eac9-2a14-4060-a87f-740eeb0332cb",
+      "name": "Elena Curcă",
+      "sex": "Feminin",
+      "age": 37,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Croitoreasă",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 58,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 72,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 46,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 34,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 71,
+          "label": "high",
+          "description": "Emoțional, anxios, sensibil la stres, precaut"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 58,
+        "conscientiousness": 72,
+        "extraversion": 46,
+        "agreeableness": 34,
+        "neuroticism": 71
+      }
+    },
+    {
+      "uuid": "abfc896c-aac1-470d-9643-a2765a1add8b",
+      "name": "Oleg Sandu",
+      "sex": "Masculin",
+      "age": 72,
+      "age_group": "65+",
+      "marital_status": "Căsătorit",
+      "education_level": "Doctorat",
+      "occupation": "Pensionar (fost: medic)",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 50,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 90,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 59,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 69,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 32,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 50,
+        "conscientiousness": 90,
+        "extraversion": 59,
+        "agreeableness": 69,
+        "neuroticism": 32
+      }
+    },
+    {
+      "uuid": "fbfb8228-5568-467d-88f2-39f4eaaa3e48",
+      "name": "Nikolai Topal",
+      "sex": "Masculin",
+      "age": 35,
+      "age_group": "35-44",
+      "marital_status": "Divorțat",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Paznic",
+      "region": "Gagauzia",
+      "district": "UTA Găgăuzia",
+      "locality": "Beșalma",
+      "residence_type": "Rural",
+      "ethnicity": "Găgăuz",
+      "religion": "Musulman",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 68,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 53,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 39,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 28,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 68,
+        "conscientiousness": 53,
+        "extraversion": 39,
+        "agreeableness": 28,
+        "neuroticism": 44
+      }
+    },
+    {
+      "uuid": "490e5c5c-5e98-4f07-ba02-a14f7d677746",
+      "name": "Petr Cvasniuc",
+      "sex": "Masculin",
+      "age": 63,
+      "age_group": "55-64",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Învățător",
+      "region": "Gagauzia",
+      "district": "UTA Găgăuzia",
+      "locality": "Avdarma",
+      "residence_type": "Rural",
+      "ethnicity": "Găgăuz",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 66,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 69,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 29,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 36,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 30,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 66,
+        "conscientiousness": 69,
+        "extraversion": 29,
+        "agreeableness": 36,
+        "neuroticism": 30
+      }
+    },
+    {
+      "uuid": "5611940c-96f7-4832-bac9-d41160c9d9fe",
+      "name": "Andrei Popa",
+      "sex": "Masculin",
+      "age": 59,
+      "age_group": "55-64",
+      "marital_status": "Căsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Psiholog",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Durlești",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 45,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 75,
+          "label": "high",
+          "description": "Sociabil, energic, asertiv, caută stimulare externă"
+        },
+        "agreeableness": {
+          "t_score": 80,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 34,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 45,
+        "conscientiousness": 57,
+        "extraversion": 75,
+        "agreeableness": 80,
+        "neuroticism": 34
+      }
+    },
+    {
+      "uuid": "bfe76a18-faec-42e1-8cfe-39c9300839ff",
+      "name": "Ion Cazac",
+      "sex": "Masculin",
+      "age": 84,
+      "age_group": "65+",
+      "marital_status": "Necăsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Vânzător",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 38,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 65,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 59,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 53,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 21,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 38,
+        "conscientiousness": 65,
+        "extraversion": 59,
+        "agreeableness": 53,
+        "neuroticism": 21
+      }
+    },
+    {
+      "uuid": "0f94e5af-26f3-4a91-bf29-e0508e931022",
+      "name": "Ana Munteanu",
+      "sex": "Feminin",
+      "age": 48,
+      "age_group": "45-54",
+      "marital_status": "Căsătorit",
+      "education_level": "Liceal",
+      "occupation": "Îngrijitor",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 51,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 72,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 38,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 74,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 26,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 51,
+        "conscientiousness": 72,
+        "extraversion": 38,
+        "agreeableness": 74,
+        "neuroticism": 26
+      }
+    },
+    {
+      "uuid": "d075ca65-4ae6-42f7-9dc9-1a6ded985bb5",
+      "name": "Irina Balan",
+      "sex": "Feminin",
+      "age": 18,
+      "age_group": "18-24",
+      "marital_status": "Necăsătorit",
+      "education_level": "Liceal",
+      "occupation": "Student",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Durlești",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 50,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 49,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 12,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 82,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 65,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 50,
+        "conscientiousness": 49,
+        "extraversion": 12,
+        "agreeableness": 82,
+        "neuroticism": 65
+      }
+    },
+    {
+      "uuid": "a6ac038d-4e11-40ec-8868-2994bc23f8b9",
+      "name": "Lidia Cojocari",
+      "sex": "Feminin",
+      "age": 31,
+      "age_group": "25-34",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Croitoreasă",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 60,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 60,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 41,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 50,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 67,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 60,
+        "conscientiousness": 60,
+        "extraversion": 41,
+        "agreeableness": 50,
+        "neuroticism": 67
+      }
+    },
+    {
+      "uuid": "b2526f29-28a9-4e30-91e2-490d8405f9c8",
+      "name": "Veronica Cercheș",
+      "sex": "Feminin",
+      "age": 56,
+      "age_group": "55-64",
+      "marital_status": "Necăsătorit",
+      "education_level": "Liceal",
+      "occupation": "Paznic",
+      "region": "Nord",
+      "district": "Mun. Bălți",
+      "locality": "Dondușeni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 40,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 65,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 37,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 54,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 48,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 40,
+        "conscientiousness": 65,
+        "extraversion": 37,
+        "agreeableness": 54,
+        "neuroticism": 48
+      }
+    },
+    {
+      "uuid": "860220da-be9a-4320-8532-38db1e839311",
+      "name": "Victor Balan",
+      "sex": "Masculin",
+      "age": 80,
+      "age_group": "65+",
+      "marital_status": "Necăsătorit",
+      "education_level": "Doctorat",
+      "occupation": "Ospătar",
+      "region": "Nord",
+      "district": "Dondușeni",
+      "locality": "Glodeni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 47,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 48,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 18,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 61,
+        "conscientiousness": 47,
+        "extraversion": 44,
+        "agreeableness": 48,
+        "neuroticism": 18
+      }
+    },
+    {
+      "uuid": "165edddb-1bc9-466e-9d1e-faaef8c92b2e",
+      "name": "Elena Ivanov",
+      "sex": "Feminin",
+      "age": 27,
+      "age_group": "25-34",
+      "marital_status": "Necăsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Asistent social",
+      "region": "Gagauzia",
+      "district": "UTA Găgăuzia",
+      "locality": "Vulcănești",
+      "residence_type": "Urban",
+      "ethnicity": "Găgăuz",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 39,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 68,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 49,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 39,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 68,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 39,
+        "conscientiousness": 68,
+        "extraversion": 49,
+        "agreeableness": 39,
+        "neuroticism": 68
+      }
+    },
+    {
+      "uuid": "b68bce32-8a14-4c08-862e-3a98e78d0ccf",
+      "name": "Gheorghe Ursu",
+      "sex": "Masculin",
+      "age": 57,
+      "age_group": "55-64",
+      "marital_status": "Căsătorit",
+      "education_level": "Liceal",
+      "occupation": "Zidar",
+      "region": "Nord",
+      "district": "Ocnița",
+      "locality": "Bălți",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 29,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 41,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 67,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 31,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 29,
+        "conscientiousness": 44,
+        "extraversion": 41,
+        "agreeableness": 67,
+        "neuroticism": 31
+      }
+    },
+    {
+      "uuid": "71b70f05-eafe-40ab-9cf5-93ee1351bedd",
+      "name": "Ecaterina Cercheș",
+      "sex": "Feminin",
+      "age": 38,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Instalator",
+      "region": "Sud",
+      "district": "Taraclia",
+      "locality": "Leova",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 30,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 35,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 77,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 30,
+        "conscientiousness": 61,
+        "extraversion": 35,
+        "agreeableness": 77,
+        "neuroticism": 56
+      }
+    },
+    {
+      "uuid": "0dda6e35-facc-4785-8484-764531eb9f98",
+      "name": "Andrei Balan",
+      "sex": "Masculin",
+      "age": 49,
+      "age_group": "45-54",
+      "marital_status": "Căsătorit",
+      "education_level": "Primar",
+      "occupation": "Lăcătuș",
+      "region": "Nord",
+      "district": "Fălești",
+      "locality": "Dondușeni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 71,
+          "label": "high",
+          "description": "Sociabil, energic, asertiv, caută stimulare externă"
+        },
+        "agreeableness": {
+          "t_score": 80,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 30,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 44,
+        "conscientiousness": 61,
+        "extraversion": 71,
+        "agreeableness": 80,
+        "neuroticism": 30
+      }
+    },
+    {
+      "uuid": "ad61bc4a-5ef1-43ce-beb2-8e42a85e56dc",
+      "name": "Vasile Cara",
+      "sex": "Masculin",
+      "age": 63,
+      "age_group": "55-64",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Pensionar (fost: profesor)",
+      "region": "Centru",
+      "district": "Criuleni",
+      "locality": "Șoldănești",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 72,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 72,
+          "label": "high",
+          "description": "Sociabil, energic, asertiv, caută stimulare externă"
+        },
+        "agreeableness": {
+          "t_score": 59,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 26,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 55,
+        "conscientiousness": 72,
+        "extraversion": 72,
+        "agreeableness": 59,
+        "neuroticism": 26
+      }
+    },
+    {
+      "uuid": "799b94a1-d74b-4130-98a3-9dfbaeb15c70",
+      "name": "Georgi Jardan",
+      "sex": "Masculin",
+      "age": 75,
+      "age_group": "65+",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Tâmplar",
+      "region": "Gagauzia",
+      "district": "UTA Găgăuzia",
+      "locality": "Vulcănești",
+      "residence_type": "Urban",
+      "ethnicity": "Găgăuz",
+      "religion": "Musulman",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 66,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 62,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 78,
+          "label": "high",
+          "description": "Sociabil, energic, asertiv, caută stimulare externă"
+        },
+        "agreeableness": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 31,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 66,
+        "conscientiousness": 62,
+        "extraversion": 78,
+        "agreeableness": 56,
+        "neuroticism": 31
+      }
+    },
+    {
+      "uuid": "3a46bc5d-ad56-48d3-ab99-f678940441a0",
+      "name": "Lidia Popa",
+      "sex": "Feminin",
+      "age": 41,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Croitoreasă",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Durlești",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 46,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 54,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 67,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 33,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 46,
+        "conscientiousness": 54,
+        "extraversion": 67,
+        "agreeableness": 33,
+        "neuroticism": 44
+      }
+    },
+    {
+      "uuid": "9d2471e8-cbec-4d75-81fe-a78b87a1c7eb",
+      "name": "Natalia Esir",
+      "sex": "Feminin",
+      "age": 46,
+      "age_group": "45-54",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Electrician",
+      "region": "Gagauzia",
+      "district": "UTA Găgăuzia",
+      "locality": "Comrat",
+      "residence_type": "Urban",
+      "ethnicity": "Găgăuz",
+      "religion": "Musulman",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 40,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 95,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 83,
+          "label": "high",
+          "description": "Sociabil, energic, asertiv, caută stimulare externă"
+        },
+        "agreeableness": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 68,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 40,
+        "conscientiousness": 95,
+        "extraversion": 83,
+        "agreeableness": 57,
+        "neuroticism": 68
+      }
+    },
+    {
+      "uuid": "5f66e0e9-2e93-4d1b-9c2a-51f8174fad1f",
+      "name": "Lidia Cojocari",
+      "sex": "Feminin",
+      "age": 38,
+      "age_group": "35-44",
+      "marital_status": "Necăsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Asistent medical",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 54,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 59,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 37,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 91,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 53,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 54,
+        "conscientiousness": 59,
+        "extraversion": 37,
+        "agreeableness": 91,
+        "neuroticism": 53
+      }
+    },
+    {
+      "uuid": "008873b6-722d-41b6-9d6d-96c51be58fdd",
+      "name": "Sergiu Gheorghe",
+      "sex": "Masculin",
+      "age": 38,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Asistent medical",
+      "region": "Sud",
+      "district": "Cantemir",
+      "locality": "Taraclia",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 39,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 58,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 63,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 66,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 31,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 39,
+        "conscientiousness": 58,
+        "extraversion": 63,
+        "agreeableness": 66,
+        "neuroticism": 31
+      }
+    },
+    {
+      "uuid": "ea93650e-5f15-47cf-a536-fa8d305228fa",
+      "name": "Elena Melnic",
+      "sex": "Feminin",
+      "age": 48,
+      "age_group": "45-54",
+      "marital_status": "Divorțat",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Mecanic",
+      "region": "Sud",
+      "district": "Cahul",
+      "locality": "Cahul",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Catolic",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 25,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 73,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 52,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 53,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 25,
+        "conscientiousness": 73,
+        "extraversion": 52,
+        "agreeableness": 44,
+        "neuroticism": 53
+      }
+    },
+    {
+      "uuid": "f63dbf5e-ef8b-49d0-a485-b170ab9b8496",
+      "name": "Sergiu Rusu",
+      "sex": "Masculin",
+      "age": 39,
+      "age_group": "35-44",
+      "marital_status": "Necăsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Asistent social",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 28,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 69,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 32,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 73,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 31,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 28,
+        "conscientiousness": 69,
+        "extraversion": 32,
+        "agreeableness": 73,
+        "neuroticism": 31
+      }
+    },
+    {
+      "uuid": "ab25888e-a53b-4199-935b-75aa68b9c9bd",
+      "name": "Anastasiia Petrenko",
+      "sex": "Feminin",
+      "age": 51,
+      "age_group": "45-54",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Vânzător",
+      "region": "Sud",
+      "district": "Taraclia",
+      "locality": "Cantemir",
+      "residence_type": "Rural",
+      "ethnicity": "Ucrainean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 33,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 80,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 52,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 31,
+          "label": "low",
+          "description": "Competitiv, direct, sceptic, asertiv"
+        },
+        "neuroticism": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 33,
+        "conscientiousness": 80,
+        "extraversion": 52,
+        "agreeableness": 31,
+        "neuroticism": 55
+      }
+    },
+    {
+      "uuid": "f554240b-2a54-4c36-840e-65d1c8e0d806",
+      "name": "Gheorghe Furtuna",
+      "sex": "Masculin",
+      "age": 21,
+      "age_group": "18-24",
+      "marital_status": "Necăsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Bucătar",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Martor al lui Iehova",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 77,
+          "label": "high",
+          "description": "Curios, creativ, deschis la experiențe noi și idei abstracte"
+        },
+        "conscientiousness": {
+          "t_score": 52,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 59,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 47,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 24,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 77,
+        "conscientiousness": 52,
+        "extraversion": 59,
+        "agreeableness": 47,
+        "neuroticism": 24
+      }
+    },
+    {
+      "uuid": "6119d3e9-d945-4080-b2ac-eb7b5ca76755",
+      "name": "Alexei Cojocaru",
+      "sex": "Masculin",
+      "age": 31,
+      "age_group": "25-34",
+      "marital_status": "Necăsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Ospătar",
+      "region": "Nord",
+      "district": "Soroca",
+      "locality": "Florești",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 69,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 39,
+          "label": "low",
+          "description": "Spontan, preferă flexibilitatea și improvizația"
+        },
+        "extraversion": {
+          "t_score": 28,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 65,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 76,
+          "label": "high",
+          "description": "Emoțional, anxios, sensibil la stres, precaut"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 69,
+        "conscientiousness": 39,
+        "extraversion": 28,
+        "agreeableness": 65,
+        "neuroticism": 76
+      }
+    },
+    {
+      "uuid": "a9e080e4-8e75-40e1-9f33-59825fcdb6fa",
+      "name": "Ludmila Ciorba",
+      "sex": "Feminin",
+      "age": 67,
+      "age_group": "65+",
+      "marital_status": "Divorțat",
+      "education_level": "Primar",
+      "occupation": "Zidar",
+      "region": "Centru",
+      "district": "Criuleni",
+      "locality": "Strășeni",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 40,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 97,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 90,
+          "label": "high",
+          "description": "Cooperant, empatic, altruist, evită conflictele"
+        },
+        "neuroticism": {
+          "t_score": 47,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 40,
+        "conscientiousness": 97,
+        "extraversion": 55,
+        "agreeableness": 90,
+        "neuroticism": 47
+      }
+    },
+    {
+      "uuid": "c2a2289f-7ddf-4cee-a3dd-0c555100dec5",
+      "name": "Galina Cojuhari",
+      "sex": "Feminin",
+      "age": 37,
+      "age_group": "35-44",
+      "marital_status": "Necăsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Meșteșugar",
+      "region": "Nord",
+      "district": "Drochia",
+      "locality": "Glodeni",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 43,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 60,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 67,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 43,
+        "conscientiousness": 60,
+        "extraversion": 67,
+        "agreeableness": 57,
+        "neuroticism": 57
+      }
+    },
+    {
+      "uuid": "5d988733-fe8b-4612-95d1-f3258d5e4819",
+      "name": "Galina Cebotari",
+      "sex": "Feminin",
+      "age": 50,
+      "age_group": "45-54",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Coafor",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 43,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 42,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 71,
+          "label": "high",
+          "description": "Sociabil, energic, asertiv, caută stimulare externă"
+        },
+        "agreeableness": {
+          "t_score": 66,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 27,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 43,
+        "conscientiousness": 42,
+        "extraversion": 71,
+        "agreeableness": 66,
+        "neuroticism": 27
+      }
+    },
+    {
+      "uuid": "38a90064-a026-4da6-b8b5-d05d2983cd2a",
+      "name": "Constantin Gheorghe",
+      "sex": "Masculin",
+      "age": 81,
+      "age_group": "65+",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Vânzător",
+      "region": "Centru",
+      "district": "Strășeni",
+      "locality": "Șoldănești",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 39,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 83,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 46,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 33,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 39,
+        "conscientiousness": 83,
+        "extraversion": 46,
+        "agreeableness": 61,
+        "neuroticism": 33
+      }
+    },
+    {
+      "uuid": "03cddd46-76d7-4d67-b4d4-6d17e14f2a3d",
+      "name": "Ecaterina Cojocari",
+      "sex": "Feminin",
+      "age": 39,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Croitoreasă",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Durlești",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 48,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 40,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 48,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 88,
+          "label": "high",
+          "description": "Emoțional, anxios, sensibil la stres, precaut"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 48,
+        "conscientiousness": 40,
+        "extraversion": 55,
+        "agreeableness": 48,
+        "neuroticism": 88
+      }
+    },
+    {
+      "uuid": "90d66a35-fab6-42a9-939d-990c9a1131aa",
+      "name": "Alexandru Lungu",
+      "sex": "Masculin",
+      "age": 58,
+      "age_group": "55-64",
+      "marital_status": "Căsătorit",
+      "education_level": "Gimnazial",
+      "occupation": "Șofer",
+      "region": "Sud",
+      "district": "Leova",
+      "locality": "Taraclia",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 63,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 48,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 32,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 63,
+        "conscientiousness": 48,
+        "extraversion": 32,
+        "agreeableness": 44,
+        "neuroticism": 56
+      }
+    },
+    {
+      "uuid": "d9bb2cbc-eb84-4533-bfc2-f6ac01e29e4f",
+      "name": "Elena Cojocaru",
+      "sex": "Feminin",
+      "age": 56,
+      "age_group": "55-64",
+      "marital_status": "Căsătorit",
+      "education_level": "Superior (Licență/Master)",
+      "occupation": "Economist",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 59,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 88,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 61,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 43,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 46,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 59,
+        "conscientiousness": 88,
+        "extraversion": 61,
+        "agreeableness": 43,
+        "neuroticism": 46
+      }
+    },
+    {
+      "uuid": "21f1f1f9-f92a-4cff-b952-46ebdef07573",
+      "name": "Elena Sandu",
+      "sex": "Feminin",
+      "age": 40,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Croitoreasă",
+      "region": "Centru",
+      "district": "Criuleni",
+      "locality": "Hîncești",
+      "residence_type": "Urban",
+      "ethnicity": "Moldovean",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 44,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 62,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 64,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 47,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 56,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 44,
+        "conscientiousness": 62,
+        "extraversion": 64,
+        "agreeableness": 47,
+        "neuroticism": 56
+      }
+    },
+    {
+      "uuid": "b8e36b45-aa93-46cd-8688-460eff0bcbf4",
+      "name": "Elena Cebotari",
+      "sex": "Feminin",
+      "age": 60,
+      "age_group": "55-64",
+      "marital_status": "Căsătorit",
+      "education_level": "Liceal",
+      "occupation": "Îngrijitor",
+      "region": "Centru",
+      "district": "Călărași",
+      "locality": "Telenești",
+      "residence_type": "Rural",
+      "ethnicity": "Moldovean",
+      "religion": "Nedeclarat",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 54,
+          "label": "average",
+          "description": "Echilibrat între tradiție și noutate"
+        },
+        "conscientiousness": {
+          "t_score": 51,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 35,
+          "label": "low",
+          "description": "Rezervat, introspectiv, preferă activități solitare"
+        },
+        "agreeableness": {
+          "t_score": 43,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 55,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 54,
+        "conscientiousness": 51,
+        "extraversion": 35,
+        "agreeableness": 43,
+        "neuroticism": 55
+      }
+    },
+    {
+      "uuid": "f31c21e6-de00-4d6d-aad8-7b21e95c2002",
+      "name": "Andreea Pop",
+      "sex": "Feminin",
+      "age": 49,
+      "age_group": "45-54",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Asistent social",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Chișinău",
+      "residence_type": "Urban",
+      "ethnicity": "Român",
+      "religion": "Ortodox",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 31,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 60,
+          "label": "average",
+          "description": "Moderat organizat, flexibil când e necesar"
+        },
+        "extraversion": {
+          "t_score": 64,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 40,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 49,
+          "label": "average",
+          "description": "Reactivitate emoțională moderată"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 31,
+        "conscientiousness": 60,
+        "extraversion": 64,
+        "agreeableness": 40,
+        "neuroticism": 49
+      }
+    },
+    {
+      "uuid": "2a68cff2-7828-4991-a607-df58dadc26b0",
+      "name": "Stanka Marinov",
+      "sex": "Feminin",
+      "age": 42,
+      "age_group": "35-44",
+      "marital_status": "Căsătorit",
+      "education_level": "Profesional/Tehnic",
+      "occupation": "Vânzător",
+      "region": "Chisinau",
+      "district": "Mun. Chișinău",
+      "locality": "Durlești",
+      "residence_type": "Urban",
+      "ethnicity": "Bulgar",
+      "religion": "Catolic",
+      "ocean_profile": {
+        "openness": {
+          "t_score": 30,
+          "label": "low",
+          "description": "Practic, preferă rutina și concretețea"
+        },
+        "conscientiousness": {
+          "t_score": 79,
+          "label": "high",
+          "description": "Organizat, disciplinat, planificat, responsabil"
+        },
+        "extraversion": {
+          "t_score": 54,
+          "label": "average",
+          "description": "Selectiv social, echilibrat între solitudine și companie"
+        },
+        "agreeableness": {
+          "t_score": 57,
+          "label": "average",
+          "description": "Direct dar respectuos, echilibrat"
+        },
+        "neuroticism": {
+          "t_score": 25,
+          "label": "low",
+          "description": "Calm, stabil emoțional, rezilient, încrezător"
+        },
+        "source": "sampled",
+        "confidence": 1.0
+      },
+      "ocean_raw_scores": {
+        "openness": 30,
+        "conscientiousness": 79,
+        "extraversion": 54,
+        "agreeableness": 57,
+        "neuroticism": 25
+      }
+    }
+  ]
+}

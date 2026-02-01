@@ -1,0 +1,81 @@
+{
+  "columns": [
+    {
+      "code": "Rate",
+      "text": "Rates",
+      "type": "d"
+    },
+    {
+      "code": "Sexe",
+      "text": "Sex",
+      "type": "d"
+    },
+    {
+      "code": "Medii",
+      "text": "Area",
+      "type": "d"
+    },
+    {
+      "code": "Ani",
+      "text": "Years",
+      "type": "t"
+    },
+    {
+      "code": "Trimestre",
+      "text": "Quarters",
+      "type": "d"
+    },
+    {
+      "code": "Activity, employment and unemployment rates",
+      "text": "Activity, employment and unemployment rates",
+      "type": "c"
+    }
+  ],
+  "comments": [],
+  "data": [
+    {
+      "key": [
+        "6",
+        "0",
+        "0",
+        "2024",
+        "0"
+      ],
+      "values": [
+        "44.5"
+      ]
+    },
+    {
+      "key": [
+        "7",
+        "0",
+        "0",
+        "2024",
+        "0"
+      ],
+      "values": [
+        "42.7"
+      ]
+    },
+    {
+      "key": [
+        "8",
+        "0",
+        "0",
+        "2024",
+        "0"
+      ],
+      "values": [
+        "4.0"
+      ]
+    }
+  ],
+  "metadata": [
+    {
+      "infofile": "AFM_en",
+      "updated": "2016-05-16T10:12:00Z",
+      "label": "Activity, employment and unemployment rates by Rates, Sex, Area, Years and Quarters",
+      "source": "National Bureau of Statistics of the Republic of Moldova, Labour Force Survey"
+    }
+  ]
+}

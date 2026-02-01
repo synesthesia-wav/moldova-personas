@@ -1,0 +1,70 @@
+{
+  "_schema": "Localities with settlement_type classification. settlement_type: city (municipiu/oras), town (comuna/sat-urban), rural (sat/comuna-rurala)",
+  "Chisinau": {
+    "localities": [
+      {"name": "Chișinău", "settlement_type": "city", "is_capital": true, "implied_residence": "Urban"},
+      {"name": "Bubuieci", "settlement_type": "town", "implied_residence": "Rural"},
+      {"name": "Budești", "settlement_type": "town", "implied_residence": "Rural"},
+      {"name": "Cruzești", "settlement_type": "rural", "implied_residence": "Rural"},
+      {"name": "Tohatin", "settlement_type": "rural", "implied_residence": "Rural"},
+      {"name": "Durlești", "settlement_type": "town", "implied_residence": "Urban"},
+      {"name": "Vatra", "settlement_type": "rural", "implied_residence": "Rural"}
+    ]
+  },
+  "Centru": {
+    "localities": [
+      {"name": "Ungheni", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Călărași", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Nisporeni", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Strășeni", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Orhei", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Criuleni", "settlement_type": "town", "implied_residence": "Rural"},
+      {"name": "Dubăsari", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Rezina", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Telenești", "settlement_type": "town", "implied_residence": "Rural"},
+      {"name": "Anenii Noi", "settlement_type": "town", "implied_residence": "Rural"},
+      {"name": "Șoldănești", "settlement_type": "town", "implied_residence": "Rural"},
+      {"name": "Hîncești", "settlement_type": "city", "implied_residence": "Urban"}
+    ]
+  },
+  "Nord": {
+    "localities": [
+      {"name": "Bălți", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Soroca", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Edineț", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Ocnița", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Dondușeni", "settlement_type": "town", "implied_residence": "Rural"},
+      {"name": "Drochia", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Fălești", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Florești", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Glodeni", "settlement_type": "town", "implied_residence": "Rural"},
+      {"name": "Rîșcani", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Sîngerei", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Briceni", "settlement_type": "town", "implied_residence": "Rural"}
+    ]
+  },
+  "Sud": {
+    "localities": [
+      {"name": "Cahul", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Cantemir", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Cimișlia", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Leova", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Taraclia", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Basarabeasca", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Comrat", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Ceadîr-Lunga", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Vulcănești", "settlement_type": "city", "implied_residence": "Urban"}
+    ]
+  },
+  "Gagauzia": {
+    "localities": [
+      {"name": "Comrat", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Ceadîr-Lunga", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Vulcănești", "settlement_type": "city", "implied_residence": "Urban"},
+      {"name": "Bugeac", "settlement_type": "town", "implied_residence": "Rural"},
+      {"name": "Chirsova", "settlement_type": "town", "implied_residence": "Rural"},
+      {"name": "Avdarma", "settlement_type": "rural", "implied_residence": "Rural"},
+      {"name": "Beșalma", "settlement_type": "rural", "implied_residence": "Rural"}
+    ]
+  }
+}
