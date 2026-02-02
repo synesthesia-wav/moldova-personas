@@ -244,6 +244,82 @@ class TestStreamingGenerator:
             # Should have total of 10 (5 from checkpoint + 5 new)
             assert len(personas_second) == 10
 
+    def test_resume_is_deterministic(self):
+        """Test that resume produces the same sequence as a full run."""
+        def signature(persona):
+            return (
+                persona.name,
+                persona.sex,
+                persona.age,
+                persona.ethnicity,
+                persona.region,
+                persona.residence_type,
+                persona.education_level,
+                persona.occupation,
+                persona.marital_status,
+            )
+
+        # Full run
+        generator_full = PersonaGenerator(seed=123)
+        streaming_full = StreamingGenerator()
+        expected = [
+            signature(p) for p in streaming_full.generate_streaming(generator_full, n=20)
+        ]
+
+        # Partial run with checkpointing
+        with tempfile.TemporaryDirectory() as tmpdir:
+            manager = CheckpointManager(tmpdir)
+            generator_partial = PersonaGenerator(seed=123)
+            streaming_partial = StreamingGenerator(
+                checkpoint_manager=manager,
+                checkpoint_every=5,
+            )
+
+            for i, _ in enumerate(
+                streaming_partial.generate_streaming(generator_partial, n=20)
+            ):
+                if i == 9:
+                    break
+
+            latest = manager._find_latest_checkpoint()
+            assert latest is not None
+
+            generator_resume = PersonaGenerator(seed=123)
+            streaming_resume = StreamingGenerator(
+                checkpoint_manager=manager,
+                checkpoint_every=5,
+            )
+            resumed = [
+                signature(p)
+                for p in streaming_resume.generate_streaming(
+                    generator_resume, n=20, resume_from=str(latest)
+                )
+            ]
+
+        assert resumed == expected
+
+    def test_resume_smaller_target_raises(self):
+        """Test resume fails when target n is smaller than completed_count."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            manager = CheckpointManager(tmpdir)
+            ckpt = Checkpoint(
+                total_target=10,
+                completed_count=5,
+                seed=42,
+                completed_personas=[],
+                timestamp="2026-01-29T12:00:00",
+            )
+            ckpt_path = manager.save(ckpt, intermediate=True)
+
+            streaming = StreamingGenerator(checkpoint_manager=manager)
+            generator = PersonaGenerator(seed=42)
+            with pytest.raises(ValueError):
+                list(
+                    streaming.generate_streaming(
+                        generator, n=4, resume_from=ckpt_path
+                    )
+                )
+
 
 class TestCheckpointSummary:
     """Tests for checkpoint summary."""

@@ -107,11 +107,10 @@ class StatisticalValidator:
                         f"{category}: obs={obs}, exp={exp_count:.1f}, χ²={contribution:.2f}"
                     )
         
-        # Calculate p-value using chi-square approximation
-        if df > 0:
-            from math import gamma
-            # Use incomplete gamma function for p-value
-            p_value = self._chi2_sf(chi2_stat, df)
+        # Calculate p-value using chi-square distribution
+        df_effective = max(df - 1, 0)
+        if df_effective > 0:
+            p_value = self._chi2_sf(chi2_stat, df_effective)
         else:
             p_value = 1.0
             
@@ -123,7 +122,7 @@ class StatisticalValidator:
             test_name="Chi-Square Goodness-of-Fit",
             statistic=chi2_stat,
             p_value=p_value,
-            degrees_of_freedom=df - 1 if df > 0 else 0,  # df = categories - 1
+            degrees_of_freedom=df_effective,
             passed=passed,
             details=details,
             alpha=self.alpha
@@ -133,26 +132,60 @@ class StatisticalValidator:
         """
         Survival function (1 - CDF) for chi-square distribution.
         
-        Uses approximation for computational efficiency.
+        Uses a regularized incomplete gamma implementation.
         """
         if x <= 0 or k <= 0:
             return 1.0
-        
-        # Wilson-Hilferty approximation for large k
-        if k > 30:
-            z = math.pow(x / k, 1/3) - (1 - 2/(9*k))
-            z = z / math.sqrt(2/(9*k))
-            return self._normal_sf(z)
-        
-        # Direct approximation for small k
-        try:
-            # Use regularized gamma approximation
-            return math.exp(-x/2) * sum(
-                (x/2) ** i / math.factorial(i) 
-                for i in range(k // 2)
-            )
-        except (OverflowError, ValueError):
-            return 0.0 if x > k else 1.0
+
+        a = 0.5 * k
+        xx = 0.5 * x
+        return self._gammaincc(a, xx)
+
+    def _gammaincc(self, a: float, x: float) -> float:
+        """Regularized upper incomplete gamma Q(a, x)."""
+        if x < 0 or a <= 0:
+            return 1.0
+        if x == 0:
+            return 1.0
+
+        eps = 3.0e-7
+        itmax = 200
+        gln = math.lgamma(a)
+
+        if x < a + 1.0:
+            # Series representation for P(a, x), then Q = 1 - P
+            ap = a
+            summation = 1.0 / a
+            delta = summation
+            for _ in range(itmax):
+                ap += 1.0
+                delta *= x / ap
+                summation += delta
+                if abs(delta) < abs(summation) * eps:
+                    break
+            p = summation * math.exp(-x + a * math.log(x) - gln)
+            return max(0.0, 1.0 - p)
+
+        # Continued fraction representation for Q(a, x)
+        b = x + 1.0 - a
+        c = 1.0 / 1.0e-30
+        d = 1.0 / b
+        h = d
+        for i in range(1, itmax + 1):
+            an = -i * (i - a)
+            b += 2.0
+            d = an * d + b
+            if abs(d) < 1.0e-30:
+                d = 1.0e-30
+            c = b + an / c
+            if abs(c) < 1.0e-30:
+                c = 1.0e-30
+            d = 1.0 / d
+            delta = d * c
+            h *= delta
+            if abs(delta - 1.0) < eps:
+                break
+        return h * math.exp(-x + a * math.log(x) - gln)
     
     def _normal_sf(self, z: float) -> float:
         """Standard normal survival function approximation."""

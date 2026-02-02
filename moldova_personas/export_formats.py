@@ -60,6 +60,7 @@ MOLDOVA_EXTENDED_FIELDS = {
     "religion",
     "residence_type",
     "age_group",
+    "ocean_profile",
 }
 
 
@@ -192,10 +193,6 @@ class ExportManager:
                     k: v for k, v in persona.items()
                     if k in NEMOTRON_BRAZIL_FIELDS
                 }
-                
-                # Ensure OCEAN is in NeMo format (not raw scores)
-                if "ocean_profile" in persona:
-                    record["ocean_profile"] = persona["ocean_profile"]
                 
                 # Add minimal metadata
                 record["_source"] = {

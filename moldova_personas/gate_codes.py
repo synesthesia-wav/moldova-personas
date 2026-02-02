@@ -40,6 +40,9 @@ class GateCode(Enum):
     FALLBACK_SUPERCRITICAL_FIELD = "FALLBACK_SUPERCRITICAL_FIELD"
     """Super-critical field (ethnicity, education, employment, region) using fallback"""
 
+    TARGET_FALLBACK_SUPERCRITICAL = "TARGET_FALLBACK_SUPERCRITICAL"
+    """Super-critical target distribution missing; skip drift checks"""
+
     ESTIMATED_FIELD_USED = "ESTIMATED_FIELD_USED"
     """Estimated/heuristic field used in generation"""
     
@@ -140,6 +143,7 @@ class GateCode(Enum):
         hard_gate_codes: Set[str] = {
             GateCode.MARGINAL_ERROR_CRITICAL.value,
             GateCode.FALLBACK_SUPERCRITICAL_FIELD.value,
+            GateCode.TARGET_FALLBACK_SUPERCRITICAL.value,
             GateCode.ESS_TOO_LOW.value,
             GateCode.IPF_DIVERGENCE.value,
             GateCode.NARRATIVE_SCHEMA_INVALID.value,
@@ -186,6 +190,7 @@ GATE_REASON_TO_CODE = {
     # Fallbacks
     "Critical field using fallback data": GateCode.FALLBACK_CRITICAL_FIELD,
     "Super-critical field using fallback": GateCode.FALLBACK_SUPERCRITICAL_FIELD,
+    "Super-critical target fallback": GateCode.TARGET_FALLBACK_SUPERCRITICAL,
     "Ethnocultural fallback used": GateCode.ETHNOCULTURAL_FALLBACK_USED,
     "Estimated field used": GateCode.ESTIMATED_FIELD_USED,
     
@@ -250,6 +255,7 @@ def get_escalation_priority(codes: list[GateCode]) -> int:
     priority_map = {
         GateCode.NARRATIVE_PII_DETECTED: 1,
         GateCode.FALLBACK_SUPERCRITICAL_FIELD: 2,
+        GateCode.TARGET_FALLBACK_SUPERCRITICAL: 2,
         GateCode.ESS_TOO_LOW: 3,
         GateCode.MARGINAL_ERROR_CRITICAL: 4,
         GateCode.NARRATIVE_PRONOUN_MISMATCH: 5,

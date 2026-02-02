@@ -9,10 +9,14 @@ Supports:
 
 import os
 import time
+import json
+import ssl
 import logging
-from typing import List, Dict, Optional, Callable
+from typing import List, Dict, Optional, Callable, Any
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 
 from .exceptions import LLMGenerationError
 
@@ -34,8 +38,18 @@ try:
 except ImportError:
     HAS_DASHSCOPE = False
 
+try:
+    import certifi
+    HAS_CERTIFI = True
+except ImportError:
+    HAS_CERTIFI = False
+
 
 logger = logging.getLogger(__name__)
+DEFAULT_SYSTEM_PROMPT = (
+    "Ești un asistent care generează descrieri realiste de personae în limba română. "
+    "Folosește un ton natural și autentic."
+)
 
 
 def with_retry(max_retries: int = 3, backoff_factor: float = 2.0):
@@ -90,17 +104,38 @@ class LLMClient(ABC):
 
 
 class OpenAIClient(LLMClient):
-    """Client for OpenAI API."""
+    """Client for OpenAI-compatible APIs (OpenAI, OpenRouter)."""
     
-    def __init__(self, model: str = "gpt-3.5-turbo", api_key: Optional[str] = None):
+    def __init__(
+        self,
+        model: str = "gpt-3.5-turbo",
+        api_key: Optional[str] = None,
+        base_url: Optional[str] = None,
+        default_headers: Optional[Dict[str, str]] = None,
+    ):
         if not HAS_OPENAI:
             raise ImportError("openai package required. Install with: pip install openai")
         
         self.model = model
-        self.client = openai.OpenAI(api_key=api_key or os.getenv("OPENAI_API_KEY"))
+        api_key = api_key or os.getenv("OPENAI_API_KEY") or os.getenv("OPENROUTER_API_KEY")
+        base_url = base_url or os.getenv("OPENAI_BASE_URL") or os.getenv("OPENROUTER_BASE_URL")
+        if default_headers is None:
+            default_headers = {}
+            app_url = os.getenv("OPENROUTER_APP_URL")
+            app_name = os.getenv("OPENROUTER_APP_NAME")
+            if app_url:
+                default_headers["HTTP-Referer"] = app_url
+            if app_name:
+                default_headers["X-Title"] = app_name
+
+        self.client = openai.OpenAI(
+            api_key=api_key,
+            base_url=base_url,
+            default_headers=default_headers or None,
+        )
         
-        if not api_key and not os.getenv("OPENAI_API_KEY"):
-            raise ValueError("OpenAI API key required. Set OPENAI_API_KEY env var.")
+        if not api_key:
+            raise ValueError("OpenAI-compatible API key required. Set OPENAI_API_KEY or OPENROUTER_API_KEY env var.")
     
     @with_retry(max_retries=3, backoff_factor=2.0)
     def generate(self, prompt: str, config: Optional[GenerationConfig] = None) -> str:
@@ -110,7 +145,7 @@ class OpenAIClient(LLMClient):
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "Ești un asistent care generează descrieri realiste de personae în limba română. Folosește un ton natural și autentic."},
+                    {"role": "system", "content": DEFAULT_SYSTEM_PROMPT},
                     {"role": "user", "content": prompt}
                 ],
                 temperature=config.temperature,
@@ -140,6 +175,178 @@ class OpenAIClient(LLMClient):
                 f"Unexpected error: {e}",
                 provider="openai",
                 retryable=False
+            ) from e
+
+
+class GeminiClient(LLMClient):
+    """Client for Google Gemini API (REST generateContent)."""
+
+    def __init__(
+        self,
+        model: str = "gemini-2.5-flash",
+        api_key: Optional[str] = None,
+        base_url: Optional[str] = None,
+        system_instruction: Optional[str] = None,
+        response_schema: Optional[Dict[str, Any]] = None,
+        response_mime_type: Optional[str] = "application/json",
+    ):
+        self.model = model
+        self.api_key = api_key or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+        self.base_url = base_url or "https://generativelanguage.googleapis.com/v1beta"
+        self.system_instruction = system_instruction or DEFAULT_SYSTEM_PROMPT
+        self.response_schema = response_schema
+        self.response_mime_type = response_mime_type
+        rate_limit = os.getenv("GEMINI_RATE_LIMIT_PER_MINUTE")
+        self.rate_limit_per_minute = int(rate_limit) if rate_limit else None
+        thinking_budget = os.getenv("GEMINI_THINKING_BUDGET", "0")
+        try:
+            self.thinking_budget = int(thinking_budget)
+        except ValueError:
+            self.thinking_budget = 0
+        self._last_request_time = 0.0
+        if HAS_CERTIFI:
+            self._ssl_context = ssl.create_default_context(cafile=certifi.where())
+        else:
+            self._ssl_context = ssl.create_default_context()
+
+        if not self.api_key:
+            raise ValueError(
+                "Gemini API key required. Set GEMINI_API_KEY or GOOGLE_API_KEY env var."
+            )
+
+        if self.response_schema is None:
+            try:
+                from .narrative_contract import NARRATIVE_JSON_SCHEMA
+                self.response_schema = NARRATIVE_JSON_SCHEMA
+            except Exception:
+                self.response_schema = None
+
+    def _sanitize_schema(self, schema: Dict[str, Any]) -> Dict[str, Any]:
+        allowed_keys = {
+            "$id",
+            "$defs",
+            "$ref",
+            "$anchor",
+            "type",
+            "format",
+            "title",
+            "description",
+            "enum",
+            "items",
+            "prefixItems",
+            "minItems",
+            "maxItems",
+            "minimum",
+            "maximum",
+            "anyOf",
+            "oneOf",
+            "properties",
+            "additionalProperties",
+            "required",
+            "propertyOrdering",
+        }
+
+        def sanitize(node: Any, parent_key: Optional[str] = None) -> Any:
+            if isinstance(node, dict):
+                cleaned = {}
+                for key, value in node.items():
+                    if parent_key in ("properties", "$defs"):
+                        cleaned[key] = sanitize(value, key)
+                        continue
+                    if key in allowed_keys:
+                        cleaned[key] = sanitize(value, key)
+                return cleaned
+            if isinstance(node, list):
+                return [sanitize(item, parent_key) for item in node]
+            return node
+
+        return sanitize(schema)
+
+    @with_retry(max_retries=3, backoff_factor=2.0)
+    def generate(self, prompt: str, config: Optional[GenerationConfig] = None) -> str:
+        config = config or GenerationConfig()
+        if self.rate_limit_per_minute and self.rate_limit_per_minute > 0:
+            min_interval = 60.0 / self.rate_limit_per_minute
+            elapsed = time.time() - self._last_request_time
+            if elapsed < min_interval:
+                time.sleep(min_interval - elapsed)
+            self._last_request_time = time.time()
+
+        url = f"{self.base_url}/models/{self.model}:generateContent?key={self.api_key}"
+        generation_config: Dict[str, Any] = {
+            "temperature": config.temperature,
+            "topP": config.top_p,
+            "maxOutputTokens": config.max_tokens,
+        }
+        if self.thinking_budget is not None:
+            generation_config["thinkingConfig"] = {
+                "thinkingBudget": max(self.thinking_budget, 0),
+                "includeThoughts": False,
+            }
+        if self.response_mime_type:
+            generation_config["responseMimeType"] = self.response_mime_type
+        if self.response_schema:
+            generation_config["_responseJsonSchema"] = self._sanitize_schema(self.response_schema)
+
+        payload: Dict[str, Any] = {
+            "contents": [
+                {
+                    "role": "user",
+                    "parts": [{"text": prompt}],
+                }
+            ],
+            "generationConfig": generation_config,
+        }
+        if self.system_instruction:
+            payload["systemInstruction"] = {
+                "role": "system",
+                "parts": [{"text": self.system_instruction}],
+            }
+
+        data = json.dumps(payload).encode("utf-8")
+        request = Request(url, data=data, headers={"Content-Type": "application/json"})
+
+        try:
+            with urlopen(request, timeout=60, context=self._ssl_context) as response:
+                body = response.read().decode("utf-8")
+            parsed = json.loads(body)
+            candidates = parsed.get("candidates", [])
+            if not candidates:
+                raise LLMGenerationError(
+                    "No candidates returned from Gemini",
+                    provider="gemini",
+                    retryable=False,
+                )
+            parts = candidates[0].get("content", {}).get("parts", [])
+            if not parts:
+                raise LLMGenerationError(
+                    "Empty content parts from Gemini",
+                    provider="gemini",
+                    retryable=False,
+                )
+            text = parts[0].get("text", "")
+            return text.strip()
+        except HTTPError as e:
+            error_body = e.read().decode("utf-8") if hasattr(e, "read") else str(e)
+            logger.error(f"Gemini API error: {error_body}")
+            raise LLMGenerationError(
+                f"Gemini API error: {error_body}",
+                provider="gemini",
+                retryable=e.code >= 500 or e.code == 429,
+            ) from e
+        except URLError as e:
+            logger.error(f"Gemini connection error: {e}")
+            raise LLMGenerationError(
+                f"Gemini connection error: {e}",
+                provider="gemini",
+                retryable=True,
+            ) from e
+        except Exception as e:
+            logger.error(f"Unexpected error in Gemini generation: {e}")
+            raise LLMGenerationError(
+                f"Unexpected error: {e}",
+                provider="gemini",
+                retryable=False,
             ) from e
 
 
@@ -504,7 +711,7 @@ def create_llm_client(provider: str = "mock", **kwargs) -> LLMClient:
     Factory function to create appropriate LLM client.
     
     Args:
-        provider: One of "openai", "qwen", "qwen-local", "local", "dashscope", "mock"
+        provider: One of "openai", "gemini", "kimi", "qwen", "qwen-local", "local", "dashscope", "mock"
         **kwargs: Provider-specific arguments
     
     Returns:
@@ -513,6 +720,12 @@ def create_llm_client(provider: str = "mock", **kwargs) -> LLMClient:
     Examples:
         # OpenAI
         client = create_llm_client("openai", model="gpt-3.5-turbo")
+        
+        # Gemini via Google API
+        client = create_llm_client("gemini", model="gemini-2.5-flash")
+        
+        # Kimi via Moonshot API
+        client = create_llm_client("kimi", model="moonshot-v1-8k")
         
         # Qwen via DashScope API
         client = create_llm_client("qwen", model="qwen-turbo")
@@ -524,6 +737,16 @@ def create_llm_client(provider: str = "mock", **kwargs) -> LLMClient:
         client = create_llm_client("qwen-local", model_name="qwen2.5-14b", load_in_4bit=True)
     """
     if provider == "openai":
+        return OpenAIClient(**kwargs)
+    elif provider == "gemini":
+        return GeminiClient(**kwargs)
+    elif provider == "kimi":
+        if "api_key" not in kwargs or not kwargs.get("api_key"):
+            kwargs["api_key"] = os.getenv("KIMI_API_KEY") or os.getenv("MOONSHOT_API_KEY")
+        if "base_url" not in kwargs or not kwargs.get("base_url"):
+            kwargs["base_url"] = os.getenv("KIMI_BASE_URL", "https://api.moonshot.ai/v1")
+        if "model" not in kwargs or not kwargs.get("model"):
+            kwargs["model"] = os.getenv("KIMI_MODEL", "moonshot-v1-8k")
         return OpenAIClient(**kwargs)
     elif provider in ("qwen", "dashscope"):
         return DashScopeClient(**kwargs)

@@ -17,6 +17,99 @@ from .models import Persona
 logger = logging.getLogger(__name__)
 
 
+def _convert_tuples_to_lists(value: Any) -> Any:
+    if isinstance(value, tuple):
+        return [_convert_tuples_to_lists(v) for v in value]
+    if isinstance(value, list):
+        return [_convert_tuples_to_lists(v) for v in value]
+    if isinstance(value, dict):
+        return {k: _convert_tuples_to_lists(v) for k, v in value.items()}
+    return value
+
+
+def _convert_lists_to_tuples(value: Any) -> Any:
+    if isinstance(value, list):
+        return tuple(_convert_lists_to_tuples(v) for v in value)
+    if isinstance(value, dict):
+        return {k: _convert_lists_to_tuples(v) for k, v in value.items()}
+    return value
+
+
+def _capture_rng_state() -> Optional[Dict[str, Any]]:
+    """Capture Python and NumPy RNG state for deterministic resume."""
+    state: Dict[str, Any] = {}
+    try:
+        import random
+
+        state["python"] = _convert_tuples_to_lists(random.getstate())
+    except Exception as exc:
+        logger.warning(f"Failed to capture Python RNG state: {exc}")
+        state["python"] = None
+
+    try:
+        import numpy as np
+
+        np_state = np.random.get_state()
+        state["numpy"] = {
+            "version": np_state[0],
+            "state": np_state[1].tolist() if hasattr(np_state[1], "tolist") else list(np_state[1]),
+            "pos": np_state[2],
+            "has_gauss": np_state[3],
+            "cached_gaussian": np_state[4],
+        }
+    except Exception as exc:
+        logger.warning(f"Failed to capture NumPy RNG state: {exc}")
+        state["numpy"] = None
+
+    return state if state.get("python") or state.get("numpy") else None
+
+
+def _restore_rng_state(state: Optional[Dict[str, Any]]) -> None:
+    """Restore Python and NumPy RNG state."""
+    if not state:
+        return
+
+    py_state = state.get("python")
+    if py_state is not None:
+        try:
+            import random
+
+            random.setstate(_convert_lists_to_tuples(py_state))
+        except Exception as exc:
+            logger.warning(f"Failed to restore Python RNG state: {exc}")
+
+    np_state = state.get("numpy")
+    if np_state:
+        try:
+            import numpy as np
+
+            restored = (
+                np_state.get("version"),
+                np.array(np_state.get("state", []), dtype=np.uint32),
+                np_state.get("pos"),
+                np_state.get("has_gauss"),
+                np_state.get("cached_gaussian"),
+            )
+            np.random.set_state(restored)
+        except Exception as exc:
+            logger.warning(f"Failed to restore NumPy RNG state: {exc}")
+
+
+def _truncate_jsonl(path: Path, max_lines: int) -> None:
+    """Truncate a JSONL file to the first max_lines non-empty records."""
+    tmp_path = path.with_suffix(path.suffix + ".tmp")
+    kept = 0
+    with open(path, "r", encoding="utf-8") as src, open(tmp_path, "w", encoding="utf-8") as dst:
+        for line in src:
+            if not line.strip():
+                continue
+            if kept >= max_lines:
+                break
+            dst.write(line)
+            kept += 1
+    tmp_path.replace(path)
+
+
 @dataclass
 class Checkpoint:
     """Represents a generation checkpoint."""
@@ -34,6 +127,7 @@ class Checkpoint:
 
     # Optional JSONL file path for persisted personas (streaming)
     data_file: Optional[str] = None
+    rng_state: Optional[Dict[str, Any]] = None
     version: str = "1.0"
     
     def to_dict(self) -> Dict[str, Any]:
@@ -46,6 +140,7 @@ class Checkpoint:
             "seed": self.seed,
             "completed_personas": self.completed_personas,
             "data_file": self.data_file,
+            "rng_state": self.rng_state,
         }
     
     @classmethod
@@ -59,6 +154,7 @@ class Checkpoint:
             seed=data.get("seed"),
             completed_personas=data["completed_personas"],
             data_file=data.get("data_file"),
+            rng_state=data.get("rng_state"),
         )
     
     @property
@@ -281,21 +377,65 @@ class StreamingGenerator:
         # Determine starting point
         if checkpoint:
             start_count = checkpoint.completed_count
+            if n < start_count:
+                raise ValueError(
+                    f"Target n={n} is less than checkpoint completed_count={start_count}."
+                )
             personas_to_generate = n - start_count
             
             # Yield already completed personas first
             logger.info(f"Resuming from checkpoint: {start_count} personas already generated")
             if checkpoint.data_file and self.checkpoint_manager:
-                for persona in self.checkpoint_manager.iter_personas(checkpoint.data_file):
-                    yield persona
+                data_path = Path(checkpoint.data_file)
+                if not data_path.exists():
+                    raise ValueError(f"Checkpoint data file missing: {data_path}")
+
+                loaded = 0
+                extra_lines = False
+                with open(data_path, "r", encoding="utf-8") as f:
+                    for line in f:
+                        if not line.strip():
+                            continue
+                        if loaded >= start_count:
+                            extra_lines = True
+                            break
+                        try:
+                            yield Persona(**json.loads(line))
+                        except Exception as e:
+                            logger.warning(f"Skipping invalid persona line in {data_path}: {e}")
+                            continue
+                        loaded += 1
+
+                if loaded < start_count:
+                    raise ValueError(
+                        f"Checkpoint data file contains only {loaded} personas; "
+                        f"expected {start_count}."
+                    )
+
+                if extra_lines and self.persist_personas:
+                    try:
+                        _truncate_jsonl(data_path, start_count)
+                        logger.info(
+                            f"Truncated checkpoint data file to {start_count} personas: {data_path}"
+                        )
+                    except Exception as e:
+                        logger.warning(f"Failed to truncate checkpoint data file: {e}")
             else:
-                for persona_data in checkpoint.completed_personas:
+                if len(checkpoint.completed_personas) < start_count:
+                    raise ValueError(
+                        "Checkpoint persona buffer shorter than completed_count; "
+                        "data_file is required for resume."
+                    )
+                for persona_data in checkpoint.completed_personas[:start_count]:
                     yield Persona(**persona_data)
                 if self.checkpoint_manager and self.persist_personas:
                     data_path = self.checkpoint_manager.reset_data_file()
-                    for persona_data in checkpoint.completed_personas:
+                    for persona_data in checkpoint.completed_personas[:start_count]:
                         self.checkpoint_manager.append_persona(persona_data)
                     checkpoint.data_file = str(data_path)
+
+            # Restore RNG state after replaying checkpoint personas
+            _restore_rng_state(checkpoint.rng_state)
         else:
             start_count = 0
             personas_to_generate = n
@@ -331,6 +471,7 @@ class StreamingGenerator:
                 checkpoint.completed_count = current_count
                 checkpoint.completed_personas = buffer
                 checkpoint.timestamp = datetime.now().isoformat()
+                checkpoint.rng_state = _capture_rng_state()
                 
                 self.checkpoint_manager.save(checkpoint, intermediate=True)
                 
@@ -348,6 +489,7 @@ class StreamingGenerator:
             checkpoint.completed_count = n
             checkpoint.completed_personas = buffer
             checkpoint.timestamp = datetime.now().isoformat()
+            checkpoint.rng_state = _capture_rng_state()
             self.checkpoint_manager.save(checkpoint, intermediate=False)
             logger.info(f"Generation complete: {n} personas")
 

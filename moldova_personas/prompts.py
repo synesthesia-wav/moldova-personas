@@ -1,33 +1,28 @@
 """Prompt templates for generating narrative content in Romanian.
 
-Prompt Version: 1.2.0
-Changes from 1.1.0:
-- Added career_goals_and_ambitions section
-- Added persona_summary one-liner
+Prompt Version: 1.4.0
+Changes from 1.3.0:
+- Switched Stage B output to JSON-only with strict key contract
+- Added explicit JSON schema guidance and minimum lengths
 
-Changes from 1.0.0:
-- Fixed ethnicity/region integration (now required, not optional)
-- Fixed pronoun enforcement (explicit sex-based instruction)
-- Added structured data validation requirements
-- Improved parsing robustness
-
-Follows the 8-section structure:
+Follows the 8-field JSON structure:
 1. descriere_generala - General personality
 2. profil_profesional - Professional life
 3. hobby_sport - Sports and activities
 4. hobby_arta_cultura - Cultural interests
 5. hobby_calatorii - Travel preferences
 6. hobby_culinar - Culinary habits
-+ NEW: career_goals_and_ambitions
-+ NEW: persona_summary
+7. career_goals_and_ambitions - Career goals
+8. persona_summary - One-line summary
 """
 
-from typing import Dict, List, Optional
+import json
+from typing import Dict, List, Optional, Tuple
 from .models import Persona
 from .geo_tables import strict_geo_enabled
 
 # Prompt versioning for reproducibility
-PROMPT_VERSION = "1.2.0"
+PROMPT_VERSION = "1.4.0"
 
 
 def get_prompt_version() -> str:
@@ -116,39 +111,151 @@ def _community_phrase(persona: Persona) -> str:
     return f"în comunitatea regiunii {persona.region}"
 
 
-def generate_full_prompt(persona: Persona) -> str:
+def _get_default_required_keys_and_lengths() -> Tuple[List[str], Dict[str, int]]:
+    """Load required keys and minimum lengths from schema, with safe fallback."""
+    fallback_required = [
+        "descriere_generala",
+        "profil_profesional",
+        "hobby_sport",
+        "hobby_arta_cultura",
+        "hobby_calatorii",
+        "hobby_culinar",
+        "career_goals_and_ambitions",
+        "persona_summary",
+    ]
+    fallback_min_lengths = {
+        "descriere_generala": 20,
+        "profil_profesional": 20,
+        "hobby_sport": 10,
+        "hobby_arta_cultura": 10,
+        "hobby_calatorii": 10,
+        "hobby_culinar": 10,
+        "career_goals_and_ambitions": 10,
+        "persona_summary": 10,
+    }
+
+    try:
+        from .narrative_contract import NARRATIVE_JSON_SCHEMA
+    except Exception:
+        return fallback_required, fallback_min_lengths
+
+    required = NARRATIVE_JSON_SCHEMA.get("required", fallback_required)
+    properties = NARRATIVE_JSON_SCHEMA.get("properties", {})
+    min_lengths = {
+        key: properties.get(key, {}).get("minLength", fallback_min_lengths.get(key, 1))
+        for key in required
+    }
+    return required, min_lengths
+
+
+def _format_json_template(required_keys: List[str]) -> str:
+    """Return a JSON skeleton with required keys."""
+    lines = ["{"]
+    for i, key in enumerate(required_keys):
+        comma = "," if i < len(required_keys) - 1 else ""
+        lines.append(f'  "{key}": "..."' + comma)
+    lines.append("}")
+    return "\n".join(lines)
+
+
+def _format_min_lengths(required_keys: List[str], min_lengths: Dict[str, int]) -> str:
+    """Format minimum length constraints for prompt guidance."""
+    if not min_lengths:
+        return ""
+    parts = []
+    for key in required_keys:
+        min_len = min_lengths.get(key)
+        if min_len:
+            parts.append(f"{key}>={min_len}")
+    if not parts:
+        return ""
+    return "LUNGIMI MINIME (caractere): " + ", ".join(parts)
+
+
+def generate_full_prompt(
+    persona: Persona,
+    required_keys: Optional[List[str]] = None,
+    min_lengths: Optional[Dict[str, int]] = None,
+) -> str:
     """
-    Generate a single comprehensive prompt for all narrative sections.
+    Generate a single comprehensive prompt for all narrative fields (JSON-only).
     
     Args:
         persona: Persona object
+        required_keys: JSON keys to require
+        min_lengths: Minimum lengths per key
         
     Returns:
         Complete prompt string
     """
+    if required_keys is None or min_lengths is None:
+        required_keys, min_lengths = _get_default_required_keys_and_lengths()
     context = get_base_context(persona)
     pronouns = _get_sex_pronouns(persona.sex)
     first_name = persona.name.split()[0]
     
     # Age-appropriate adaptations
     if persona.age < 18:
-        return _generate_child_prompt(persona, context, pronouns)
+        return _generate_child_prompt(persona, context, pronouns, required_keys, min_lengths)
     elif persona.age >= 65:
-        return _generate_elderly_prompt(persona, context, pronouns)
+        return _generate_elderly_prompt(persona, context, pronouns, required_keys, min_lengths)
     else:
-        return _generate_adult_prompt(persona, context, pronouns)
+        return _generate_adult_prompt(persona, context, pronouns, required_keys, min_lengths)
 
 
 def _generate_adult_prompt(
     persona: Persona, 
     context: str, 
-    pronouns: Dict[str, str]
+    pronouns: Dict[str, str],
+    required_keys: List[str],
+    min_lengths: Dict[str, int],
 ) -> str:
     """Generate prompt for adult personas (18-64)."""
     
     first_name = persona.name.split()[0]
     sex_adj = pronouns["adjective_f"] if persona.sex == "Feminin" else "un bărbat"
     locality = _locality_phrase(persona)
+    json_template = _format_json_template(required_keys)
+    min_lengths_text = _format_min_lengths(required_keys, min_lengths)
+
+    guidance = {
+        "descriere_generala": (
+            f"{first_name} este {sex_adj} de {persona.age} ani {locality}. "
+            "Descrie personalitatea în 2-3 propoziții, menționând 2-3 trăsături esențiale."
+        ),
+        "profil_profesional": (
+            f"Lucrează ca {persona.occupation}. Detaliază responsabilitățile, abilitățile "
+            "și etica în muncă în 3-4 propoziții."
+        ),
+        "hobby_sport": (
+            f"Sporturi sau activități fizice practicate în {persona.region}. "
+            "Menționează activități populare în regiune. 2-3 propoziții."
+        ),
+        "hobby_arta_cultura": (
+            f"Gusturi în muzică, artă, literatură specifice contextului {persona.ethnicity} "
+            f"și regiunii {persona.region}. Include nume de artiști sau tradiții. 2-3 propoziții."
+        ),
+        "hobby_calatorii": (
+            "Preferințe de călătorie: stil (economic/confortabil/aventură) și destinații preferate. "
+            "2 propoziții."
+        ),
+        "hobby_culinar": (
+            f"Relația cu gastronomia: gătește? Preparate tradiționale din {persona.region}? "
+            f"Influențe {persona.ethnicity} în bucătărie? 2-3 propoziții."
+        ),
+        "career_goals_and_ambitions": (
+            "Obiective pe termen scurt și mediu, realiste pentru vârsta și ocupația sa. "
+            "2-3 propoziții."
+        ),
+        "persona_summary": (
+            "O singură propoziție (15-25 cuvinte) care include nume, vârstă, ocupație, regiune "
+            "+ un element distinctiv."
+        ),
+    }
+    section_lines = [
+        f"- {key}: {guidance.get(key, 'Completează cu text relevant.')}"
+        for key in required_keys
+    ]
     
     return f"""GENEREAZĂ PROFIL NARATIV - Versiunea {PROMPT_VERSION}
 
@@ -163,31 +270,8 @@ INSTRUCȚIUNI OBLIGATORII:
 5. Include obligatoriu cel puțin un marker cultural pentru etnia {persona.ethnicity}
 6. Folosește diacritice corecte în limba română
 
-STRUCTURA RĂSPUNSULUI (8 secțiuni marcate clar):
-
-**1. DESCRIERE GENERALĂ**
-{first_name} este {sex_adj} de {persona.age} ani {locality}. Descrie-i personalitatea în 2-3 propoziții, menționând 2-3 trăsături esențiale.
-
-**2. PROFIL PROFESIONAL**
-Lucrează ca {persona.occupation}. Detaliază responsabilitățile, abilitățile și etica în muncă în 3-4 propoziții.
-
-**3. HOBBY-URI SPORTIVE ȘI ACTIVITĂȚI**
-Ce sporturi sau activități fizice practică în {persona.region}? Menționează specific activități populare în această regiune. 2-3 propoziții.
-
-**4. INTERESE CULTURALE ȘI ARTISTICE**
-Gusturi în muzică, artă, literatură specifice contextului {persona.ethnicity} și regiunii {persona.region}. Include nume de artiști sau tradiții culturale specifice. 2-3 propoziții.
-
-**5. OBICEIURI DE CĂLĂTORIE**
-Preferințe de călătorie: stil (economic/confortabil/aventură) și destinații preferate. 2 propoziții.
-
-**6. OBICEIURI CULINARE ȘI TRADIȚII**
-Relația cu gastronomia: gătește? Preparate tradiționale din {persona.region}? Influențe {persona.ethnicity} în bucătărie? 2-3 propoziții.
-
-**7. OBIECTIVE ȘI ASPIRAȚII PROFESIONALE**
-Obiective pe termen scurt și mediu, realiste pentru vârsta și ocupația sa. 2-3 propoziții.
-
-**8. REZUMAT**
-O singură propoziție (15-25 cuvinte) care include nume, vârstă, ocupație, regiune + un element distinctiv.
+STRUCTURA CONȚINUTULUI (chei JSON):
+{chr(10).join(section_lines)}
 
 RESTRICȚII:
 - NU folosi pronumele "el" dacă sexul este Feminin
@@ -196,42 +280,61 @@ RESTRICȚII:
 - NU folosi stereotipuri negative
 - Total: 300-400 cuvinte
 
-RĂSPUNDE STRICT ÎN FORMATUL DE MAI JOS (păstrează etichetele exacte):
+FORMAT DE RĂSPUNS (JSON ONLY):
+{json_template}
 
-[DESCRIERE GENERALA]
-(textul tău aici)
-
-[PROFIL PROFESIONAL]
-(textul tău aici)
-
-[HOBBY SPORT]
-(textul tău aici)
-
-[HOBBY ARTA CULTURA]
-(textul tău aici)
-
-[HOBBY CALATORII]
-(textul tău aici)
-
-[HOBBY CULINAR]
-(textul tău aici)
-
-[OBIECTIVE ȘI ASPIRAȚII]
-(textul tău aici)
-
-[REZUMAT]
-(textul tău aici)
+REGULI JSON:
+- Return JSON only. No markdown. No explanations.
+- All keys must be present. Values must be non-empty strings.
+- Use exact keys as listed; no extra keys.
+- If you are unsure, still produce plausible content; do not omit keys.
+{min_lengths_text}
 """
 
 
 def _generate_child_prompt(
     persona: Persona, 
     context: str, 
-    pronouns: Dict[str, str]
+    pronouns: Dict[str, str],
+    required_keys: List[str],
+    min_lengths: Dict[str, int],
 ) -> str:
     """Generate age-appropriate prompt for children (< 18)."""
     
     first_name = persona.name.split()[0]
+    json_template = _format_json_template(required_keys)
+    min_lengths_text = _format_min_lengths(required_keys, min_lengths)
+    guidance = {
+        "descriere_generala": (
+            f"Cum este {first_name} ca copil la {persona.age} ani? Trăsături de caracter și comportament. "
+            "2-3 propoziții."
+        ),
+        "profil_profesional": (
+            "Viața școlară: materii preferate, relația cu colegii și profesorii. 2-3 propoziții."
+        ),
+        "hobby_sport": (
+            f"Activități și jocuri potrivite vârstei de {persona.age} ani în {persona.region}. 2-3 propoziții."
+        ),
+        "hobby_arta_cultura": (
+            "Interese și pasiuni: cărți, desen, muzică, natură. 2 propoziții."
+        ),
+        "hobby_calatorii": (
+            "Preferințe de călătorie împreună cu familia sau școala, adaptate vârstei. 1-2 propoziții."
+        ),
+        "hobby_culinar": (
+            "Relația cu mâncarea și tradițiile culinare din familie. 1-2 propoziții."
+        ),
+        "career_goals_and_ambitions": (
+            "Aspirații educaționale sau personale potrivite vârstei. 1-2 propoziții."
+        ),
+        "persona_summary": (
+            "O singură propoziție (15-25 cuvinte) care include nume, vârstă, localitate + un element distinctiv."
+        ),
+    }
+    section_lines = [
+        f"- {key}: {guidance.get(key, 'Completează cu text relevant.')}"
+        for key in required_keys
+    ]
     
     return f"""GENEREAZĂ PROFIL NARATIV PENTRU COPIL - Versiunea {PROMPT_VERSION}
 
@@ -245,72 +348,72 @@ INSTRUCȚIUNI OBLIGATORII:
 4. Include context familial și comunitar din {persona.region}
 5. Include aspirații educaționale potrivite vârstei
 
-STRUCTURA RĂSPUNSULUI:
-
-**1. DESCRIERE GENERALĂ**
-Cum este {first_name} ca copil la {persona.age} ani? Trăsături de caracter și comportament. 2-3 propoziții.
-
-**2. VIAȚA ȘCOLARĂ**
-Experiența la școală: materii preferate, relația cu colegii și profesorii. 2-3 propoziții.
-
-**3. ACTIVITĂȚI ȘI JOCURI**
-Cu ce îi place să se joace? Sporturi și activități specifice vârstei de {persona.age} ani în {persona.region}. 2-3 propoziții.
-
-**4. INTERESE ȘI PASIUNI**
-Ce îl/o pasionează? Cărți, desen, muzică, natură? 2 propoziții.
-
-**5. FAMILIE ȘI COMUNITATE**
-Context familial în care crește. Tradiții și obiceiuri din familia {persona.ethnicity} din {persona.region}. 2-3 propoziții.
-
-**6. ASPIRAȚII**
-Ce își dorește să învețe sau să devină când va crește? 1-2 propoziții.
-
-**7. REZUMAT**
-O singură propoziție (15-25 cuvinte) care include nume, vârstă, localitate + un element distinctiv.
+STRUCTURA CONȚINUTULUI (chei JSON):
+{chr(10).join(section_lines)}
 
 RESTRICȚII:
 - Fără referințe la job sau carieră
 - Ton adecvat vârstei de {persona.age} ani
 - Diacritice corecte
 
-RĂSPUNDE ÎN FORMAT:
+FORMAT DE RĂSPUNS (JSON ONLY):
+{json_template}
 
-[DESCRIERE GENERALA]
-(textul)
-
-[PROFIL PROFESIONAL]
-(textul - despre școală pentru copii)
-
-[HOBBY SPORT]
-(textul)
-
-[HOBBY ARTA CULTURA]
-(textul)
-
-[HOBBY CALATORII]
-(textul)
-
-[HOBBY CULINAR]
-(textul)
-
-[OBIECTIVE ȘI ASPIRAȚII]
-(textul - aspirații educaționale sau personale)
-
-[REZUMAT]
-(textul)
+REGULI JSON:
+- Return JSON only. No markdown. No explanations.
+- All keys must be present. Values must be non-empty strings.
+- Use exact keys as listed; no extra keys.
+- If you are unsure, still produce plausible content; do not omit keys.
+{min_lengths_text}
 """
 
 
 def _generate_elderly_prompt(
     persona: Persona, 
     context: str, 
-    pronouns: Dict[str, str]
+    pronouns: Dict[str, str],
+    required_keys: List[str],
+    min_lengths: Dict[str, int],
 ) -> str:
     """Generate age-appropriate prompt for elderly (65+)."""
     
     first_name = persona.name.split()[0]
     sex_adj = pronouns["adjective_f"] if persona.sex == "Feminin" else "un bărbat"
     community = _community_phrase(persona)
+    json_template = _format_json_template(required_keys)
+    min_lengths_text = _format_min_lengths(required_keys, min_lengths)
+    guidance = {
+        "descriere_generala": (
+            f"{first_name} este {sex_adj} de {persona.age} ani. Experiența de viață acumulată și personalitatea. "
+            "2-3 propoziții."
+        ),
+        "profil_profesional": (
+            f"A lucrat ca {persona.occupation.lower()}. Realizări profesionale și amintiri din perioada activă. "
+            "2-3 propoziții."
+        ),
+        "hobby_sport": (
+            f"Viața la pensie și activități ușoare în {community}. 2-3 propoziții."
+        ),
+        "hobby_arta_cultura": (
+            f"Interese culturale și artistice, incluzând tradiții din cultura {persona.ethnicity}. 2-3 propoziții."
+        ),
+        "hobby_calatorii": (
+            "Preferințe de călătorie la vârsta respectivă, cu accent pe familie sau comunitate. 1-2 propoziții."
+        ),
+        "hobby_culinar": (
+            f"Tradiții culinare păstrate din regiunea {persona.region}. 2-3 propoziții."
+        ),
+        "career_goals_and_ambitions": (
+            "Obiective personale sau comunitare potrivite vârstei (voluntariat, familie, sănătate). 1-2 propoziții."
+        ),
+        "persona_summary": (
+            "O singură propoziție (15-25 cuvinte) care include nume, vârstă, ocupație anterioară, regiune + un element distinctiv."
+        ),
+    }
+    section_lines = [
+        f"- {key}: {guidance.get(key, 'Completează cu text relevant.')}"
+        for key in required_keys
+    ]
     
     return f"""GENEREAZĂ PROFIL NARATIV PENTRU PERSOANĂ ÎN VÂRSTĂ - Versiunea {PROMPT_VERSION}
 
@@ -324,31 +427,8 @@ INSTRUCȚIUNI OBLIGATORII:
 4. Folosește pronumele "{pronouns['subject']}" corespunzător sexului {persona.sex}
 5. Include tradiții și valori din cultura {persona.ethnicity}
 
-STRUCTURA RĂSPUNSULUI:
-
-**1. DESCRIERE GENERALĂ**
-{first_name} este {sex_adj} de {persona.age} ani. Experiența de viață acumulată și personalitatea. 2-3 propoziții.
-
-**2. CARIERA ANTERIOARĂ** 
-A lucrat ca {persona.occupation.lower()}. Realizări profesionale și amintiri din perioada activă (folosește timpul trecut). 2-3 propoziții.
-
-**3. VIAȚA LA PENSIE**
-Cum își petrece timpul acum? Rutina zilnică și implicare {community}. 2-3 propoziții.
-
-**4. FAMILIE ȘI RELAȚII**
-Rolul de părinte/bunic. Relația cu copiii și nepoții. 2-3 propoziții.
-
-**5. INTERESE ȘI ACTIVITĂȚI**
-Hobby-uri adecvate vârstei: grădinărit, lectură, activități religioase ({persona.religion}). 2 propoziții.
-
-**6. VALORI ȘI TRADIȚII**
-Valori importante și tradiții pe care le păstrează din cultura {persona.ethnicity} din regiunea {persona.region}. 2-3 propoziții.
-
-**7. OBIECTIVE ȘI ASPIRAȚII**
-Obiective personale sau comunitare potrivite vârstei (voluntariat, familie, sănătate). 1-2 propoziții.
-
-**8. REZUMAT**
-O singură propoziție (15-25 cuvinte) care include nume, vârstă, ocupație anterioară, regiune + un element distinctiv.
+STRUCTURA CONȚINUTULUI (chei JSON):
+{chr(10).join(section_lines)}
 
 RESTRICȚII:
 - Folosește timpul trecut pentru carieră ("a lucrat", "a fost")
@@ -356,31 +436,15 @@ RESTRICȚII:
 - Ton respectuos și călduros
 - Diacritice corecte
 
-RĂSPUNDE ÎN FORMAT:
+FORMAT DE RĂSPUNS (JSON ONLY):
+{json_template}
 
-[DESCRIERE GENERALA]
-(textul)
-
-[PROFIL PROFESIONAL]
-(textul - cariera anterioară)
-
-[HOBBY SPORT]
-(textul - activități ușoare)
-
-[HOBBY ARTA CULTURA]
-(textul)
-
-[HOBBY CALATORII]
-(textul)
-
-[HOBBY CULINAR]
-(textul - tradiții culinare)
-
-[OBIECTIVE ȘI ASPIRAȚII]
-(textul)
-
-[REZUMAT]
-(textul)
+REGULI JSON:
+- Return JSON only. No markdown. No explanations.
+- All keys must be present. Values must be non-empty strings.
+- Use exact keys as listed; no extra keys.
+- If you are unsure, still produce plausible content; do not omit keys.
+{min_lengths_text}
 """
 
 
@@ -500,6 +564,43 @@ RĂSPUNDE STRICT ÎN FORMATUL:
 """
 
 
+def parse_json_narrative_response_strict(
+    response: str,
+    allowed_keys: List[str],
+    require_all: bool = True,
+) -> Dict[str, str]:
+    """
+    Strict JSON-only parser for narrative responses.
+    
+    Enforces: response starts with '{', ends with '}', no extra keys,
+    and all values are strings. Missing required keys raise if require_all.
+    """
+    if response is None or not response.startswith("{") or not response.endswith("}"):
+        raise ValueError("Response is not JSON-only or has trailing/leading content")
+    
+    try:
+        data = json.loads(response)
+    except json.JSONDecodeError as exc:
+        raise ValueError("Invalid JSON response") from exc
+    
+    if not isinstance(data, dict):
+        raise ValueError("JSON response must be an object")
+    
+    allowed = set(allowed_keys)
+    for key, value in data.items():
+        if key not in allowed:
+            raise ValueError(f"Unexpected key in JSON: {key}")
+        if not isinstance(value, str):
+            raise ValueError(f"Non-string value for key: {key}")
+    
+    if require_all:
+        missing = [key for key in allowed_keys if key not in data]
+        if missing:
+            raise ValueError(f"Missing required keys: {missing}")
+    
+    return {key: data.get(key, "") for key in allowed_keys}
+
+
 def parse_narrative_response(response: str) -> Dict[str, str]:
     """
     Parse LLM response into structured narrative fields.
@@ -552,6 +653,73 @@ def parse_narrative_response(response: str) -> Dict[str, str]:
     # Strategy 3: Everything in descriere_generala
     sections["descriere_generala"] = response.strip()
     return sections
+
+
+def generate_repair_prompt(
+    persona: Persona,
+    missing_fields: List[str],
+    existing_sections: Optional[Dict[str, str]] = None,
+    min_lengths: Optional[Dict[str, int]] = None,
+    force_fill_all: bool = False,
+) -> str:
+    """
+    Generate a targeted repair prompt for missing narrative sections.
+    
+    Args:
+        persona: Persona object
+        missing_fields: Fields to regenerate
+        existing_sections: Existing sections to keep unchanged
+        
+    Returns:
+        Repair prompt string
+    """
+    context = get_base_context(persona)
+    pronouns = _get_sex_pronouns(persona.sex)
+
+    existing_sections = existing_sections or {}
+    json_template = _format_json_template(missing_fields)
+    min_lengths = min_lengths or {}
+    min_lengths_text = _format_min_lengths(missing_fields, min_lengths)
+
+    frozen_sections = []
+    for key, value in existing_sections.items():
+        if key in missing_fields or not value:
+            continue
+        frozen_sections.append(f'- {key}: "{value.strip()}"')
+    frozen_text = "\n".join(frozen_sections) if frozen_sections else "(nu există)"
+    force_text = ""
+    if force_fill_all:
+        force_text = (
+            "Trebuie să completezi TOATE cheile. Nicio omisiune. "
+            "Dacă e nevoie, scrie un text scurt dar valid (respectă lungimile minime)."
+        )
+
+    return f"""REPARĂ SECTIUNI LIPSĂ - Versiunea {PROMPT_VERSION}
+
+DATE STRUCTURATE (trebuie respectate):
+{context}
+
+INSTRUCȚIUNI:
+1. Return JSON only. No markdown. No explanations.
+2. Completează DOAR cheile lipsă listate mai jos; NU adăuga alte chei.
+3. NU modifica secțiunile deja existente.
+4. Respectă vârsta {persona.age}, ocupația {persona.occupation}, regiunea {persona.region}.
+5. Folosește pronumele "{pronouns['subject']}" ({persona.sex.lower()}).
+6. Folosește diacritice corecte în limba română.
+{force_text}
+
+SECTIUNI EXISTENTE (NU LE MODIFICA):
+{frozen_text}
+
+FORMAT DE RĂSPUNS (JSON ONLY):
+{json_template}
+
+REGULI JSON:
+- All keys must be present. Values must be non-empty strings.
+- Use exact keys as listed; no extra keys.
+- If you are unsure, still produce plausible content; do not omit keys.
+{min_lengths_text}
+"""
 
 
 def _parse_by_markers(response: str, markers: Dict[str, str]) -> Dict[str, str]:

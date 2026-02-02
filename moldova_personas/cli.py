@@ -62,7 +62,7 @@ def cmd_generate(args):
             logger.info(f"Resuming from: {args.resume_from}")
     
     # Initialize generator
-    generator = PersonaGenerator(seed=args.seed)
+    generator = PersonaGenerator(seed=args.seed, include_ocean=args.ocean)
     
     # Generate structured data with streaming
     start_time = datetime.now()
@@ -103,6 +103,16 @@ def cmd_generate(args):
                 llm_kwargs['api_key'] = args.openai_api_key
             if args.openai_model:
                 llm_kwargs['model'] = args.openai_model
+        elif args.llm_provider == 'gemini':
+            if args.gemini_api_key:
+                llm_kwargs['api_key'] = args.gemini_api_key
+            if args.gemini_model:
+                llm_kwargs['model'] = args.gemini_model
+        elif args.llm_provider == 'kimi':
+            if args.kimi_api_key:
+                llm_kwargs['api_key'] = args.kimi_api_key
+            if args.kimi_model:
+                llm_kwargs['model'] = args.kimi_model
         
         # Qwen/DashScope specific
         elif args.llm_provider in ('qwen', 'dashscope'):
@@ -145,10 +155,13 @@ def cmd_generate(args):
             )
             
             nar_start = datetime.now()
+            delay = args.llm_delay
+            if args.llm_rate_limit and args.llm_rate_limit > 0:
+                delay = max(delay, 1.0 / args.llm_rate_limit)
             personas = nar_gen.generate_batch(
                 personas, 
                 show_progress=True,
-                delay=args.llm_delay
+                delay=delay
             )
             nar_duration = (datetime.now() - nar_start).total_seconds()
             logger.info(f"Generated narratives in {nar_duration:.2f} seconds")
@@ -399,8 +412,12 @@ def main():
                           help='Use IPF adjustment for better distribution matching')
     gen_parser.add_argument('--narratives', action='store_true',
                           help='Generate narrative content (even with mock provider)')
+    gen_parser.add_argument('--ocean', dest='ocean', action='store_true', default=True,
+                          help='Include OCEAN personality fields (default: enabled)')
+    gen_parser.add_argument('--no-ocean', dest='ocean', action='store_false',
+                          help='Disable OCEAN personality fields')
     gen_parser.add_argument('--llm-provider', type=str, default='mock',
-                          choices=['mock', 'openai', 'qwen', 'qwen-local', 'dashscope', 'local'],
+                          choices=['mock', 'openai', 'gemini', 'kimi', 'qwen', 'qwen-local', 'dashscope', 'local'],
                           help='LLM provider for narratives (default: mock)')
     gen_parser.add_argument('--openai-api-key', type=str, default=None,
                           help='OpenAI API key (or set OPENAI_API_KEY env var)')
@@ -410,6 +427,14 @@ def main():
                           help='DashScope API key for Qwen (or set DASHSCOPE_API_KEY env var)')
     gen_parser.add_argument('--qwen-model', type=str, default='qwen-turbo',
                           help='Qwen model: qwen-turbo, qwen-plus, qwen-max, qwen2.5-7b, etc.')
+    gen_parser.add_argument('--gemini-api-key', type=str, default=None,
+                          help='Gemini API key (or set GEMINI_API_KEY env var)')
+    gen_parser.add_argument('--gemini-model', type=str, default='gemini-2.5-flash',
+                          help='Gemini model (default: gemini-2.5-flash)')
+    gen_parser.add_argument('--kimi-api-key', type=str, default=None,
+                          help='Kimi API key (or set KIMI_API_KEY env var)')
+    gen_parser.add_argument('--kimi-model', type=str, default='moonshot-v1-8k',
+                          help='Kimi model (default: moonshot-v1-8k)')
     gen_parser.add_argument('--qwen-local-model', type=str, default='qwen2.5-7b',
                           help='Local Qwen model: qwen2.5-7b, qwen2.5-14b, etc.')
     gen_parser.add_argument('--llm-delay', type=float, default=0.1,
@@ -417,7 +442,7 @@ def main():
     gen_parser.add_argument('--llm-workers', type=int, default=1,
                           help='Number of parallel LLM workers (default: 1, use 5-20 for speedup)')
     gen_parser.add_argument('--llm-rate-limit', type=float, default=None,
-                          help='Rate limit in requests per second (optional)')
+                          help='Rate limit in requests per second (optional, serial/parallel)')
     gen_parser.add_argument('--checkpoint-every', type=int, default=1000,
                           help='Save checkpoint every N personas (default: 1000, set 0 to disable)')
     gen_parser.add_argument('--checkpoint-dir', type=str, default=None,

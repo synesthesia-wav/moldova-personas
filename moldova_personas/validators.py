@@ -15,7 +15,7 @@ from collections import Counter
 
 import numpy as np
 
-from .models import Persona, AgeConstraints
+from .models import Persona, AgeConstraints, PopulationMode
 from .census_data import CENSUS
 from .geo_tables import (
     strict_geo_enabled,
@@ -87,7 +87,7 @@ class ValidationPipeline:
     Multi-layer validation pipeline for persona datasets.
     """
     
-    def __init__(self, census_data=None):
+    def __init__(self, census_data=None, population_mode: PopulationMode = PopulationMode.ADULT_18):
         """
         Initialize validator.
         
@@ -95,6 +95,7 @@ class ValidationPipeline:
             census_data: Census distributions for statistical validation
         """
         self.census = census_data or CENSUS
+        self.population_mode = population_mode
         
         # Occupations requiring higher education
         self.high_education_occupations = {
@@ -157,11 +158,12 @@ class ValidationPipeline:
         errors = []
         warnings = []
         
-        # Age validation
-        if not (0 <= persona.age <= 110):
+        # Age validation (mode-aware)
+        min_age, max_age = self._age_range()
+        if not (min_age <= persona.age <= max_age):
             errors.append(ValidationError(
                 field="age",
-                message=f"Age {persona.age} out of valid range [0, 110]",
+                message=f"Age {persona.age} out of valid range [{min_age}, {max_age}]",
                 severity="error",
                 persona_uuid=persona.uuid
             ))
@@ -387,6 +389,8 @@ class ValidationPipeline:
         warnings = []
         
         n = len(personas)
+        if n == 0:
+            return errors, warnings
         
         # Check sex distribution
         sex_counts = Counter(p.sex for p in personas)
@@ -441,12 +445,13 @@ class ValidationPipeline:
                     severity="warning"
                 ))
         
-        # Check education distribution (for age 10+)
+        # Check education distribution (mode-aligned)
         ed_personas = [p for p in personas if p.age >= 10]
         if ed_personas:
             ed_counts = Counter(p.education_level for p in ed_personas)
             ed_dist = {k: v/len(ed_personas) for k, v in ed_counts.items()}
-            for education, target in self.census.EDUCATION_DISTRIBUTION.items():
+            education_target = self.census.education_distribution(self.population_mode).values
+            for education, target in education_target.items():
                 actual = ed_dist.get(education, 0)
                 if abs(actual - target) > tolerance * 1.5:
                     warnings.append(ValidationError(
@@ -473,6 +478,14 @@ class ValidationPipeline:
             return "55-64"
         else:
             return "65+"
+
+    def _age_range(self) -> Tuple[int, int]:
+        """Return (min_age, max_age) for the current population mode."""
+        if self.population_mode == PopulationMode.ADULT_18:
+            return AgeConstraints.MIN_PERSONA_AGE, 110
+        if self.population_mode == PopulationMode.AGE_15_PLUS:
+            return 15, 110
+        return 0, 110
 
 
 class NarrativeValidator:
