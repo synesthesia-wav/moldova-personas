@@ -5,9 +5,17 @@ Defines the schema for both structured fields and narrative fields,
 ensuring type safety and validation.
 """
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
+from enum import Enum
 from uuid import uuid4
 from pydantic import BaseModel, Field, ConfigDict
+
+
+class PopulationMode(Enum):
+    """Population scope for generation and validation."""
+    ADULT_18 = "adult_18"
+    AGE_15_PLUS = "15_plus"
+    ALL = "all"
 
 
 class AgeConstraints:
@@ -254,6 +262,58 @@ class Persona(BaseModel):
     field_provenance: Optional[Dict[str, str]] = Field(
         default=None,
         description="Map of field names to data source (PXWEB_DIRECT, CENSUS_HARDCODED, IPF_DERIVED, ESTIMATED, LLM_GENERATED)"
+    )
+
+    # =========================================================================
+    # OCEAN PERSONALITY (OPTIONAL)
+    # =========================================================================
+    ocean_openness: Optional[int] = Field(
+        default=None,
+        ge=0,
+        le=100,
+        description="OCEAN Openness score (0-100)"
+    )
+    ocean_conscientiousness: Optional[int] = Field(
+        default=None,
+        ge=0,
+        le=100,
+        description="OCEAN Conscientiousness score (0-100)"
+    )
+    ocean_extraversion: Optional[int] = Field(
+        default=None,
+        ge=0,
+        le=100,
+        description="OCEAN Extraversion score (0-100)"
+    )
+    ocean_agreeableness: Optional[int] = Field(
+        default=None,
+        ge=0,
+        le=100,
+        description="OCEAN Agreeableness score (0-100)"
+    )
+    ocean_neuroticism: Optional[int] = Field(
+        default=None,
+        ge=0,
+        le=100,
+        description="OCEAN Neuroticism score (0-100)"
+    )
+    ocean_source: Optional[str] = Field(
+        default=None,
+        description="OCEAN source (sampled, inferred, calibrated)"
+    )
+    ocean_confidence: Optional[float] = Field(
+        default=None,
+        ge=0.0,
+        le=1.0,
+        description="OCEAN confidence (0-1)"
+    )
+    ocean_profile: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="NeMo-style OCEAN profile (t_score, label, description)"
+    )
+    behavioral_contract: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Behavioral contract derived from OCEAN profile"
     )
     
 

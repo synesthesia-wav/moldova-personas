@@ -1,5 +1,7 @@
 """Custom exceptions for the Moldova personas pipeline."""
 
+from typing import Optional
+
 
 class MoldovaPersonasError(Exception):
     """Base exception for all pipeline errors."""

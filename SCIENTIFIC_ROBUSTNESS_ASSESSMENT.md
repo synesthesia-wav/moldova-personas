@@ -14,7 +14,7 @@ This assessment evaluates the scientific rigor of the Moldova Personas Generator
 
 | Component | Status | Notes |
 |-----------|--------|-------|
-| IPF Ethnicity Correction | ✅ Working | `_ipf_resample()` correctly adjusts ethnicity distribution |
+| Multi-marginal Raking | ✅ Working | `_rake_resample()` adjusts key marginal distributions with diagnostics |
 | Mock Mode Safety | ✅ Fixed | Returns empty strings, no fabricated content |
 | Fake Villages Removed | ✅ Fixed | All geographic data now uses real cities |
 | Template Cultural Backgrounds | ✅ Removed | No more Mad Libs-style generation |

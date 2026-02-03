@@ -1,5 +1,6 @@
 """Tests for async narrative generator."""
 
+import json
 import pytest
 import time
 from unittest.mock import Mock, patch
@@ -171,6 +172,16 @@ class TestParallelPerformance:
     def test_speedup_with_workers(self):
         """Test speedup scales with worker count."""
         delays = [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
+        json_response = json.dumps({
+            "descriere_generala": "x" * 25,
+            "profil_profesional": "y" * 25,
+            "hobby_sport": "z" * 15,
+            "hobby_arta_cultura": "w" * 15,
+            "hobby_calatorii": "v" * 15,
+            "hobby_culinar": "u" * 15,
+            "career_goals_and_ambitions": "t" * 15,
+            "persona_summary": "s" * 15,
+        })
         
         class VariableDelayClient:
             def __init__(self, delays):
@@ -181,7 +192,7 @@ class TestParallelPerformance:
                 delay = self.delays[self.index % len(self.delays)]
                 self.index += 1
                 time.sleep(delay)
-                return "Test response"
+                return json_response
         
         persona_gen = PersonaGenerator(seed=42)
         personas = persona_gen.generate(8, show_progress=False)

@@ -82,7 +82,6 @@ class AsyncNarrativeGenerator:
         )
         self.max_workers = max_workers
         self.rate_limit = rate_limit_per_second
-
         self.ocean_tolerance = ocean_tolerance
         self.max_rewrites = max_rewrites
         
@@ -285,7 +284,9 @@ def enrich_personas_parallel(
     model: Optional[str] = None,
     max_workers: int = 10,
     rate_limit_per_second: Optional[float] = None,
-    show_progress: bool = True
+    show_progress: bool = True,
+    ocean_tolerance: int = 15,
+    max_rewrites: int = 3,
 ) -> List[Persona]:
     """
     Convenience function to enrich personas with parallel narrative generation.
@@ -323,6 +324,8 @@ def enrich_personas_parallel(
         provider=provider,
         max_workers=max_workers,
         rate_limit_per_second=rate_limit_per_second,
+        ocean_tolerance=ocean_tolerance,
+        max_rewrites=max_rewrites,
         **kwargs
     )
     

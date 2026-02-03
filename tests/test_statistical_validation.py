@@ -49,6 +49,21 @@ class TestStatisticalValidator:
         assert result.statistic > 0
         assert result.p_value < 0.05
         assert result.passed is False
+
+    def test_chi_square_p_value_df2(self):
+        """Test chi-square p-value for df=2 against a known range."""
+        validator = StatisticalValidator(alpha=0.05)
+
+        n = 200
+        expected_probs = {"A": 0.5, "B": 0.3, "C": 0.2}
+        observed = {"A": 120, "B": 50, "C": 30}
+
+        result = validator.chi_square_goodness_of_fit(
+            observed, expected_probs, n
+        )
+
+        assert result.degrees_of_freedom == 2
+        assert 0.01 < result.p_value < 0.03
     
     def test_sex_distribution_test(self):
         """Test sex distribution validation."""

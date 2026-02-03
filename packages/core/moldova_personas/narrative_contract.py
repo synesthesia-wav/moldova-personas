@@ -18,11 +18,16 @@ from typing import Dict, List, Optional, Any, Callable
 from pathlib import Path
 
 from .models import Persona
-from .prompts import parse_narrative_response, validate_narrative_against_persona
+from .prompts import (
+    PROMPT_VERSION,
+    parse_narrative_response,
+    parse_json_narrative_response_strict,
+    validate_narrative_against_persona,
+)
 
 
 # Version of the narrative contract
-NARRATIVE_CONTRACT_VERSION = "1.2.0"
+NARRATIVE_CONTRACT_VERSION = "1.4.0"
 
 
 @dataclass
@@ -35,7 +40,7 @@ class NarrativeContract:
     
     # Version tracking
     contract_version: str = NARRATIVE_CONTRACT_VERSION
-    prompt_version: str = "1.2.0"
+    prompt_version: str = PROMPT_VERSION
     
     # Required sections
     required_sections: List[str] = field(default_factory=lambda: [
@@ -158,8 +163,17 @@ class NarrativeContractValidator:
             contract_version=self.contract.contract_version,
         )
         
-        # Parse response
-        sections = parse_narrative_response(response)
+        # Parse response (JSON-only preferred if present)
+        is_json = False
+        try:
+            sections = parse_json_narrative_response_strict(
+                response,
+                self.contract.required_sections,
+                require_all=False,
+            )
+            is_json = True
+        except Exception:
+            sections = parse_narrative_response(response)
         
         # Check required sections
         for section in self.contract.required_sections:
@@ -167,11 +181,12 @@ class NarrativeContractValidator:
                 result.missing_sections.append(section)
                 result.errors.append(f"Missing section: {section}")
         
-        # Check required markers
-        for marker in self.contract.required_markers:
-            if marker not in response:
-                result.missing_markers.append(marker)
-                result.errors.append(f"Missing marker: {marker}")
+        # Check required markers (skip for JSON-only responses)
+        if not is_json:
+            for marker in self.contract.required_markers:
+                if marker not in response:
+                    result.missing_markers.append(marker)
+                    result.errors.append(f"Missing marker: {marker}")
         
         # Check section lengths
         for section_name, content in sections.items():

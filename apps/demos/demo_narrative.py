@@ -34,7 +34,7 @@ from moldova_personas.narrative_generator import NarrativeGenerator
 def main():
     parser = argparse.ArgumentParser(description="Demo narrative generation")
     parser.add_argument('--mode', type=str, default='mock', 
-                       choices=['mock', 'openai', 'qwen', 'qwen-local', 'dashscope'],
+                       choices=['mock', 'openai', 'gemini', 'kimi', 'qwen', 'qwen-local', 'dashscope'],
                        help='LLM provider mode')
     parser.add_argument('--count', type=int, default=3,
                        help='Number of personas to generate')

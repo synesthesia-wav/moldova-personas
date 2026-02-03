@@ -18,6 +18,7 @@ Based on research linking Big Five traits to behavioral patterns:
 import random
 import json
 import re
+import unicodedata
 from dataclasses import dataclass, field
 from typing import Dict, List, Tuple, Optional, Any
 from enum import Enum
@@ -142,8 +143,7 @@ class OCEANSampler:
     """
     
     def __init__(self, seed: Optional[int] = None):
-        if seed is not None:
-            random.seed(seed)
+        self.rng = random.Random(seed)
     
     def sample(
         self,
@@ -190,7 +190,7 @@ class OCEANSampler:
         """Sample base profile from normal distribution."""
         def sample_trait():
             # Use bounded normal approximation
-            value = random.gauss(mean, std)
+            value = self.rng.gauss(mean, std)
             return int(max(0, min(100, value)))
         
         return OCEANProfile(
@@ -405,17 +405,10 @@ class OCEANBehaviorMapper:
     @staticmethod
     def _calc_dissent_probability(profile: OCEANProfile) -> float:
         """Calculate probability of saying 'no' or disagreeing."""
-        # Low A + High E + Low N = likely to dissent
-        base = 0.3
-        if profile.agreeableness < 40:
-            base += 0.2
-        if profile.extraversion > 60:
-            base += 0.1
-        if profile.neuroticism < 40:
-            base += 0.1
-        if profile.openness > 60:
-            base += 0.1
-        return min(0.9, base)
+        a_norm = profile.agreeableness / 100.0
+        e_norm = profile.extraversion / 100.0
+        value = 0.05 + 0.35 * (1.0 - a_norm) + 0.10 * e_norm
+        return min(0.60, max(0.02, value))
     
     @staticmethod
     def _calc_complaint_likelihood(profile: OCEANProfile) -> str:
@@ -461,21 +454,28 @@ class OCEANTextAnalyzer:
         },
         "conscientiousness": {
             "high": ["organizat", "disciplinat", "planific", "precis", "responsabil", "meticulos", "punctual", "structurat"],
-            "low": ["spontan", "relaxed", "flexibil", "improvizează", "laid-back", "dezorganizat"]
+            "low": ["spontan", "relaxat", "flexibil", "improvizează", "dezorganizat"]
         },
         "extraversion": {
             "high": ["sociabil", "extrovertit", "energic", "vorbăreț", "petreceri", "grupuri", "entuziast", "asertiv"],
-            "low": ["introvertit", "quiet", "rezervat", "solitar", "liniștit", "introspectiv", "privat"]
+            "low": ["introvertit", "rezervat", "solitar", "liniștit", "introspectiv", "tăcut"]
         },
         "agreeableness": {
             "high": ["amabil", "cooperant", "empatic", "înțelegător", "generos", "ajută", "armonios", "diplomatic"],
-            "low": ["competitiv", "direct", "critic", "sceptic", "blunt", "dur", "confruntațional"]
+            "low": ["competitiv", "direct", "critic", "sceptic", "dur", "confruntațional"]
         },
         "neuroticism": {
-            "high": ["anxios", "stresat", "îngrijorat", "emotional", "sensibil", "nervos", "fricos", "temător"],
+            "high": ["anxios", "stresat", "îngrijorat", "emoțional", "sensibil", "nervos", "fricos", "temător"],
             "low": ["calm", "stabil", "relaxat", "încrezător", "rezilient", "echilibrat", "liniștit"]
         }
     }
+
+    @staticmethod
+    def _normalize_text(text: str) -> str:
+        text = (text or "").lower()
+        text = unicodedata.normalize("NFKD", text)
+        text = "".join(ch for ch in text if not unicodedata.combining(ch))
+        return text
     
     def analyze(self, text: str) -> OCEANProfile:
         """
@@ -483,32 +483,43 @@ class OCEANTextAnalyzer:
         
         Returns inferred profile with confidence score.
         """
-        text_lower = text.lower()
+        normalized_text = self._normalize_text(text)
+        tokens = re.findall(r"\b\w+\b", normalized_text)
+        token_set = set(tokens)
+
+        if not tokens:
+            return OCEANProfile(
+                openness=50,
+                conscientiousness=50,
+                extraversion=50,
+                agreeableness=50,
+                neuroticism=50,
+                source="inferred",
+                confidence=0.0
+            )
         
         scores = {}
+        total_hits = 0
         for trait, keywords in self.KEYWORDS.items():
-            high_count = sum(1 for word in keywords["high"] if word in text_lower)
-            low_count = sum(1 for word in keywords["low"] if word in text_lower)
-            
-            # Calculate score (50 = neutral)
-            total = high_count + low_count
-            if total == 0:
-                scores[trait] = 50  # Unknown
-            else:
-                # Scale to 0-100
-                ratio = high_count / total
-                scores[trait] = int(ratio * 100)
+            high_words = {self._normalize_text(word) for word in keywords["high"]}
+            low_words = {self._normalize_text(word) for word in keywords["low"]}
+
+            high_hits = {word for word in high_words if word in token_set}
+            low_hits = {word for word in low_words if word in token_set}
+
+            trait_hits = len(high_hits) + len(low_hits)
+            total_hits += trait_hits
+
+            delta = 5 * (len(high_hits) - len(low_hits))
+            delta = max(-20, min(20, delta))
+            if trait_hits < 2:
+                delta = max(-10, min(10, delta))
+
+            scores[trait] = int(max(0, min(100, 50 + delta)))
         
         # Confidence based on keyword density
-        total_words = len(text.split())
-        keyword_hits = sum(
-            len([w for w in keywords["high"] + keywords["low"] if w in text_lower])
-            for keywords in self.KEYWORDS.values()
-        )
-        if total_words == 0:
-            confidence = 0.0
-        else:
-            confidence = min(1.0, keyword_hits / (total_words * 0.1))  # Expect ~10% keyword density
+        total_words = len(tokens)
+        confidence = min(1.0, total_hits / max(1.0, total_words * 0.1))  # Expect ~10% keyword density
         
         return OCEANProfile(
             openness=scores["openness"],
@@ -590,6 +601,11 @@ def generate_ocean_guided_prompt(
     conflict = behavioral_contract["conflict_style"]
     social = behavioral_contract["social_pattern"]
     novelty = behavioral_contract["novelty_seeking"]
+
+    if traits_desc:
+        personality_line = f"Persoana este {', '.join(traits_desc)}."
+    else:
+        personality_line = "Persoana are un profil echilibrat și ia decizii pragmatic."
     
     prompt = f"""PERSONALITATE (OCEAN Profile):
 - Openness: {ocean_profile.openness}/100
@@ -598,8 +614,8 @@ def generate_ocean_guided_prompt(
 - Agreeableness: {ocean_profile.agreeableness}/100
 - Neuroticism: {ocean_profile.neuroticism}/100
 
-DESCRIERE PERSONALITATE:
-Persoana este {', '.join(traits_desc)}.
+    DESCRIERE PERSONALITATE:
+    {personality_line}
 
 COMPORTAMENT:
 - Toleranță la risc: {risk}

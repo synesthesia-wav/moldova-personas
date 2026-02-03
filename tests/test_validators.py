@@ -48,6 +48,14 @@ class TestValidationPipeline:
         
         report = pipeline.validate(personas)
         assert report.total_checked == 5
+
+    def test_pipeline_handles_empty_list(self):
+        """Test that empty inputs do not crash validation."""
+        pipeline = ValidationPipeline()
+        report = pipeline.validate([])
+        assert report.total_checked == 0
+        assert report.error_count == 0
+        assert report.warning_count == 0
     
     def test_valid_persona_passes(self):
         """Test that a valid persona passes validation."""

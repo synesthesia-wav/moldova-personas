@@ -61,6 +61,7 @@ MOLDOVA_EXTENDED_FIELDS = {
     "religion",
     "residence_type",
     "age_group",
+    "ocean_profile",
 }
 
 
@@ -193,7 +194,7 @@ class ExportManager:
                     k: v for k, v in persona.items()
                     if k in REFERENCE_SCHEMA_FIELDS
                 }
-                
+
                 # Ensure OCEAN is in reference format (not raw scores)
                 ocean_profile = persona.get("ocean_profile")
                 if not ocean_profile:
@@ -208,7 +209,6 @@ class ExportManager:
                         ocean_profile = convert_to_reference_schema(raw)
                 if ocean_profile:
                     record["ocean_profile"] = ocean_profile
-                
                 # Add minimal metadata
                 record["_source"] = {
                     "generator": "moldova-personas",

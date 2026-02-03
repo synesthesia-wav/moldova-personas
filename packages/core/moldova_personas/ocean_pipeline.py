@@ -439,6 +439,20 @@ RĂSPUNS JSON:
         )
         
         max_deviation = max(abs(d) for d in deviations.values())
+        confidence = inferred.confidence
+
+        rewrite_policy = "standard"
+        if confidence < 0.35:
+            # Low-signal text: avoid random rewrites
+            is_within = True
+            rewrite_policy = "skip_low_confidence"
+        elif confidence < 0.6:
+            # Medium confidence: only rewrite on large deviations
+            if max_deviation <= 25:
+                is_within = True
+                rewrite_policy = "skip_medium_confidence"
+            else:
+                rewrite_policy = "allow_large_deviation"
         
         deviation_info = {
             "is_within_tolerance": is_within,
@@ -446,6 +460,8 @@ RĂSPUNS JSON:
             "inferred": inferred.to_dict(),
             "deviations": deviations,
             "max_deviation": max_deviation,
+            "confidence": confidence,
+            "rewrite_policy": rewrite_policy,
             "traits_to_adjust": [
                 trait for trait, dev in deviations.items()
                 if abs(dev) > self.ocean_tolerance

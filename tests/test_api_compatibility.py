@@ -346,7 +346,7 @@ class TestVersionSynchronization:
         
         Narrative contract changes affect LLM output format.
         """
-        expected_contract_version = "1.2.0"
+        expected_contract_version = "1.4.0"
         
         assert mp.NARRATIVE_CONTRACT_VERSION == expected_contract_version, (
             f"NARRATIVE_CONTRACT_VERSION changed from {expected_contract_version} "

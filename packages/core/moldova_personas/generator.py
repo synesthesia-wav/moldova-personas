@@ -23,12 +23,14 @@ from .names import (
     get_religion_by_ethnicity,
     reset_ethnocultural_fallbacks,
 )
+from .ocean_framework import OCEANSampler, OCEANBehaviorMapper
+from .ocean_schema import convert_to_reference_schema
 from .geo_tables import (
     strict_geo_enabled,
     get_district_distribution,
     get_region_for_district,
 )
-from .models import Persona, get_age_group, AgeConstraints
+from .models import Persona, get_age_group, AgeConstraints, PopulationMode
 from .paths import config_dir
 
 
@@ -40,7 +42,13 @@ class PersonaGenerator:
     between demographic variables.
     """
     
-    def __init__(self, census_data: Optional[CensusDistributions] = None, seed: Optional[int] = None):
+    def __init__(
+        self,
+        census_data: Optional[CensusDistributions] = None,
+        seed: Optional[int] = None,
+        population_mode: PopulationMode = PopulationMode.ADULT_18,
+        include_ocean: bool = True,
+    ):
         """
         Initialize the generator.
         
@@ -49,10 +57,16 @@ class PersonaGenerator:
             seed: Random seed for reproducibility
         """
         self.census = census_data or CENSUS
+        self.population_mode = population_mode
+        self.include_ocean = include_ocean
+        if self.population_mode != PopulationMode.ADULT_18:
+            raise ValueError("PopulationMode is adult-only; non-adult modes are not supported yet.")
         
         if seed is not None:
             random.seed(seed)
             np.random.seed(seed)
+
+        self.ocean_sampler = OCEANSampler(seed=seed) if self.include_ocean else None
         
         # Pre-compute city/district data for realistic location generation
         self._init_location_data()
@@ -137,12 +151,20 @@ class PersonaGenerator:
         probabilities = list(distribution.values())
         return random.choices(keys, weights=probabilities, k=1)[0]
     
+    def _min_persona_age(self) -> int:
+        """Minimum age based on population mode."""
+        if self.population_mode == PopulationMode.ADULT_18:
+            return AgeConstraints.MIN_PERSONA_AGE
+        if self.population_mode == PopulationMode.AGE_15_PLUS:
+            return 15
+        return 0
+
     def _sample_age_from_group(self, age_group: str) -> int:
         """
         Sample a specific age within an age group using realistic distribution.
         
         Uses a slightly bell-shaped distribution within each group rather than
-        uniform random. Minimum age is enforced at 18.
+        uniform random. Minimum age is enforced by population mode.
         
         Args:
             age_group: Age group string (e.g., "25-34")
@@ -162,7 +184,19 @@ class PersonaGenerator:
         min_age, max_age = ranges.get(age_group, (25, 65))
         
         # Enforce minimum age for personas
-        min_age = max(min_age, AgeConstraints.MIN_PERSONA_AGE)
+        min_age = max(min_age, self._min_persona_age())
+
+        # Prefer single-age sampling when available
+        try:
+            single_age_counts = self.census._load_single_age_counts()
+        except Exception:
+            single_age_counts = None
+        if single_age_counts:
+            ages = [age for age in range(min_age, max_age + 1) if age in single_age_counts]
+            if ages:
+                weights = [single_age_counts[age] for age in ages]
+                if sum(weights) > 0:
+                    return random.choices(ages, weights=weights, k=1)[0]
         
         # Use triangular distribution for more realistic age distribution within group
         mode = (min_age + max_age) // 2
@@ -450,8 +484,8 @@ class PersonaGenerator:
         # Step 6: Generate Name (based on ethnicity and sex - now sex is known)
         name = generate_name(ethnicity, sex)
         
-        # Step 7: Sample Age Group, then specific age (adult-only distribution)
-        age_group_dist = self.census.ADULT_AGE_GROUP_DISTRIBUTION
+        # Step 7: Sample Age Group, then specific age (mode-specific distribution)
+        age_group_dist = self.census.age_group_distribution(self.population_mode)
         age_group = self._sample_from_dict(age_group_dist)
         age = self._sample_age_from_group(age_group)
         
@@ -472,6 +506,35 @@ class PersonaGenerator:
         
         # Step 12: Generate Field of Study (if applicable)
         field_of_study = self._generate_field_of_study(education)
+
+        # Step 12b: Sample OCEAN personality and behavioral contract (optional)
+        ocean_scores = None
+        ocean_profile = None
+        behavioral_contract = None
+        ocean_source = None
+        ocean_confidence = None
+        if self.include_ocean and self.ocean_sampler:
+            ocean = self.ocean_sampler.sample(
+                age=age,
+                sex=sex,
+                education_level=education,
+                occupation=occupation,
+            )
+            ocean_scores = {
+                "openness": ocean.openness,
+                "conscientiousness": ocean.conscientiousness,
+                "extraversion": ocean.extraversion,
+                "agreeableness": ocean.agreeableness,
+                "neuroticism": ocean.neuroticism,
+            }
+            ocean_profile = convert_to_reference_schema(ocean_scores)
+            behavioral_contract = OCEANBehaviorMapper.generate_behavioral_contract(ocean)
+            if "ocean_profile" in behavioral_contract:
+                behavioral_contract = {
+                    k: v for k, v in behavioral_contract.items() if k != "ocean_profile"
+                }
+            ocean_source = ocean.source
+            ocean_confidence = ocean.confidence
         
         # Step 13: Generate Location details (strict geo avoids fabricated localities)
         if strict_geo:
@@ -504,6 +567,15 @@ class PersonaGenerator:
             region=region,
             residence_type=residence_type,
             country="Moldova",
+            ocean_openness=ocean_scores["openness"] if ocean_scores else None,
+            ocean_conscientiousness=ocean_scores["conscientiousness"] if ocean_scores else None,
+            ocean_extraversion=ocean_scores["extraversion"] if ocean_scores else None,
+            ocean_agreeableness=ocean_scores["agreeableness"] if ocean_scores else None,
+            ocean_neuroticism=ocean_scores["neuroticism"] if ocean_scores else None,
+            ocean_source=ocean_source,
+            ocean_confidence=ocean_confidence,
+            ocean_profile=ocean_profile,
+            behavioral_contract=behavioral_contract,
         )
     
     def _select_city(self, region: str, residence_type: str) -> str:
@@ -596,7 +668,7 @@ class PersonaGenerator:
         Args:
             n: Number of personas to generate
             show_progress: Whether to show progress bar
-            use_ethnicity_correction: Whether to apply IPF correction for ethnicity
+            use_ethnicity_correction: Whether to apply multi-marginal raking correction
         
         Returns:
             List of Persona objects
@@ -623,14 +695,14 @@ class PersonaGenerator:
         return_metrics: bool = False,
     ) -> List[Persona] | Tuple[List[Persona], "IPFMetrics"]:
         """
-        Generate personas with IPF (Iterative Proportional Fitting) adjustment.
+        Generate personas with multi-marginal raking adjustment.
         
         This ensures the final sample more closely matches target distributions
-        by iteratively adjusting sampling weights.
+        by iteratively adjusting sampling weights across multiple marginals.
         
         Args:
             n: Number of personas to generate
-            max_iterations: Maximum IPF iterations
+            max_iterations: Maximum raking iterations
         
         Returns:
             List of Persona objects adjusted to match targets, or tuple with metrics if return_metrics=True
@@ -639,126 +711,192 @@ class PersonaGenerator:
 
         # Generate initial oversample
         oversample_factor = 2
-        # Avoid double-correction: generate without ethnicity correction
+        # Avoid double-correction: generate without raking
         initial_sample = self.generate(
             n * oversample_factor,
             show_progress=True,
             use_ethnicity_correction=False,
         )
         
-        # Apply IPF-like adjustment through resampling
-        # This is a simplified version - full IPF would adjust weights
-        adjusted, metrics = self._ipf_resample(initial_sample, n)
+        # Apply raking adjustment through resampling
+        adjusted, metrics = self._rake_resample(initial_sample, n, max_iterations=max_iterations)
         
         if return_metrics:
             return adjusted, metrics
         return adjusted
     
-    def _ipf_resample(self, sample: List[Persona], target_n: int) -> Tuple[List[Persona], "IPFMetrics"]:
+    def _get_raking_targets(self) -> Tuple[Dict[str, Dict[str, float]], Dict[str, callable]]:
+        """Return target distributions and extractors for raking."""
+        targets: Dict[str, Dict[str, float]] = {
+            "sex": self.census.SEX_DISTRIBUTION,
+            "age_group": self.census.age_group_distribution(self.population_mode),
+            "residence_type": self.census.RESIDENCE_TYPE_DISTRIBUTION,
+            "ethnicity": self.census.ETHNICITY_DISTRIBUTION,
+        }
+        extractors: Dict[str, callable] = {
+            "sex": lambda p: p.sex,
+            "age_group": lambda p: p.age_group,
+            "residence_type": lambda p: p.residence_type,
+            "ethnicity": lambda p: p.ethnicity,
+        }
+        # Prefer district targets in strict geo mode when available
+        if strict_geo_enabled():
+            district_target = get_district_distribution()
+            if district_target:
+                targets["district"] = district_target
+                extractors["district"] = lambda p: p.district if p.district else "Unknown"
+            else:
+                targets["region"] = self.census.REGION_DISTRIBUTION
+                extractors["region"] = lambda p: p.region
+        else:
+            targets["region"] = self.census.REGION_DISTRIBUTION
+            extractors["region"] = lambda p: p.region
+        return targets, extractors
+
+    def _compute_weighted_dist(
+        self,
+        sample: List[Persona],
+        weights: List[float],
+        extractor,
+    ) -> Dict[str, float]:
+        totals: Dict[str, float] = {}
+        total_w = sum(weights)
+        if total_w <= 0:
+            return {}
+        for p, w in zip(sample, weights):
+            key = extractor(p)
+            totals[key] = totals.get(key, 0.0) + w
+        return {k: v / total_w for k, v in totals.items()}
+
+    def _compute_unweighted_dist(
+        self,
+        sample: List[Persona],
+        extractor,
+    ) -> Dict[str, float]:
+        totals: Dict[str, float] = {}
+        for p in sample:
+            key = extractor(p)
+            totals[key] = totals.get(key, 0) + 1
+        total = len(sample)
+        return {k: v / total for k, v in totals.items()} if total > 0 else {}
+
+    def _rake_weights(
+        self,
+        sample: List[Persona],
+        targets: Dict[str, Dict[str, float]],
+        extractors: Dict[str, callable],
+        max_iterations: int = 50,
+        tol: float = 1e-6,
+        weight_cap: Optional[Tuple[float, float]] = (0.2, 5.0),
+    ) -> Tuple[List[float], Dict[str, float], int, bool, float]:
+        """Iteratively rake weights to match target marginals."""
+        weights = [1.0 for _ in sample]
+        converged = False
+        field_errors: Dict[str, float] = {}
+
+        for iteration in range(1, max_iterations + 1):
+            for field, target in targets.items():
+                extractor = extractors[field]
+                current = self._compute_weighted_dist(sample, weights, extractor)
+                for i, persona in enumerate(sample):
+                    key = extractor(persona)
+                    cur = current.get(key, 0.0)
+                    if cur <= 0:
+                        continue
+                    adj = target.get(key, 0.0) / cur
+                    weights[i] *= adj
+                if weight_cap:
+                    min_w, max_w = weight_cap
+                    weights = [min(max(w, min_w), max_w) for w in weights]
+
+            # Evaluate convergence after full pass
+            max_err = 0.0
+            field_errors = {}
+            for field, target in targets.items():
+                extractor = extractors[field]
+                current = self._compute_weighted_dist(sample, weights, extractor)
+                keys = set(current.keys()) | set(target.keys())
+                err = max((abs(current.get(k, 0.0) - target.get(k, 0.0)) for k in keys), default=0.0)
+                field_errors[field] = err
+                max_err = max(max_err, err)
+
+            if max_err < tol:
+                converged = True
+                break
+
+        return weights, field_errors, iteration, converged, max_err
+
+    def _weighted_resample(
+        self,
+        sample: List[Persona],
+        weights: List[float],
+        target_n: int,
+    ) -> List[Persona]:
+        """Weighted resampling with replacement."""
+        if not sample:
+            return []
+        return random.choices(sample, weights=weights, k=target_n)
+
+    def _rake_resample(
+        self,
+        sample: List[Persona],
+        target_n: int,
+        max_iterations: int = 50,
+    ) -> Tuple[List[Persona], "IPFMetrics"]:
         """
-        Resample from initial sample to better match target distributions.
-        
-        Uses IPF (Iterative Proportional Fitting) to adjust for ethnicity
-        underrepresentation while preserving regional correlations.
+        Resample from initial sample to better match multiple target distributions.
         
         Args:
             sample: Initial oversampled personas
             target_n: Target number of personas
+            max_iterations: Maximum raking iterations
         
         Returns:
             Tuple of (resampled personas, IPFMetrics with ESS and weight concentration)
         """
-        import numpy as np
         from .trust_report import IPFMetrics
         
-        # Calculate current ethnicity distribution
-        ethnicity_counts = {}
-        for p in sample:
-            ethnicity_counts[p.ethnicity] = ethnicity_counts.get(p.ethnicity, 0) + 1
-        
-        total = len(sample)
-        current_ethnicity_dist = {e: c / total for e, c in ethnicity_counts.items()}
-        
-        # Target ethnicity distribution from NBS 2024
-        target_ethnicity_dist = self.census.ETHNICITY_DISTRIBUTION
-        
-        # Calculate adjustment weights for each ethnicity
-        ethnicity_weights = {}
-        for ethnicity in target_ethnicity_dist:
-            current = current_ethnicity_dist.get(ethnicity, 0.001)  # Avoid div by zero
-            target = target_ethnicity_dist[ethnicity]
-            ethnicity_weights[ethnicity] = target / current
-        
-        # Normalize weights
-        max_weight = max(ethnicity_weights.values())
-        ethnicity_weights = {e: w / max_weight for e, w in ethnicity_weights.items()}
-        
-        # Apply weighted resampling
-        weights = [ethnicity_weights.get(p.ethnicity, 0.1) for p in sample]
-        weights_array = np.array(weights)
-        
-        # Calculate ESS and weight concentration metrics
-        sum_weights = np.sum(weights_array)
-        sum_weights_sq = np.sum(weights_array ** 2)
-        effective_sample_size = (sum_weights ** 2) / sum_weights_sq if sum_weights_sq > 0 else 0
-        
-        # Weight concentration: max_weight / mean_weight
-        # High values indicate some personas are being over-represented
-        mean_weight = np.mean(weights_array)
+        targets, extractors = self._get_raking_targets()
+        weights, field_errors, iterations, converged, max_err = self._rake_weights(
+            sample,
+            targets,
+            extractors,
+            max_iterations=max_iterations,
+        )
+
+        # Compute ESS and weight concentration metrics
+        weights_array = np.array(weights, dtype=float)
+        sum_weights = float(np.sum(weights_array))
+        sum_weights_sq = float(np.sum(weights_array ** 2))
+        effective_sample_size = (sum_weights ** 2) / sum_weights_sq if sum_weights_sq > 0 else 0.0
+        mean_weight = float(np.mean(weights_array)) if len(weights_array) > 0 else 0.0
+        max_weight = float(np.max(weights_array)) if len(weights_array) > 0 else 0.0
         weight_concentration = max_weight / mean_weight if mean_weight > 0 else 1.0
-        
-        # Calculate pre-correction drift
-        pre_correction_drift = {
-            "ethnicity": sum(
-                abs(current_ethnicity_dist.get(e, 0) - target_ethnicity_dist.get(e, 0))
-                for e in set(current_ethnicity_dist) | set(target_ethnicity_dist)
+
+        # Top 5% weight share
+        top_k = max(1, int(0.05 * len(weights_array)))
+        top_5_share = float(np.sum(np.sort(weights_array)[-top_k:]) / sum_weights) if sum_weights > 0 else 0.0
+
+        # Pre-correction drift per field
+        pre_correction_drift = {}
+        for field, target in targets.items():
+            current = self._compute_unweighted_dist(sample, extractors[field])
+            pre_correction_drift[field] = sum(
+                abs(current.get(k, 0.0) - target.get(k, 0.0))
+                for k in set(current) | set(target)
             )
-        }
-        
-        # Use weighted random sampling without replacement
-        result = []
-        available_indices = list(range(len(sample)))
-        available_weights = weights.copy()
-        
-        for _ in range(target_n):
-            if not available_indices:
-                break
-            
-            # Normalize available weights
-            total_weight = sum(available_weights)
-            if total_weight == 0:
-                break
-            
-            normalized_weights = [w / total_weight for w in available_weights]
-            
-            # Weighted random selection
-            selected_idx = random.choices(available_indices, weights=normalized_weights, k=1)[0]
-            result.append(sample[selected_idx])
-            
-            # Remove selected from available pool
-            idx_in_available = available_indices.index(selected_idx)
-            available_indices.pop(idx_in_available)
-            available_weights.pop(idx_in_available)
-        
-        # If we couldn't get enough, fill with random choices
-        while len(result) < target_n:
-            result.append(random.choice(sample))
-        
-        random.shuffle(result)
-        
-        # Calculate post-correction drift (on the result)
-        result_ethnicity_counts = {}
-        for p in result:
-            result_ethnicity_counts[p.ethnicity] = result_ethnicity_counts.get(p.ethnicity, 0) + 1
-        result_total = len(result)
-        result_ethnicity_dist = {e: c / result_total for e, c in result_ethnicity_counts.items()}
-        
-        post_correction_drift = {
-            "ethnicity": sum(
-                abs(result_ethnicity_dist.get(e, 0) - target_ethnicity_dist.get(e, 0))
-                for e in set(result_ethnicity_dist) | set(target_ethnicity_dist)
+
+        # Resample
+        result = self._weighted_resample(sample, weights, target_n)
+
+        # Post-correction drift per field
+        post_correction_drift = {}
+        for field, target in targets.items():
+            current = self._compute_unweighted_dist(result, extractors[field])
+            post_correction_drift[field] = sum(
+                abs(current.get(k, 0.0) - target.get(k, 0.0))
+                for k in set(current) | set(target)
             )
-        }
         
         # Create metrics object
         metrics = IPFMetrics(
@@ -767,10 +905,17 @@ class PersonaGenerator:
             resampling_ratio=target_n / len(sample) if len(sample) > 0 else 0,
             pre_correction_drift=pre_correction_drift,
             post_correction_drift=post_correction_drift,
+            correction_iterations=iterations,
         )
         
-        # Add weight concentration to metrics (stored in a field we'll add)
+        # Add raking diagnostics
         metrics.weight_concentration = weight_concentration
+        metrics.top_5_weight_share = top_5_share
+        metrics.raking_fields = list(targets.keys())
+        metrics.raking_converged = converged
+        metrics.max_marginal_error = max_err
+        metrics.marginal_error_by_field = field_errors
+        metrics.weight_cap = (0.2, 5.0)
         
         return result[:target_n], metrics
     
@@ -781,14 +926,14 @@ class PersonaGenerator:
         return_metrics: bool = False
     ) -> List[Persona] | Tuple[List[Persona], "IPFMetrics"]:
         """
-        Generate personas with ethnicity distribution correction.
+        Generate personas with multi-marginal raking correction.
         
-        Uses IPF to ensure the final sample matches NBS 2024 national
-        ethnicity targets while preserving regional correlations.
+        Uses raking to ensure the final sample matches multiple target
+        distributions while preserving correlations.
         
         Args:
             n: Number of personas to generate
-            oversample_factor: How many times to oversample for IPF
+            oversample_factor: How many times to oversample for raking
             return_metrics: If True, return (personas, metrics) tuple
         
         Returns:
@@ -804,8 +949,8 @@ class PersonaGenerator:
         for _ in tqdm(range(target_n), desc="Generating personas", total=target_n):
             initial_sample.append(self.generate_single())
         
-        # Apply IPF correction
-        corrected, metrics = self._ipf_resample(initial_sample, n)
+        # Apply raking correction
+        corrected, metrics = self._rake_resample(initial_sample, n)
         
         if return_metrics:
             return corrected, metrics

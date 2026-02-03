@@ -109,9 +109,10 @@ class TestPromptGeneration:
         
         if adult:
             prompt = generate_full_prompt(adult)
-            assert "[DESCRIERE GENERALA]" in prompt
-            assert "[PROFIL PROFESIONAL]" in prompt
-            assert "[HOBBY SPORT]" in prompt
+            assert "FORMAT DE RĂSPUNS (JSON ONLY)" in prompt or "FORMAT DE RASPUNS (JSON ONLY)" in prompt
+            assert '"descriere_generala"' in prompt
+            assert '"profil_profesional"' in prompt
+            assert '"hobby_sport"' in prompt
     
     def test_elderly_prompt_structure(self):
         """Test elderly prompt mentions retirement."""

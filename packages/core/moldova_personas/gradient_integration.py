@@ -37,7 +37,7 @@ from .trust_report import (
 )
 from .run_manifest import RunManifest, create_run_manifest_from_trust_report
 from .gate_codes import GateCode, map_reason_to_code, sort_gate_codes
-from .models import Persona
+from .models import Persona, PopulationMode
 from .exporters import export_all_formats
 from .census_data import CENSUS
 from .pxweb_fetcher import NBS_BASE_URL
@@ -62,6 +62,7 @@ GATE_CODE_RECOMMENDATIONS: Dict[GateCode, str] = {
     GateCode.MARGINAL_ERROR_CRITICAL: "Regenerate with updated census data or reduce sample size",
     GateCode.FALLBACK_CRITICAL_FIELD: "Refresh PxWeb cache to get live data for critical fields",
     GateCode.FALLBACK_SUPERCRITICAL_FIELD: "CRITICAL: Refresh PxWeb cache immediately; super-critical fields must use live data",
+    GateCode.TARGET_FALLBACK_SUPERCRITICAL: "CRITICAL: Super-critical targets missing; refresh PxWeb data or block run",
     GateCode.PXWEB_CACHE_STALE: "Refresh PxWeb cache and re-run generation",
     GateCode.PXWEB_FETCH_FAILED: "Check network connectivity; verify PxWeb API availability",
     GateCode.ETHNOCULTURAL_FALLBACK_USED: "Review ethnocultural tables; missing ethnicity rows defaulted to national totals",
@@ -111,10 +112,13 @@ class DatasetConfig:
     seed: Optional[int] = None
     use_ipf: bool = True
     oversample_factor: int = 3
+    population_mode: PopulationMode = PopulationMode.ADULT_18
     generate_narratives: bool = False
     llm_provider: str = "mock"
     llm_api_key: Optional[str] = None
     llm_model: Optional[str] = None
+    allow_mock_narratives: Optional[bool] = None
+    llm_rate_limit: Optional[float] = None
     strict: bool = False
     cache_dir: Optional[str] = None
     raise_on_reject: bool = False
@@ -128,9 +132,12 @@ class DatasetConfig:
             "seed": self.seed,
             "use_ipf": self.use_ipf,
             "oversample_factor": self.oversample_factor,
+            "population_mode": self.population_mode.value,
             "generate_narratives": self.generate_narratives,
             "llm_provider": self.llm_provider,
             "llm_model": self.llm_model,
+            "allow_mock_narratives": self.allow_mock_narratives,
+            "llm_rate_limit": self.llm_rate_limit,
             "strict": self.strict,
             "raise_on_reject": self.raise_on_reject,
             "output_drop_fields": list(self.output_drop_fields),
@@ -376,10 +383,13 @@ def generate_dataset(
     profile: UseCaseProfile,
     seed: Optional[int] = None,
     use_ipf: bool = True,
+    population_mode: PopulationMode = PopulationMode.ADULT_18,
     generate_narratives: bool = False,
     llm_provider: str = "mock",
     llm_api_key: Optional[str] = None,
     llm_model: Optional[str] = None,
+    allow_mock_narratives: Optional[bool] = None,
+    llm_rate_limit: Optional[float] = None,
     strict: Optional[bool] = None,
     raise_on_reject: bool = False,
     outputs: List[str] = None,
@@ -422,6 +432,8 @@ def generate_dataset(
     # Determine strict mode from profile if not specified
     if strict is None:
         strict = profile == UseCaseProfile.HIGH_STAKES
+    if allow_mock_narratives is None:
+        allow_mock_narratives = not (generate_narratives and profile != UseCaseProfile.ANALYSIS_ONLY)
     
     # Create configuration
     config = DatasetConfig(
@@ -430,9 +442,12 @@ def generate_dataset(
         seed=seed,
         use_ipf=use_ipf,
         generate_narratives=generate_narratives,
+        population_mode=population_mode,
         llm_provider=llm_provider,
         llm_api_key=llm_api_key,
         llm_model=llm_model,
+        allow_mock_narratives=allow_mock_narratives,
+        llm_rate_limit=llm_rate_limit,
         strict=strict,
         raise_on_reject=raise_on_reject,
     )
@@ -450,7 +465,7 @@ def generate_dataset(
     
     # Stage 1: Structured generation
     logger.info("Stage 1: Structured generation...")
-    generator = PersonaGenerator(seed=seed)
+    generator = PersonaGenerator(seed=seed, population_mode=population_mode)
     
     if use_ipf:
         personas, ipf_metrics = generator.generate_with_ethnicity_correction(
@@ -475,20 +490,27 @@ def generate_dataset(
                 api_key=llm_api_key,
                 model=llm_model,
             )
-            personas = nar_gen.generate_batch(personas, show_progress=True)
+            delay = 0.0
+            if config.llm_rate_limit and config.llm_rate_limit > 0:
+                delay = max(delay, 1.0 / config.llm_rate_limit)
+            personas = nar_gen.generate_batch(personas, show_progress=True, delay=delay)
             
         except Exception as e:
             logger.error(f"Narrative generation failed: {e}")
-            if strict:
+            if strict or not config.allow_mock_narratives:
                 raise RuntimeError(f"Narrative generation failed in strict mode: {e}")
             # In non-strict mode, continue with mock narratives
     
     # Stage 3: Trust validation
     logger.info("Stage 3: Trust validation...")
-    report_gen = TrustReportGenerator(census_distributions=CENSUS, use_case=profile)
+    report_gen = TrustReportGenerator(
+        census_distributions=CENSUS,
+        use_case=profile,
+        population_mode=population_mode,
+    )
     
     # Get provenance info
-    provenance_info = CENSUS.get_all_provenance()
+    provenance_info = CENSUS.get_all_provenance(population_mode)
     if config.output_drop_fields:
         provenance_info = {
             k: v for k, v in provenance_info.items()
@@ -502,7 +524,7 @@ def generate_dataset(
         generator_version="1.0.0",
         generator_config=config.to_dict(),
         ipf_metrics=ipf_metrics,
-        pxweb_cache_timestamp=CENSUS.get_pxweb_snapshot_timestamp(),
+        pxweb_cache_timestamp=CENSUS.get_pxweb_snapshot_timestamp(population_mode),
     )
     
     # Determine decision and gate codes

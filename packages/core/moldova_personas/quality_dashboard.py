@@ -94,6 +94,49 @@ class QualityDashboard:
         self.min_rare_anchor_rate = min_rare_anchor_rate
         self.trigram_threshold = trigram_threshold
         self.dedup_threshold = dedup_threshold
+
+        self._narrative_fields = [
+            "persona",
+            "professional_persona",
+            "sports_persona",
+            "arts_persona",
+            "travel_persona",
+            "culinary_persona",
+        ]
+        self._narrative_field_map = {
+            "persona": "descriere_generala",
+            "professional_persona": "profil_profesional",
+            "sports_persona": "hobby_sport",
+            "arts_persona": "hobby_arta_cultura",
+            "travel_persona": "hobby_calatorii",
+            "culinary_persona": "hobby_culinar",
+        }
+
+    def _get_narrative_text(self, persona: Dict, field: str) -> str:
+        personas_block = persona.get("personas")
+        if isinstance(personas_block, dict):
+            text = personas_block.get(field, "")
+            if isinstance(text, str) and text.strip():
+                return text
+
+        fallback_key = self._narrative_field_map.get(field)
+        if fallback_key:
+            text = persona.get(fallback_key, "")
+            if isinstance(text, str):
+                return text
+        return ""
+
+    def _get_all_narrative_texts(self, persona: Dict) -> List[str]:
+        personas_block = persona.get("personas")
+        if isinstance(personas_block, dict) and personas_block:
+            return [v for v in personas_block.values() if isinstance(v, str)]
+
+        texts = []
+        for field in self._narrative_fields:
+            text = self._get_narrative_text(persona, field)
+            if text:
+                texts.append(text)
+        return texts
     
     def analyze_dataset(self, personas: List[Dict]) -> DatasetQualityMetrics:
         """Analyze full dataset and return quality metrics."""
@@ -135,9 +178,8 @@ class QualityDashboard:
         }
         
         for p in personas:
-            for field in ["persona", "professional_persona", "sports_persona", 
-                         "arts_persona", "travel_persona", "culinary_persona"]:
-                text = p.get("personas", {}).get(field, "").lower()
+            for field in self._narrative_fields:
+                text = self._get_narrative_text(p, field).lower()
                 if not text:
                     continue
                 
@@ -160,9 +202,8 @@ class QualityDashboard:
         total_trigrams = 0
         
         for p in personas:
-            for field in ["persona", "professional_persona", "sports_persona", 
-                         "arts_persona", "travel_persona", "culinary_persona"]:
-                text = p.get("personas", {}).get(field, "").lower()
+            for field in self._narrative_fields:
+                text = self._get_narrative_text(p, field).lower()
                 words = re.findall(r'\b\w+\b', text)
                 
                 for i in range(len(words) - 2):
@@ -178,12 +219,11 @@ class QualityDashboard:
         """Calculate type-token ratio per field."""
         diversity = {}
         
-        for field in ["persona", "professional_persona", "sports_persona", 
-                     "arts_persona", "travel_persona", "culinary_persona"]:
+        for field in self._narrative_fields:
             all_tokens = []
             
             for p in personas:
-                text = p.get("personas", {}).get(field, "").lower()
+                text = self._get_narrative_text(p, field).lower()
                 tokens = re.findall(r'\b\w+\b', text)
                 all_tokens.extend(tokens)
             
@@ -201,7 +241,7 @@ class QualityDashboard:
         starters = Counter()
         
         for p in personas:
-            all_text = " ".join(p.get("personas", {}).values())
+            all_text = " ".join(self._get_all_narrative_texts(p))
             sentences = re.split(r'[.!?]+', all_text)
             
             for sent in sentences:
@@ -239,7 +279,6 @@ class QualityDashboard:
         
         for p in personas:
             constraints = p.get("constraints", [])
-            all_persona_text = " ".join(p.get("personas", {}).values()).lower()
             
             for constraint in constraints:
                 constraint_lower = constraint.lower()
@@ -272,7 +311,7 @@ class QualityDashboard:
         
         for p in personas:
             constraints = p.get("constraints", [])
-            persona_text = " ".join(p.get("personas", {}).values()).lower()
+            persona_text = " ".join(self._get_all_narrative_texts(p)).lower()
             
             for constraint in constraints:
                 total_constraints += 1
@@ -415,7 +454,7 @@ class QualityDashboard:
         
         signatures = []
         for p in sample:
-            text = " ".join(p.get("personas", {}).values())
+            text = " ".join(self._get_all_narrative_texts(p))
             sig = self._minhash_signature(text)
             signatures.append(sig)
         
@@ -451,7 +490,7 @@ class QualityDashboard:
         
         signatures = []
         for p in sample:
-            text = " ".join(p.get("personas", {}).values())
+            text = " ".join(self._get_all_narrative_texts(p))
             sig = self._minhash_signature(text)
             signatures.append(sig)
         

@@ -20,7 +20,7 @@ from .pxweb_fetcher import (
     NBSDataManager,
     NBS_MANAGER,
 )
-from .models import AgeConstraints
+from .models import AgeConstraints, PopulationMode
 from .paths import data_path
 
 
@@ -62,6 +62,7 @@ class CensusDistributions:
     _cache: Dict[str, Distribution] = field(default_factory=dict)
     _cross_cache: Dict[str, Dict[str, Dict[str, float]]] = field(default_factory=dict)
     _cross_provenance: Dict[str, DataProvenance] = field(default_factory=dict)
+    _adult_age_exact: Optional[bool] = None
     
     def _get_dist(self, name: str) -> Distribution:
         """Get distribution from cache or fetch."""
@@ -75,14 +76,20 @@ class CensusDistributions:
     def _adult_age_distribution_obj(self) -> Distribution:
         """Return adult-only age distribution as a Distribution object."""
         base = self._get_dist("age_group")
+        is_exact = bool(self._adult_age_exact)
+        provenance = base.provenance if is_exact else DataProvenance.ESTIMATED
+        confidence = base.confidence if is_exact else min(base.confidence, 0.7)
+        limitations = base.limitations
+        if not is_exact:
+            limitations = "Adult-only age distribution approximated from 15-24 group scaling"
         return Distribution(
             values=self.ADULT_AGE_GROUP_DISTRIBUTION,
-            provenance=base.provenance,
+            provenance=provenance,
             source_table=base.source_table,
             last_fetched=base.last_fetched,
-            confidence=base.confidence,
+            confidence=confidence,
             methodology="Adult-only derived from age_group distribution",
-            limitations=base.limitations,
+            limitations=limitations,
         )
 
     def _derive_adult_marginal(
@@ -108,6 +115,29 @@ class CensusDistributions:
         if total <= 0:
             return totals
         return {k: v / total for k, v in totals.items()}
+    def _age_group_distribution_15_plus(self) -> Dict[str, float]:
+        """Return 15+ age group distribution by dropping 0-14 and renormalizing."""
+        base = dict(self.AGE_GROUP_DISTRIBUTION)
+        base.pop("0-14", None)
+        total = sum(base.values())
+        return {k: v / total for k, v in base.items()} if total > 0 else base
+
+    def _age_group_distribution_obj(self, population_mode: PopulationMode) -> Distribution:
+        """Return age group Distribution object for a given population mode."""
+        if population_mode == PopulationMode.ADULT_18:
+            return self._adult_age_distribution_obj()
+        base = self._get_dist("age_group")
+        if population_mode == PopulationMode.AGE_15_PLUS:
+            return Distribution(
+                values=self._age_group_distribution_15_plus(),
+                provenance=base.provenance,
+                source_table=base.source_table,
+                last_fetched=base.last_fetched,
+                confidence=base.confidence,
+                methodology="15+ derived by dropping 0-14 and renormalizing",
+                limitations=base.limitations,
+            )
+        return base
 
     def _derive_conditional_by_age(
         self,
@@ -146,6 +176,96 @@ class CensusDistributions:
         self._cross_cache[cache_key] = fallback
         self._cross_provenance[cache_key] = DataProvenance.ESTIMATED
         return fallback
+
+    def _derive_marginal_from_by_age(
+        self,
+        age_dist: Dict[str, float],
+        conditional_by_age: Dict[str, Dict[str, float]],
+    ) -> Dict[str, float]:
+        """Derive a marginal distribution from age-group conditionals."""
+        totals: Dict[str, float] = {}
+        for age_group, age_prob in age_dist.items():
+            conditional = conditional_by_age.get(age_group)
+            if not conditional:
+                continue
+            for category, prob in conditional.items():
+                totals[category] = totals.get(category, 0.0) + age_prob * prob
+        total = sum(totals.values())
+        return {k: v / total for k, v in totals.items()} if total > 0 else totals
+
+    def age_group_distribution(self, population_mode: PopulationMode) -> Dict[str, float]:
+        """Return age group distribution for the requested population mode."""
+        if population_mode == PopulationMode.ADULT_18:
+            return self.ADULT_AGE_GROUP_DISTRIBUTION
+        if population_mode == PopulationMode.AGE_15_PLUS:
+            return self._age_group_distribution_15_plus()
+        return self.AGE_GROUP_DISTRIBUTION
+
+    def education_distribution(self, population_mode: PopulationMode) -> Distribution:
+        """Return education distribution aligned to the population mode."""
+        if population_mode == PopulationMode.ALL:
+            return self._get_dist("education")
+        age_dist = self.age_group_distribution(population_mode)
+        values = self._derive_marginal_from_by_age(age_dist, self.EDUCATION_BY_AGE_GROUP)
+        base = self._get_dist("education")
+        is_estimated = (population_mode == PopulationMode.ADULT_18 and not self._adult_age_exact)
+        provenance = DataProvenance.ESTIMATED if is_estimated else DataProvenance.IPF_DERIVED
+        limitations = None
+        if is_estimated:
+            limitations = "Adult-only education derived from approximate 18+ age distribution"
+        return Distribution(
+            values=values,
+            provenance=provenance,
+            source_table=base.source_table,
+            last_fetched=base.last_fetched,
+            confidence=0.85 if not is_estimated else 0.65,
+            methodology="Derived from education-by-age and age-group distribution",
+            limitations=limitations,
+        )
+
+    def marital_status_distribution(self, population_mode: PopulationMode) -> Distribution:
+        """Return marital status distribution aligned to the population mode."""
+        if population_mode == PopulationMode.ALL:
+            return self._get_dist("marital_status")
+        age_dist = self.age_group_distribution(population_mode)
+        values = self._derive_marginal_from_by_age(age_dist, self.MARITAL_STATUS_BY_AGE)
+        base = self._get_dist("marital_status")
+        is_estimated = (population_mode == PopulationMode.ADULT_18 and not self._adult_age_exact)
+        provenance = DataProvenance.ESTIMATED if is_estimated else DataProvenance.IPF_DERIVED
+        limitations = None
+        if is_estimated:
+            limitations = "Adult-only marital status derived from approximate 18+ age distribution"
+        return Distribution(
+            values=values,
+            provenance=provenance,
+            source_table=base.source_table,
+            last_fetched=base.last_fetched,
+            confidence=0.85 if not is_estimated else 0.65,
+            methodology="Derived from marital-status-by-age and age-group distribution",
+            limitations=limitations,
+        )
+
+    def employment_status_distribution(self, population_mode: PopulationMode) -> Distribution:
+        """Return employment status distribution aligned to the population mode."""
+        if population_mode == PopulationMode.ALL:
+            return self._get_dist("employment_status")
+        age_dist = self.age_group_distribution(population_mode)
+        values = self._derive_marginal_from_by_age(age_dist, self.EMPLOYMENT_STATUS_BY_AGE)
+        base = self._get_dist("employment_status")
+        is_estimated = (population_mode == PopulationMode.ADULT_18 and not self._adult_age_exact)
+        provenance = DataProvenance.ESTIMATED if is_estimated else DataProvenance.IPF_DERIVED
+        limitations = None
+        if is_estimated:
+            limitations = "Adult-only employment status derived from approximate 18+ age distribution"
+        return Distribution(
+            values=values,
+            provenance=provenance,
+            source_table=base.source_table,
+            last_fetched=base.last_fetched,
+            confidence=0.85 if not is_estimated else 0.65,
+            methodology="Derived from employment-status-by-age and age-group distribution",
+            limitations=limitations,
+        )
     
     # =========================================================================
     # REGION DISTRIBUTION
@@ -250,6 +370,7 @@ class CensusDistributions:
         """
         single_age_counts = self._load_single_age_counts()
         if single_age_counts:
+            self._adult_age_exact = True
             adult_counts: Dict[str, int] = {
                 "15-24": 0,
                 "25-34": 0,
@@ -271,6 +392,7 @@ class CensusDistributions:
                 return {k: v / total for k, v in adult_counts.items()}
 
         # Fallback approximation using existing age-group distribution
+        self._adult_age_exact = False
         base = dict(self.AGE_GROUP_DISTRIBUTION)
         base.pop("0-14", None)
         if "15-24" in base:
@@ -474,7 +596,11 @@ class CensusDistributions:
     # Utility Methods
     # =========================================================================
     
-    def get_distribution_info(self, name: str) -> Optional[Distribution]:
+    def get_distribution_info(
+        self,
+        name: str,
+        population_mode: PopulationMode = PopulationMode.ADULT_18,
+    ) -> Optional[Distribution]:
         """
         Get full Distribution object with provenance info.
         
@@ -485,11 +611,22 @@ class CensusDistributions:
             Distribution object or None if not found
         """
         try:
+            if name == "age_group":
+                return self._age_group_distribution_obj(population_mode)
+            if name == "education":
+                return self.education_distribution(population_mode)
+            if name == "marital_status":
+                return self.marital_status_distribution(population_mode)
+            if name == "employment_status":
+                return self.employment_status_distribution(population_mode)
             return self._get_dist(name)
         except ValueError:
             return None
     
-    def get_all_provenance(self) -> Dict[str, Dict[str, any]]:
+    def get_all_provenance(
+        self,
+        population_mode: PopulationMode = PopulationMode.ADULT_18,
+    ) -> Dict[str, Dict[str, any]]:
         """Get provenance information for all distributions."""
         info = {}
         for name in [
@@ -497,7 +634,7 @@ class CensusDistributions:
             "ethnicity", "education", "marital_status",
             "religion", "language", "employment_status", "district"
         ]:
-            dist = self.get_distribution_info(name)
+            dist = self.get_distribution_info(name, population_mode)
             if dist:
                 info[name] = {
                     "provenance": dist.provenance.value,
@@ -565,7 +702,10 @@ class CensusDistributions:
             info[field_name]["last_fetched"] = None
         return info
 
-    def get_pxweb_snapshot_timestamp(self) -> Optional[str]:
+    def get_pxweb_snapshot_timestamp(
+        self,
+        population_mode: PopulationMode = PopulationMode.ADULT_18,
+    ) -> Optional[str]:
         """Return the oldest PxWeb fetch timestamp across available distributions."""
         timestamps = []
         for name in [
@@ -573,7 +713,7 @@ class CensusDistributions:
             "ethnicity", "education", "marital_status",
             "religion", "language", "employment_status", "district"
         ]:
-            dist = self.get_distribution_info(name)
+            dist = self.get_distribution_info(name, population_mode)
             if not dist or not dist.last_fetched:
                 continue
             if dist.provenance in {DataProvenance.PXWEB_DIRECT, DataProvenance.PXWEB_CACHED}:
