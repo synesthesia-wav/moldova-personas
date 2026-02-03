@@ -8,7 +8,7 @@ from pathlib import Path
 from moldova_personas.checkpoint import (
     Checkpoint,
     CheckpointManager,
-    StreamingGenerator,
+    CheckpointStreamingGenerator,
     get_checkpoint_summary,
 )
 from moldova_personas import PersonaGenerator
@@ -171,12 +171,12 @@ class TestCheckpointManager:
 
 
 class TestStreamingGenerator:
-    """Tests for StreamingGenerator."""
+    """Tests for CheckpointStreamingGenerator."""
     
     def test_streaming_generation(self):
         """Test basic streaming generation."""
         generator = PersonaGenerator(seed=42)
-        streaming = StreamingGenerator()
+        streaming = CheckpointStreamingGenerator()
         
         personas = []
         for persona in streaming.generate_streaming(generator, n=10):
@@ -191,7 +191,7 @@ class TestStreamingGenerator:
             manager = CheckpointManager(tmpdir)
             generator = PersonaGenerator(seed=42)
             
-            streaming = StreamingGenerator(
+            streaming = CheckpointStreamingGenerator(
                 checkpoint_manager=manager,
                 checkpoint_every=5,
             )
@@ -211,7 +211,7 @@ class TestStreamingGenerator:
             generator = PersonaGenerator(seed=42)
             
             # First, generate some with checkpointing
-            streaming = StreamingGenerator(
+            streaming = CheckpointStreamingGenerator(
                 checkpoint_manager=manager,
                 checkpoint_every=5,
             )

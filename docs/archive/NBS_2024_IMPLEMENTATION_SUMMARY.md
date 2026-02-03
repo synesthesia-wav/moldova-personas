@@ -120,20 +120,20 @@ employment_dist = {k: v/n for k, v in employment_dist.items()}
 
 ## Files Modified
 
-1. **moldova_personas/census_data.py**
+1. **packages/core/moldova_personas/census_data.py**
    - Updated AGE_GROUP_DISTRIBUTION with NBS 2024 values
    - Added EMPLOYMENT_STATUS_DISTRIBUTION
    - Added EMPLOYMENT_STATUS_BY_AGE
 
-2. **moldova_personas/models.py**
+2. **packages/core/moldova_personas/models.py**
    - Added employment_status field to Persona model
    - Added employment_status_distribution to PersonaStatistics
 
-3. **moldova_personas/generator.py**
+3. **packages/core/moldova_personas/generator.py**
    - Added _generate_employment_status() method
    - Updated generate_single() to include employment_status
 
-4. **moldova_personas/exporters.py**
+4. **packages/core/moldova_personas/exporters.py**
    - Updated StatisticsExporter.generate() to calculate employment distribution
 
 ---

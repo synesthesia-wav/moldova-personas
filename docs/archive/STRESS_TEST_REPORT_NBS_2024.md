@@ -98,7 +98,7 @@ The stress test revealed significant discrepancies between the current Persona G
 
 **Impact:**
 - Completely unrealistic demographic profile
-- Cannot match Nemotron quality standard
+- Cannot match reference quality standard
 - Ignores 59% of adult population
 
 ---

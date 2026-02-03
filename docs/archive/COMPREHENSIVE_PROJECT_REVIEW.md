@@ -27,7 +27,7 @@ The project is well-architected and functional, but has one critical issue (ethn
 ### 1.1 Module Structure (✅ Good)
 
 ```
-moldova_personas/
+packages/core/moldova_personas/
 ├── __init__.py              # Package initialization
 ├── __main__.py              # CLI entry point
 ├── census_data.py           # NBS 2024 distributions
@@ -143,7 +143,7 @@ New field added with NBS 2024-based distributions:
 **Likely Cause:** LLM narrative generation was not run or failed silently
 
 **Solution:** 
-- Verify LLM integration with `demo_narrative.py`
+- Verify LLM integration with `apps/demos/demo_narrative.py`
 - Add validation that narrative fields are populated
 - Consider fallback/mock narratives for testing
 
@@ -229,7 +229,7 @@ All tests passing.
    - Run 1K test batch and verify chi-square p > 0.05
 
 2. **Verify LLM integration**
-   - Run `demo_narrative.py` with actual API key
+   - Run `apps/demos/demo_narrative.py` with actual API key
    - Confirm narrative fields populate correctly
    - Check rate limiting and error handling
 
@@ -273,9 +273,9 @@ All tests passing.
 
 ---
 
-## 8. Comparison to Nemotron (Reference Standard)
+## 8. Comparison to Reference Standard
 
-| Feature | Nemotron | Moldova Personas | Gap |
+| Feature | Reference | Moldova Personas | Gap |
 |---------|----------|------------------|-----|
 | Population size | 1M | 100K (planned) | 10× |
 | Countries | 70+ | 1 (Moldova) | - |

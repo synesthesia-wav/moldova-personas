@@ -53,7 +53,7 @@ python -m moldova_personas generate \
     --output ./output
 
 # Via demo script
-python demo_narrative.py --mode qwen --count 5
+python apps/demos/demo_narrative.py --mode qwen --count 5
 ```
 
 ### Available Models
@@ -115,7 +115,7 @@ python -m moldova_personas generate \
     --output ./output
 
 # Via demo script
-python demo_narrative.py --mode qwen-local --count 3
+python apps/demos/demo_narrative.py --mode qwen-local --count 3
 ```
 
 ### Python API
@@ -246,12 +246,12 @@ print(os.getenv("DASHSCOPE_API_KEY"))
 
 1. **Test with mock mode**: Verify structured data generation
    ```bash
-   python demo_narrative.py --mode mock --count 5
+   python apps/demos/demo_narrative.py --mode mock --count 5
    ```
 
 2. **Test with qwen-turbo**: Quick quality check
    ```bash
-   python demo_narrative.py --mode qwen --count 5
+   python apps/demos/demo_narrative.py --mode qwen --count 5
    ```
 
 3. **Generate sample (1k)**: Evaluate quality

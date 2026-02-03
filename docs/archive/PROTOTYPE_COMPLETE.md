@@ -77,7 +77,7 @@ python -m moldova_personas generate \
 ### 4. Demo Mode (Mock LLM)
 
 ```bash
-python demo_narrative.py --mode mock --count 5
+python apps/demos/demo_narrative.py --mode mock --count 5
 ```
 
 For testing without API calls.
@@ -186,13 +186,13 @@ df = pd.read_parquet("moldova_personas.parquet")
 ### Run Demo
 ```bash
 # Structured data only
-python demo.py
+python apps/demos/demo.py
 
 # With mock narratives
-python demo_narrative.py --mode mock
+python apps/demos/demo_narrative.py --mode mock
 
 # With OpenAI (requires API key)
-python demo_narrative.py --mode openai --count 5
+python apps/demos/demo_narrative.py --mode openai --count 5
 ```
 
 ### Validate Output

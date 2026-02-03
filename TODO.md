@@ -6,7 +6,7 @@
 
 | Option | Quality | Sections | Cost | Time |
 |--------|---------|----------|------|------|
-| A | Full Nemotron | 6 | $800 | 23hrs |
+| A | Full pipeline | 6 | $800 | 23hrs |
 | B | Current | 6 | $800 | 23hrs |
 | C (Recommended) | Core 3 | 3 | $200-400 | 10hrs |
 | D | Structured only | 0 | $0 | 2min |

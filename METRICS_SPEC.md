@@ -1,6 +1,6 @@
 # Minimal Metrics Specification
 
-Production logging format for Nemotron-scale persona generation.
+Production logging format for large-scale persona generation.
 
 ## Design Principles
 
@@ -159,7 +159,7 @@ def aggregate_tier(batches: List[BatchMetrics]) -> Dict:
 import json
 import logging
 
-logger = logging.getLogger("nemotron.generation")
+logger = logging.getLogger("persona.generation")
 handler = logging.FileHandler("generation.log")
 handler.setFormatter(logging.Formatter('%(message)s'))
 logger.addHandler(handler)

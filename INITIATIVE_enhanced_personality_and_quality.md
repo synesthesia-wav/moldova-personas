@@ -10,11 +10,11 @@
 
 ## Executive Summary
 
-This initiative proposes two major enhancements to the Moldova personas pipeline, inspired by NVIDIA's Nemotron methodology:
+This initiative proposes two major enhancements to the Moldova personas pipeline, inspired by an external benchmark methodology:
 
 1. **OCEAN Personality Model Integration**: Add Big Five personality traits (Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism) to each persona for richer psychological dimensionality.
 
-2. **Multi-Attribute Quality Scoring**: Replace binary pass/fail validation with continuous 5-dimensional quality scoring, enabling threshold-based filtering similar to Nemotron's HelpSteer2 reward model approach.
+2. **Multi-Attribute Quality Scoring**: Replace binary pass/fail validation with continuous 5-dimensional quality scoring, enabling threshold-based filtering similar to a HelpSteer2-style reward model approach.
 
 ---
 
@@ -22,7 +22,7 @@ This initiative proposes two major enhancements to the Moldova personas pipeline
 
 ### 1.1 Background
 
-Current personas lack psychological depth. While Nemotron's marketing claims include "personality modeling (OCEAN)", our research confirmed this is **not actually implemented** in their published datasets. This presents an opportunity for differentiation.
+Current personas lack psychological depth. While some external marketing claims include "personality modeling (OCEAN)", our research confirmed this is **not actually implemented** in their published datasets. This presents an opportunity for differentiation.
 
 ### 1.2 Proposed Implementation
 
@@ -134,7 +134,7 @@ class QualityScore:
 
 class QualityScorer:
     """
-    Nemotron-style multi-attribute quality scoring.
+    Benchmark-style multi-attribute quality scoring.
     Replaces/supplements binary ValidationPipeline.
     """
     
@@ -221,7 +221,7 @@ def generate(self, count: int, quality_threshold: float = 0.0) -> List[Persona]:
         count: Target number of personas
         quality_threshold: Minimum overall quality score (0-1)
                           0.0 = no filtering (current behavior)
-                          0.8 = Nemotron-style high quality only
+                          0.8 = benchmark-style high quality only
     """
     scorer = QualityScorer()
     personas = []
@@ -243,9 +243,9 @@ gen_parser.add_argument('--quality-threshold', type=float, default=0.0,
                       help='Minimum quality score (0-1). 0.8 = high quality only')
 ```
 
-### 2.4 Comparison to Nemotron
+### 2.4 Comparison to Reference Dataset
 
-| Aspect | Nemotron | Our Implementation |
+| Aspect | Reference | Our Implementation |
 |--------|----------|-------------------|
 | Scoring Model | Learned reward model (HelpSteer2) | Rule-based heuristic |
 | Dimensions | 5 (Helpfulness, Correctness, Coherence, Complexity, Verbosity) | 5 (Demographic, Narrative, Statistical, Completeness, Age-Edu) |
@@ -302,7 +302,7 @@ gen_parser.add_argument('--quality-threshold', type=float, default=0.0,
 
 ## References
 
-- Nemotron-4 340B Technical Report (NVIDIA, 2024)
+- Large-model technical report (2024)
 - HelpSteer2: Multi-attribute Reward Model Training (NVIDIA, 2024)
 - Schmitt et al. (2007): "The Geographic Distribution of Big Five Personality Traits"
 - Costa & McCrae (1992): "Revised NEO Personality Inventory"

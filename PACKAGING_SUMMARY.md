@@ -75,7 +75,7 @@ payload = bundle.to_gradient_trust_payload()
 - `pyproject.toml` — PEP 621 compliant
 - `Dockerfile` — Multi-stage (runtime, dev, ci)
 - `.github/workflows/ci.yml` — Full CI/CD
-- `moldova_personas/py.typed` — Type hints
+- `packages/core/moldova_personas/py.typed` — Type hints
 
 ### New Modules
 

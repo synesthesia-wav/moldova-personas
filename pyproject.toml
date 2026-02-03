@@ -38,6 +38,24 @@ dependencies = [
 # LLM narrative generation
 narratives = [
     "openai>=1.0.0",
+    "dashscope>=1.20.0",
+]
+# Provider-specific extras
+openai = [
+    "openai>=1.0.0",
+]
+dashscope = [
+    "dashscope>=1.20.0",
+]
+local-llm = [
+    "transformers>=4.30.0",
+    "torch>=2.0.0",
+    "accelerate>=0.20.0",
+]
+qwen-local = [
+    "transformers>=4.30.0",
+    "torch>=2.0.0",
+    "accelerate>=0.20.0",
 ]
 # Network data fetching
 network = [
@@ -47,6 +65,10 @@ network = [
 all = [
     "openai>=1.0.0",
     "requests>=2.28.0",
+    "dashscope>=1.20.0",
+    "transformers>=4.30.0",
+    "torch>=2.0.0",
+    "accelerate>=0.20.0",
 ]
 # Development dependencies
 dev = [
@@ -68,15 +90,18 @@ test = [
 moldova-personas = "moldova_personas.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/example/moldova-personas"
-Documentation = "https://github.com/example/moldova-personas/docs"
-Repository = "https://github.com/example/moldova-personas.git"
-Issues = "https://github.com/example/moldova-personas/issues"
+Homepage = "https://github.com/synesthesia-wav/moldova-personas"
+Documentation = "https://github.com/synesthesia-wav/moldova-personas/docs"
+Repository = "https://github.com/synesthesia-wav/moldova-personas.git"
+Issues = "https://github.com/synesthesia-wav/moldova-personas/issues"
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["packages/core"]
 include = ["moldova_personas*"]
 exclude = ["tests*", "benchmarks*", "docs*", "test_cache*", "nbs_cache*"]
+
+[tool.setuptools.package-dir]
+"" = "packages/core"
 
 [tool.setuptools.package-data]
 moldova_personas = ["py.typed"]

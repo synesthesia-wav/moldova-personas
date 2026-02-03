@@ -20,7 +20,7 @@ This is a comprehensive technical plan for generating **100,000 synthetic person
 |--------|------------|
 | **Data Foundation** | Solid use of official 2024 Census data from BNS (National Bureau of Statistics) via PxWeb platform |
 | **Methodology** | Sophisticated statistical approach using PGM (Probabilistic Graphical Models) and IPF (Iterative Proportional Fitting) to ensure representativeness |
-| **Schema Design** | Well-thought-out ~22 fields, mirroring NVIDIA's Nemotron-Personas dataset structure with appropriate Moldovan adaptations |
+| **Schema Design** | Well-thought-out ~22 fields, mirroring an external reference dataset structure with appropriate Moldovan adaptations |
 | **Dependency Graph** | Clear modeling of relationships between variables (region → ethnicity → language → name, age → education → occupation, etc.) |
 | **Narrative Generation** | Detailed prompt templates for LLM-based generation of 6 personality narrative sections |
 | **Validation Strategy** | Multi-layer validation covering internal consistency, statistical accuracy, and technical format |

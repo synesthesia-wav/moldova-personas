@@ -1,7 +1,7 @@
 {
   "source": {
     "file": "Date_Comunicat_Etnoculturale_20_10_25.xlsx",
-    "extracted_on": "2026-01-31T15:31:46.241424",
+    "extracted_on": "2026-02-01T21:18:00.198914",
     "sheets": {
       "language_by_ethnicity": "Figura 16",
       "religion_by_ethnicity": "Figura 17"
@@ -132,6 +132,15 @@
       "Bulgară": 0.7171386693189556,
       "Rromani": 0.002407998743652816,
       "Alta": 0.00041878239020048984
+    },
+    "Rrom": {
+      "Română": 0.18251845511928938,
+      "Ucraineană": 0.006847116721942867,
+      "Rusă": 0.034235583609714265,
+      "Găgăuză": 0.004386434149994648,
+      "Bulgară": 0.008130951107307155,
+      "Rromani": 0.7631325559002892,
+      "Alta": 0.000748903391462501
     },
     "Altele": {
       "Română": 0.10722311396468699,

@@ -27,8 +27,6 @@ python -m moldova_personas generate --count 100 --narratives --llm-provider dash
 - [x] IPF-derived cross-tabulations
 - [x] Comprehensive test suite (181 tests)
 
-### Nemotron Comparison (Completed ✅)
-See [NEMOTRON.md](NEMOTRON.md) for detailed comparison analysis.
 
 ### 100K Generation (Pending)
 See [TODO.md](TODO.md) for generation roadmap.
@@ -36,7 +34,7 @@ See [TODO.md](TODO.md) for generation roadmap.
 ## Architecture
 
 ```
-moldova_personas/
+packages/core/moldova_personas/
 ├── pxweb_fetcher.py      # NBS PxWeb data fetching
 ├── census_data.py        # Census distributions
 ├── generator.py          # Core PGM generator

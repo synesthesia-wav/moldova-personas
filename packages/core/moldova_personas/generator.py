@@ -1,0 +1,812 @@
+"""
+Core persona generation engine using PGM (Probabilistic Graphical Models)
+and IPF (Iterative Proportional Fitting).
+
+Implements the dependency graph from the technical plan:
+    Region → Ethnicity → Language → Name
+    Age → Education → Occupation
+    Location → Occupation
+"""
+
+import random
+import uuid
+from typing import List, Dict, Optional, Tuple
+from dataclasses import dataclass
+from tqdm import tqdm
+
+import numpy as np
+
+from .census_data import CENSUS, CensusDistributions
+from .names import (
+    generate_name,
+    get_language_by_ethnicity,
+    get_religion_by_ethnicity,
+    reset_ethnocultural_fallbacks,
+)
+from .geo_tables import (
+    strict_geo_enabled,
+    get_district_distribution,
+    get_region_for_district,
+)
+from .models import Persona, get_age_group, AgeConstraints
+from .paths import config_dir
+
+
+class PersonaGenerator:
+    """
+    Generator for synthetic Moldovan personas.
+    
+    Uses conditional probability sampling to ensure realistic correlations
+    between demographic variables.
+    """
+    
+    def __init__(self, census_data: Optional[CensusDistributions] = None, seed: Optional[int] = None):
+        """
+        Initialize the generator.
+        
+        Args:
+            census_data: Census distributions to use (defaults to CENSUS singleton)
+            seed: Random seed for reproducibility
+        """
+        self.census = census_data or CENSUS
+        
+        if seed is not None:
+            random.seed(seed)
+            np.random.seed(seed)
+        
+        # Pre-compute city/district data for realistic location generation
+        self._init_location_data()
+    
+    def _init_location_data(self) -> None:
+        """Initialize realistic locality data by region from config files."""
+        import json
+        config_dir_path = config_dir()
+        
+        # Load localities with settlement type metadata
+        localities_path = config_dir_path / "localities_by_region.json"
+        if localities_path.exists():
+            with open(localities_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                # Parse localities with metadata
+                self.localities_by_region: Dict[str, List[Dict]] = {
+                    region: info["localities"] 
+                    for region, info in data.items() 
+                    if not region.startswith("_")
+                }
+        else:
+            # Fallback to legacy cities config
+            cities_path = config_dir_path / "cities_by_region.json"
+            if cities_path.exists():
+                with open(cities_path, 'r', encoding='utf-8') as f:
+                    cities = json.load(f)
+                # Convert to new format without implied_residence
+                self.localities_by_region = {
+                    region: [{"name": city, "settlement_type": "unknown", "implied_residence": None}
+                            for city in cities_list]
+                    for region, cities_list in cities.items()
+                }
+            else:
+                # Ultimate fallback
+                self.localities_by_region = {
+                    "Chisinau": [{"name": "Chișinău", "settlement_type": "city", "implied_residence": "Urban"}],
+                    "Centru": [{"name": "Ungheni", "settlement_type": "city", "implied_residence": "Urban"}],
+                    "Nord": [{"name": "Bălți", "settlement_type": "city", "implied_residence": "Urban"}],
+                    "Sud": [{"name": "Cahul", "settlement_type": "city", "implied_residence": "Urban"}],
+                    "Gagauzia": [{"name": "Comrat", "settlement_type": "city", "implied_residence": "Urban"}],
+                }
+        
+        # Also load legacy cities for backwards compatibility
+        cities_path = config_dir_path / "cities_by_region.json"
+        if cities_path.exists():
+            with open(cities_path, 'r', encoding='utf-8') as f:
+                self.cities_by_region: Dict[str, List[str]] = json.load(f)
+        else:
+            self.cities_by_region = {
+                region: [loc["name"] for loc in localities]
+                for region, localities in self.localities_by_region.items()
+            }
+        
+        # Load districts by region
+        districts_path = config_dir_path / "districts_by_region.json"
+        if districts_path.exists():
+            with open(districts_path, 'r', encoding='utf-8') as f:
+                self.districts_by_region: Dict[str, List[str]] = json.load(f)
+        else:
+            # Fallback to default data
+            self.districts_by_region = {
+                "Chisinau": ["Mun. Chișinău"],
+                "Centru": ["Ungheni", "Călărași", "Nisporeni", "Strășeni", "Criuleni",
+                          "Dubăsari", "Orhei", "Rezina", "Telenești"],
+                "Nord": ["Mun. Bălți", "Soroca", "Edineț", "Ocnița", "Dondușeni", "Drochia",
+                        "Fălești", "Florești", "Glodeni", "Rîșcani", "Sîngerei"],
+                "Sud": ["Cahul", "Cantemir", "Cimișlia", "Leova", "Taraclia", "Basarabeasca"],
+                "Gagauzia": ["UTA Găgăuzia"],
+            }
+    
+    def _sample_from_dict(self, distribution: Dict[str, float]) -> str:
+        """
+        Sample a key from a probability distribution.
+        
+        Args:
+            distribution: Dict mapping outcomes to probabilities
+        
+        Returns:
+            Sampled key
+        """
+        keys = list(distribution.keys())
+        probabilities = list(distribution.values())
+        return random.choices(keys, weights=probabilities, k=1)[0]
+    
+    def _sample_age_from_group(self, age_group: str) -> int:
+        """
+        Sample a specific age within an age group using realistic distribution.
+        
+        Uses a slightly bell-shaped distribution within each group rather than
+        uniform random. Minimum age is enforced at 18.
+        
+        Args:
+            age_group: Age group string (e.g., "25-34")
+        
+        Returns:
+            Specific age in years (minimum 18)
+        """
+        ranges = {
+            "0-14": (0, 14),
+            "15-24": (15, 24),
+            "25-34": (25, 34),
+            "35-44": (35, 44),
+            "45-54": (45, 54),
+            "55-64": (55, 64),
+            "65+": (65, AgeConstraints.MAX_REALISTIC_AGE),
+        }
+        min_age, max_age = ranges.get(age_group, (25, 65))
+        
+        # Enforce minimum age for personas
+        min_age = max(min_age, AgeConstraints.MIN_PERSONA_AGE)
+        
+        # Use triangular distribution for more realistic age distribution within group
+        mode = (min_age + max_age) // 2
+        return int(random.triangular(min_age, max_age, mode))
+    
+    def _generate_occupation(self, age: int, education: str, 
+                            residence_type: str, region: str) -> Tuple[str, Optional[str]]:
+        """
+        Generate realistic occupation based on age, education, and location.
+        
+        Args:
+            age: Age in years
+            education: Education level
+            residence_type: Urban or Rural
+            region: Development region
+        
+        Returns:
+            Tuple of (occupation, sector)
+        """
+        # Handle special cases by age using census-based probabilities
+        # Source: NBS 2024 Census - Employment Status by Age Group
+        if age < 22 and education in ["Liceal", "Superior (Licență/Master)", "Doctorat"]:
+            # For 15-24 age group: 60% students (from EMPLOYMENT_STATUS_BY_AGE)
+            # Younger ages (< 22) with higher education have higher student probability
+            if random.random() < 0.75:  # Estimated: 75% for this specific subgroup
+                return "Student", "Educație"
+        elif age >= 63:
+            # For 65+ age group: 75% retired (from EMPLOYMENT_STATUS_BY_AGE census data)
+            # Age 63-64 has lower retirement rate, age 65+ uses census rate
+            retirement_rate = 0.55 if age == 63 else (0.65 if age == 64 else 0.75)
+            if random.random() < retirement_rate:
+                # Sometimes include former profession
+                former_jobs = ["profesor", "inginer", "medic", "contabil", "muncitor"]
+                return f"Pensionar (fost: {random.choice(former_jobs)})", None
+        
+        # Education-based occupation selection
+        high_skill_jobs = [
+            "Profesor", "Medic", "Inginer", "Avocat", "Contabil", "Manager",
+            "Programator", "Farmacist", "Arhitect", "Economist", "Psiholog"
+        ]
+        
+        medium_skill_jobs = [
+            "Învățător", "Asistent medical", "Tehnician", "Secretar", "Vânzător",
+            "Șofer", "Bucătar", "Croitoreasă", "Electrician", "Instalator",
+            "Mecanic", "Coafor", "Asistent social"
+        ]
+        
+        low_skill_jobs = [
+            "Muncitor necalificat", "Agricultor", "Personal de curățenie", "Paznic",
+            "Îngrijitor", "Lăcătuș", "Tâmplar", "Zidar", "Ospătar"
+        ]
+        
+        rural_jobs = [
+            "Agricultor", "Fermier", "Meșteșugar", "Învățător", "Asistent medical",
+            "Comerciant mic", "Preot", "Îngrijitor", "Muncitor agricol"
+        ]
+        
+        urban_jobs = [
+            "Funcționar public", "Vânzător", "Șofer", "Bucătar", "Contabil",
+            "Manager", "Programator", "Consultant", "Agent de vânzări"
+        ]
+        
+        # Apply location bias
+        if residence_type == "Rural":
+            if random.random() < 0.4:  # 40% agricultural in rural
+                sector = "Agricultură"
+                job = random.choice(rural_jobs)
+            else:
+                sector = "Servicii"
+                job = random.choice(low_skill_jobs + medium_skill_jobs[:5])
+        else:  # Urban
+            if education in ["Superior (Licență/Master)", "Doctorat"]:
+                sector = "Servicii"
+                job = random.choice(high_skill_jobs)
+            elif education == "Profesional/Tehnic":
+                sector = random.choice(["Industrie", "Servicii"])
+                job = random.choice(medium_skill_jobs)
+            else:
+                sector = "Servicii"
+                job = random.choice(low_skill_jobs + medium_skill_jobs[:8])
+        
+        # Regional adjustments
+        if region == "Chisinau" and education in ["Superior (Licență/Master)", "Doctorat"]:
+            if random.random() < 0.3:  # Higher chance of IT/finance in capital
+                job = random.choice(["Programator", "Analist financiar", "Consultant IT"])
+                sector = "Servicii"
+        
+        return job, sector
+    
+    def _generate_employment_status(self, age: int, occupation: str) -> str:
+        """
+        Generate employment status based on age and current occupation.
+        
+        Uses the EMPLOYMENT_STATUS_BY_AGE distribution from census data.
+        Also considers occupation hints (e.g., "Student", "Pensionar").
+        
+        Args:
+            age: Age in years
+            occupation: Current occupation (may hint at status)
+            
+        Returns:
+            Employment status string
+        """
+        # First check occupation hints
+        if "Student" in occupation:
+            return "student"
+        if "Pensionar" in occupation:
+            return "retired"
+        
+        # Get age group and corresponding distribution
+        age_group = self._get_age_group(age)
+        status_dist = self.census.EMPLOYMENT_STATUS_BY_AGE.get(
+            age_group, 
+            {"employed": 0.427, "unemployed": 0.018, "student": 0.08,
+             "retired": 0.183, "homemaker": 0.06, "other_inactive": 0.232}
+        )
+        
+        return self._sample_from_dict(status_dist)
+    
+    def _generate_realistic_education(self, age: int) -> str:
+        """
+        Generate education level that is realistic for the given age.
+        
+        Uses AgeConstraints for consistent minimum ages.
+        
+        Args:
+            age: Age in years
+        
+        Returns:
+            Education level string
+        """
+        ac = AgeConstraints  # Shorthand for readability
+        
+        # Age-based constraints using centralized constants
+        if age < ac.MIN_PRIMARY_SCHOOL:
+            # Before school age
+            return "Fără studii"
+        
+        elif age < ac.MIN_GYMNASIUM:
+            # Early primary (age 6-7)
+            return random.choices(
+                ["Fără studii", "Primar"],
+                weights=[0.2, 0.8]
+            )[0]
+        
+        elif age < 11:
+            # Primary school age
+            return "Primar"
+        
+        elif age < ac.MIN_HIGH_SCHOOL:
+            # Gymnasium age
+            return random.choices(
+                ["Primar", "Gimnazial"],
+                weights=[0.1, 0.9]
+            )[0]
+        
+        elif age < 16:
+            # Can have started high school or vocational
+            return random.choices(
+                ["Gimnazial", "Liceal", "Profesional/Tehnic"],
+                weights=[0.3, 0.4, 0.3]
+            )[0]
+        
+        elif age < ac.MIN_HIGHER_EDUCATION:
+            # High school/vocational age (16-18), NO university yet
+            return random.choices(
+                ["Gimnazial", "Liceal", "Profesional/Tehnic"],
+                weights=[0.15, 0.45, 0.40]
+            )[0]
+        
+        elif age < ac.MIN_DOCTORATE:
+            # University age or early career - can have superior, no doctorate yet
+            return random.choices(
+                ["Gimnazial", "Liceal", "Profesional/Tehnic", "Superior (Licență/Master)"],
+                weights=[0.05, 0.25, 0.25, 0.45]
+            )[0]
+        
+        else:
+            # Use the census distribution for the age group
+            # But filter out education levels that are too advanced for the age
+            age_group = self._get_age_group(age)
+            dist = dict(self.census.EDUCATION_BY_AGE_GROUP[age_group])
+            
+            # Filter: no Superior for ages < MIN_HIGHER_EDUCATION
+            if age < ac.MIN_HIGHER_EDUCATION:
+                dist.pop("Superior (Licență/Master)", None)
+                dist.pop("Doctorat", None)
+            # Filter: no Doctorat for ages < MIN_DOCTORATE
+            elif age < ac.MIN_DOCTORATE:
+                dist.pop("Doctorat", None)
+            
+            # Renormalize if we removed anything
+            total = sum(dist.values())
+            if total > 0:
+                dist = {k: v / total for k, v in dist.items()}
+            
+            return self._sample_from_dict(dist)
+    
+    def _get_age_group(self, age: int) -> str:
+        """Map age to age group."""
+        if age < 15:
+            return "0-14"
+        elif age < 25:
+            return "15-24"
+        elif age < 35:
+            return "25-34"
+        elif age < 45:
+            return "35-44"
+        elif age < 55:
+            return "45-54"
+        elif age < 65:
+            return "55-64"
+        else:
+            return "65+"
+
+    def _generate_field_of_study(self, education: str) -> Optional[str]:
+        """
+        Generate field of study for higher education.
+        
+        Args:
+            education: Education level
+        
+        Returns:
+            Field name or None if not applicable
+        """
+        if education not in ["Superior (Licență/Master)", "Doctorat"]:
+            return None
+        
+        fields = [
+            ("Educație/Pedagogie", 0.20),
+            ("Medicină/Sănătate", 0.15),
+            ("Economie/Finanțe", 0.15),
+            ("Inginerie", 0.14),
+            ("Drept", 0.08),
+            ("IT/Informatică", 0.10),
+            ("Științe Sociale", 0.08),
+            ("Agricultură", 0.05),
+            ("Arte/Umanistice", 0.05),
+        ]
+        
+        names, weights = zip(*fields)
+        return random.choices(names, weights=weights, k=1)[0]
+    
+    def generate_single(self) -> Persona:
+        """
+        Generate a single persona with all structured fields.
+        
+        Follows the dependency graph:
+            Region → Urban/Rural
+            Region → Ethnicity → Language, Religion
+            Sex + Ethnicity → Name
+            Age → Education → Occupation
+            Location → Occupation
+        
+        Returns:
+            Persona with structured fields populated
+        """
+        # Step 1: Sample Region (top of hierarchy) or District if available
+        strict_geo = strict_geo_enabled()
+        district_distribution = get_district_distribution() if strict_geo else None
+        district = ""
+
+        if strict_geo and district_distribution:
+            # Sample district from official distribution, derive region
+            district = self._sample_from_dict(district_distribution)
+            region = get_region_for_district(district, strict=True)
+        else:
+            region = self._sample_from_dict(self.census.REGION_DISTRIBUTION)
+        
+        # Step 2: Sample Urban/Rural (conditional on region)
+        urban_rural_dist = self.census.REGION_URBAN_CROSS[region]
+        residence_type = self._sample_from_dict(urban_rural_dist)
+        
+        # Step 3: Sample Ethnicity (conditional on region)
+        ethnicity_dist = self.census.ETHNICITY_BY_REGION[region]
+        ethnicity = self._sample_from_dict(ethnicity_dist)
+        
+        # Step 4: Derive Language and Religion from ethnicity
+        mother_tongue = get_language_by_ethnicity(ethnicity, region, residence_type)
+        religion = get_religion_by_ethnicity(ethnicity, region)
+        
+        # Step 5: Sample Sex (BEFORE name - name depends on sex)
+        sex = self._sample_from_dict(self.census.SEX_DISTRIBUTION)
+        
+        # Step 6: Generate Name (based on ethnicity and sex - now sex is known)
+        name = generate_name(ethnicity, sex)
+        
+        # Step 7: Sample Age Group, then specific age (adult-only distribution)
+        age_group_dist = self.census.ADULT_AGE_GROUP_DISTRIBUTION
+        age_group = self._sample_from_dict(age_group_dist)
+        age = self._sample_age_from_group(age_group)
+        
+        # Step 8: Sample Education (conditional on age group with realistic constraints)
+        education = self._generate_realistic_education(age)
+        
+        # Step 9: Sample Marital Status (conditional on age)
+        marital_dist = self.census.MARITAL_STATUS_BY_AGE[age_group]
+        marital_status = self._sample_from_dict(marital_dist)
+        
+        # Step 10: Generate Occupation (conditional on age, education, location)
+        occupation, sector = self._generate_occupation(
+            age, education, residence_type, region
+        )
+        
+        # Step 11: Generate Employment Status (conditional on age)
+        employment_status = self._generate_employment_status(age, occupation)
+        
+        # Step 12: Generate Field of Study (if applicable)
+        field_of_study = self._generate_field_of_study(education)
+        
+        # Step 13: Generate Location details (strict geo avoids fabricated localities)
+        if strict_geo:
+            city = ""
+            if not district:
+                district = ""
+        else:
+            # Use weighted city selection based on residence type
+            city = self._select_city(region, residence_type)
+            district = random.choice(self.districts_by_region[region])
+        
+        # Create and return persona
+        return Persona(
+            uuid=str(uuid.uuid4()),
+            name=name,
+            sex=sex,
+            age=age,
+            age_group=age_group,
+            ethnicity=ethnicity,
+            mother_tongue=mother_tongue,
+            religion=religion,
+            marital_status=marital_status,
+            education_level=education,
+            field_of_study=field_of_study,
+            occupation=occupation,
+            occupation_sector=sector,
+            employment_status=employment_status,
+            city=city,
+            district=district,
+            region=region,
+            residence_type=residence_type,
+            country="Moldova",
+        )
+    
+    def _select_city(self, region: str, residence_type: str) -> str:
+        """
+        Select a city/locality consistent with residence_type.
+        
+        Uses locality metadata to ensure consistency:
+        - Urban personas get cities and urban towns
+        - Rural personas get rural towns and villages
+        
+        Args:
+            region: Development region
+            residence_type: "Urban" or "Rural"
+            
+        Returns:
+            Locality name
+            
+        Raises:
+            ValueError: If no suitable localities found for residence_type
+        """
+        localities = self.localities_by_region.get(region, [])
+        
+        if not localities:
+            return "Chișinău"
+        
+        # Filter localities by implied_residence if available
+        # implied_residence in config should match residence_type
+        matching_localities = []
+        fallback_localities = []
+        
+        for loc in localities:
+            implied = loc.get("implied_residence")
+            if implied == residence_type:
+                matching_localities.append(loc)
+            elif implied is None:
+                # No metadata - use as fallback
+                fallback_localities.append(loc)
+            # Mismatched implied_residence is excluded (e.g., Rural + Chișinău)
+        
+        # If we have matching localities with metadata, use those
+        if matching_localities:
+            candidates = matching_localities
+        elif fallback_localities:
+            # No metadata available - use fallback with legacy weights
+            candidates = fallback_localities
+        else:
+            # No matching localities found - this is a config error
+            # Fall back to legacy cities but log a warning
+            cities = self.cities_by_region.get(region, ["Chișinău"])
+            # For rural, exclude first city (usually capital)
+            if residence_type == "Rural" and len(cities) > 1:
+                return random.choice(cities[1:])
+            return cities[0] if cities else "Chișinău"
+        
+        # Apply weighted sampling based on settlement_type
+        # Cities get higher weight for urban, lower for rural
+        weights = []
+        for loc in candidates:
+            settlement_type = loc.get("settlement_type", "unknown")
+            if residence_type == "Urban":
+                if settlement_type == "city":
+                    weights.append(0.7)
+                elif settlement_type == "town":
+                    weights.append(0.25)
+                else:  # rural or unknown
+                    weights.append(0.05)
+            else:  # Rural
+                if settlement_type == "rural":
+                    weights.append(0.6)
+                elif settlement_type == "town":
+                    weights.append(0.35)
+                else:  # city or unknown (avoid cities for rural)
+                    weights.append(0.05)
+        
+        # Normalize weights
+        total_weight = sum(weights)
+        if total_weight > 0:
+            weights = [w / total_weight for w in weights]
+        else:
+            weights = None  # uniform
+        
+        names = [loc["name"] for loc in candidates]
+        return random.choices(names, weights=weights, k=1)[0]
+    
+    def generate(self, n: int, show_progress: bool = True, 
+                 use_ethnicity_correction: bool = True) -> List[Persona]:
+        """
+        Generate multiple personas.
+        
+        Args:
+            n: Number of personas to generate
+            show_progress: Whether to show progress bar
+            use_ethnicity_correction: Whether to apply IPF correction for ethnicity
+        
+        Returns:
+            List of Persona objects
+        """
+        reset_ethnocultural_fallbacks()
+
+        if use_ethnicity_correction:
+            return self.generate_with_ethnicity_correction(n, oversample_factor=3)
+        
+        iterator = range(n)
+        if show_progress:
+            iterator = tqdm(iterator, desc="Generating personas", total=n)
+        
+        personas = []
+        for _ in iterator:
+            personas.append(self.generate_single())
+        
+        return personas
+    
+    def generate_with_ipf_adjustment(
+        self,
+        n: int,
+        max_iterations: int = 100,
+        return_metrics: bool = False,
+    ) -> List[Persona] | Tuple[List[Persona], "IPFMetrics"]:
+        """
+        Generate personas with IPF (Iterative Proportional Fitting) adjustment.
+        
+        This ensures the final sample more closely matches target distributions
+        by iteratively adjusting sampling weights.
+        
+        Args:
+            n: Number of personas to generate
+            max_iterations: Maximum IPF iterations
+        
+        Returns:
+            List of Persona objects adjusted to match targets, or tuple with metrics if return_metrics=True
+        """
+        from .trust_report import IPFMetrics
+
+        # Generate initial oversample
+        oversample_factor = 2
+        # Avoid double-correction: generate without ethnicity correction
+        initial_sample = self.generate(
+            n * oversample_factor,
+            show_progress=True,
+            use_ethnicity_correction=False,
+        )
+        
+        # Apply IPF-like adjustment through resampling
+        # This is a simplified version - full IPF would adjust weights
+        adjusted, metrics = self._ipf_resample(initial_sample, n)
+        
+        if return_metrics:
+            return adjusted, metrics
+        return adjusted
+    
+    def _ipf_resample(self, sample: List[Persona], target_n: int) -> Tuple[List[Persona], "IPFMetrics"]:
+        """
+        Resample from initial sample to better match target distributions.
+        
+        Uses IPF (Iterative Proportional Fitting) to adjust for ethnicity
+        underrepresentation while preserving regional correlations.
+        
+        Args:
+            sample: Initial oversampled personas
+            target_n: Target number of personas
+        
+        Returns:
+            Tuple of (resampled personas, IPFMetrics with ESS and weight concentration)
+        """
+        import numpy as np
+        from .trust_report import IPFMetrics
+        
+        # Calculate current ethnicity distribution
+        ethnicity_counts = {}
+        for p in sample:
+            ethnicity_counts[p.ethnicity] = ethnicity_counts.get(p.ethnicity, 0) + 1
+        
+        total = len(sample)
+        current_ethnicity_dist = {e: c / total for e, c in ethnicity_counts.items()}
+        
+        # Target ethnicity distribution from NBS 2024
+        target_ethnicity_dist = self.census.ETHNICITY_DISTRIBUTION
+        
+        # Calculate adjustment weights for each ethnicity
+        ethnicity_weights = {}
+        for ethnicity in target_ethnicity_dist:
+            current = current_ethnicity_dist.get(ethnicity, 0.001)  # Avoid div by zero
+            target = target_ethnicity_dist[ethnicity]
+            ethnicity_weights[ethnicity] = target / current
+        
+        # Normalize weights
+        max_weight = max(ethnicity_weights.values())
+        ethnicity_weights = {e: w / max_weight for e, w in ethnicity_weights.items()}
+        
+        # Apply weighted resampling
+        weights = [ethnicity_weights.get(p.ethnicity, 0.1) for p in sample]
+        weights_array = np.array(weights)
+        
+        # Calculate ESS and weight concentration metrics
+        sum_weights = np.sum(weights_array)
+        sum_weights_sq = np.sum(weights_array ** 2)
+        effective_sample_size = (sum_weights ** 2) / sum_weights_sq if sum_weights_sq > 0 else 0
+        
+        # Weight concentration: max_weight / mean_weight
+        # High values indicate some personas are being over-represented
+        mean_weight = np.mean(weights_array)
+        weight_concentration = max_weight / mean_weight if mean_weight > 0 else 1.0
+        
+        # Calculate pre-correction drift
+        pre_correction_drift = {
+            "ethnicity": sum(
+                abs(current_ethnicity_dist.get(e, 0) - target_ethnicity_dist.get(e, 0))
+                for e in set(current_ethnicity_dist) | set(target_ethnicity_dist)
+            )
+        }
+        
+        # Use weighted random sampling without replacement
+        result = []
+        available_indices = list(range(len(sample)))
+        available_weights = weights.copy()
+        
+        for _ in range(target_n):
+            if not available_indices:
+                break
+            
+            # Normalize available weights
+            total_weight = sum(available_weights)
+            if total_weight == 0:
+                break
+            
+            normalized_weights = [w / total_weight for w in available_weights]
+            
+            # Weighted random selection
+            selected_idx = random.choices(available_indices, weights=normalized_weights, k=1)[0]
+            result.append(sample[selected_idx])
+            
+            # Remove selected from available pool
+            idx_in_available = available_indices.index(selected_idx)
+            available_indices.pop(idx_in_available)
+            available_weights.pop(idx_in_available)
+        
+        # If we couldn't get enough, fill with random choices
+        while len(result) < target_n:
+            result.append(random.choice(sample))
+        
+        random.shuffle(result)
+        
+        # Calculate post-correction drift (on the result)
+        result_ethnicity_counts = {}
+        for p in result:
+            result_ethnicity_counts[p.ethnicity] = result_ethnicity_counts.get(p.ethnicity, 0) + 1
+        result_total = len(result)
+        result_ethnicity_dist = {e: c / result_total for e, c in result_ethnicity_counts.items()}
+        
+        post_correction_drift = {
+            "ethnicity": sum(
+                abs(result_ethnicity_dist.get(e, 0) - target_ethnicity_dist.get(e, 0))
+                for e in set(result_ethnicity_dist) | set(target_ethnicity_dist)
+            )
+        }
+        
+        # Create metrics object
+        metrics = IPFMetrics(
+            original_sample_size=len(sample),
+            effective_sample_size=float(effective_sample_size),
+            resampling_ratio=target_n / len(sample) if len(sample) > 0 else 0,
+            pre_correction_drift=pre_correction_drift,
+            post_correction_drift=post_correction_drift,
+        )
+        
+        # Add weight concentration to metrics (stored in a field we'll add)
+        metrics.weight_concentration = weight_concentration
+        
+        return result[:target_n], metrics
+    
+    def generate_with_ethnicity_correction(
+        self, 
+        n: int, 
+        oversample_factor: int = 3,
+        return_metrics: bool = False
+    ) -> List[Persona] | Tuple[List[Persona], "IPFMetrics"]:
+        """
+        Generate personas with ethnicity distribution correction.
+        
+        Uses IPF to ensure the final sample matches NBS 2024 national
+        ethnicity targets while preserving regional correlations.
+        
+        Args:
+            n: Number of personas to generate
+            oversample_factor: How many times to oversample for IPF
+            return_metrics: If True, return (personas, metrics) tuple
+        
+        Returns:
+            List of Persona objects, or tuple with metrics if return_metrics=True
+        """
+        from .trust_report import IPFMetrics
+
+        reset_ethnocultural_fallbacks()
+        
+        # Generate initial oversample (without correction to avoid recursion)
+        initial_sample = []
+        target_n = n * oversample_factor
+        for _ in tqdm(range(target_n), desc="Generating personas", total=target_n):
+            initial_sample.append(self.generate_single())
+        
+        # Apply IPF correction
+        corrected, metrics = self._ipf_resample(initial_sample, n)
+        
+        if return_metrics:
+            return corrected, metrics
+        return corrected

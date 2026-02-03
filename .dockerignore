@@ -41,6 +41,7 @@ nbs_cache/
 *.log
 output/
 output_500/
+artifacts/
 generation_*.log
 monitor_*.log
 

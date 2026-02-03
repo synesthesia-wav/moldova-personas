@@ -2,17 +2,17 @@
 
 **Project:** Moldova Personas v0.3.0  
 **Target:** 100,000 synthetic personas  
-**Reference Standard:** nvidia/Nemotron-Personas-Brazil
+**Reference Standard:** external reference personas dataset (Brazil)
 
 ---
 
 ## Executive Summary
 
-Based on comparison with Nemotron Brazil dataset, we need to:
+Based on comparison with reference Brazil dataset, we need to:
 1. **Fix ethnicity sampling** (6% underrepresentation)
 2. **Add missing narrative fields** (career goals, persona summary)
 3. **Run LLM narrative generation** (currently empty!)
-4. **Match Nemotron's narrative quality** (~1,800 char cultural backgrounds)
+4. **Match Reference's narrative quality** (~1,800 char cultural backgrounds)
 
 ---
 
@@ -76,9 +76,9 @@ persona.hobby_sport = ""          # Empty!
 
 **Required Action:**
 - [ ] Get Qwen API key (DashScope)
-- [ ] Run `demo_narrative.py` or `async_narrative_generator.py`
+- [ ] Run `apps/demos/demo_narrative.py` or `async_narrative_generator.py`
 - [ ] Generate for 500 sample first
-- [ ] Validate quality against Nemotron benchmark
+- [ ] Validate quality against Reference benchmark
 - [ ] Target: ~1,800 character cultural backgrounds
 
 **Cost Estimate:** 
@@ -88,12 +88,12 @@ persona.hobby_sport = ""          # Empty!
 
 ---
 
-## Phase 2: Nemotron-Inspired Improvements
+## Phase 2: Benchmark-Inspired Improvements
 
 ### Task 4: Add Career Goals Field 🔴 HIGH PRIORITY
 **Status:** ⏳ Pending  
 **Estimated Time:** 1 hour  
-**Motivation:** Nemotron has this; adds professional depth
+**Motivation:** Reference has this; adds professional depth
 
 **Implementation:**
 1. Add field to `models.py`:
@@ -103,7 +103,7 @@ persona.hobby_sport = ""          # Empty!
 2. Add to `prompts.py` narrative generation
 3. Include in LLM generation pipeline
 
-**Example (Nemotron):**
+**Example (Reference):**
 > "Marcos pretende concluir o ensino médio e ingressar em um curso técnico em 
 > mecatrônica... A médio prazo, deseja especializar-se em manutenção preditiva..."
 
@@ -119,7 +119,7 @@ persona.hobby_sport = ""          # Empty!
 - Generate via LLM or template
 - Template: "{name} is a {age}-year-old {occupation} from {region} who..."
 
-**Example (Nemotron):**
+**Example (Reference):**
 > "Marcos Antunes, operador de máquinas CNC e montador experiente em uma fábrica 
 > de peças, combina sua organização metódica e espírito colaborativo..."
 
@@ -133,7 +133,7 @@ persona.hobby_sport = ""          # Empty!
 **Add:** `skills_and_expertise` (text narrative)  
 **Same for:** hobbies_and_interests
 
-**Example (Nemotron):**
+**Example (Reference):**
 > "Marcos possui sólida experiência como operador de instalações e máquinas...
 > Destaca-se pela organização, planejamento de tarefas..."
 
@@ -166,7 +166,7 @@ persona.hobby_sport = ""          # Empty!
 **Estimated Time:** 1 hour  
 **Depends On:** Task 7
 
-**Compare 500-sample against Nemotron:**
+**Compare 500-sample against Reference:**
 - [ ] Narrative length (target: ~1,800 chars for cultural_background)
 - [ ] Professional detail (career goals quality)
 - [ ] Skills/hobbies richness
@@ -210,8 +210,8 @@ persona.hobby_sport = ""          # Empty!
 **Stage 1: Structured Generation (Fast)**
 ```python
 # ~2 minutes for 100K
-from moldova_personas.checkpoint import StreamingGenerator
-gen = StreamingGenerator(checkpoint_manager=checkpoint_mgr)
+from moldova_personas.checkpoint import CheckpointStreamingGenerator
+gen = CheckpointStreamingGenerator(checkpoint_manager=checkpoint_mgr)
 personas = gen.generate_stream(100000, show_progress=True)
 ```
 
@@ -282,7 +282,7 @@ results = generate_narratives_parallel(
 3. [ ] Update API examples if needed
 4. [ ] Create dataset card for 100K release
 5. [ ] Update CHANGELOG.md
-6. [ ] Update comparison with Nemotron
+6. [ ] Update comparison with Reference
 
 ---
 
@@ -317,7 +317,7 @@ results = generate_narratives_parallel(
 | Ethnicity still off after fix | Validate with 1K before 100K |
 | Power/internet failure | Checkpoint every 1000 personas |
 | Disk space | Ensure 2GB free for 100K + checkpoints |
-| Narrative quality below Nemotron | Iterate on prompts, use stronger model if needed |
+| Narrative quality below Reference | Iterate on prompts, use stronger model if needed |
 
 ---
 
@@ -336,7 +336,7 @@ Phase 2: Improvements
 
 Phase 3: Validation
   [⏳] Regenerate 500-sample
-  [⏳] Quality benchmarking vs Nemotron
+  [⏳] Quality benchmarking vs Reference
   [⏳] Statistical validation
 
 Phase 4: Generation
@@ -364,14 +364,13 @@ Progress: 1/13 complete (8%)
 
 ### Next Week
 5. **Regenerate 500-sample** - Full pipeline test
-6. **Quality benchmarking** - Compare to Nemotron
+6. **Quality benchmarking** - Compare to Reference
 7. **100K generation** - If all validations pass
 
 ---
 
 ## Reference Documents
 
-- `NEMOTRON_COMPARISON_ANALYSIS.md` - Detailed comparison with Nemotron Brazil
 - `NBS_2024_VERIFICATION_REPORT.md` - NBS data verification
 - `COMPREHENSIVE_PROJECT_REVIEW.md` - Full project assessment
 - `NBS_2024_IMPLEMENTATION_SUMMARY.md` - Recent changes summary

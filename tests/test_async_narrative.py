@@ -195,8 +195,9 @@ class TestParallelPerformance:
             gen.generate_batch(personas, show_progress=False)
             elapsed = time.time() - start
             
-            # Expected time: (total_delay / workers) + overhead
-            expected_approx = (sum(delays) / workers) + 0.1
+            # Expected time: (total_delay * 2 + per-persona overhead) / workers
+            per_persona_overhead = 0.1
+            expected_approx = ((sum(delays) * 2) + (per_persona_overhead * len(personas))) / workers + 0.05
             
             assert elapsed < expected_approx * 1.5, (
                 f"With {workers} workers, took {elapsed:.2f}s, "

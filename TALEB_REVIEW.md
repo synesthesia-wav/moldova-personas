@@ -28,7 +28,7 @@ IPF ensures your marginals match the census. **So what?** The census captures a 
 
 ## 2. The Lindy Effect and Your "Quality" Metrics
 
-You propose a "5-dimensional quality scoring" system inspired by NVIDIA's Nemotron. 
+You propose a "5-dimensional quality scoring" system inspired by an external benchmark. 
 
 **Let me tell you about the Lindy effect:** Technologies and ideas that have survived a long time will continue to survive. Your "quality scoring" has survived exactly... zero years in production. It is untested.
 

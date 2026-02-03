@@ -1,6 +1,6 @@
 # Production Operations Summary
 
-Complete production readiness for Nemotron-parity at scale (100K-1M personas).
+Complete production readiness for reference-schema parity at scale (100K-1M personas).
 
 ---
 
@@ -144,9 +144,9 @@ else:
   - `validation` results
   - `trace_id`, `prompt_hash`
 
-### Format 2: `nemotron_compat.jsonl`
-- **Purpose**: Nemotron-Brazil compatibility
-- **Fields**: Exact Nemotron public schema
+### Format 2: `schema_compat.jsonl`
+- **Purpose**: Reference schema compatibility
+- **Fields**: Exact reference public schema
   - 20 demographic + 6 persona fields
   - `ocean_profile` in NeMo format only
   - No internal fields
@@ -154,7 +154,7 @@ else:
 
 ### Format 3: `moldova_extended_public.jsonl`
 - **Purpose**: Public release with extensions
-- **Fields**: Nemotron schema + Moldova fields
+- **Fields**: Reference schema + Moldova fields
   - `locality` (village/city)
   - `ethnicity`
   - `religion`
@@ -189,7 +189,7 @@ config = ExportConfig(
 exporter = ExportManager(config)
 paths = exporter.export_all(personas, "./output_release")
 
-print(f"Nemotron: {paths['nemotron']}")
+print(f"Schema compat: {paths['schema_compat']}")
 print(f"Extended: {paths['extended']}")
 ```
 
@@ -257,7 +257,7 @@ else:
 ### Upload
 
 ```bash
-huggingface-cli upload your-org/nemotron-personas-moldova \
+huggingface-cli upload your-org/moldova-personas \
     ./output_release/*.jsonl \
     ./output_release/*.json \
     ./output_release/README.md \
@@ -330,7 +330,7 @@ python -c "from safety_gates import run_safety_check; print(run_safety_check(per
 python -c "from export_formats import export_personas; export_personas(personas, './output')"
 
 # 6. Full release pipeline
-python scripts/release_pipeline.py --tier 100K --publish
+python tools/scripts/release_pipeline.py --tier 100K --publish
 ```
 
 ---
@@ -354,7 +354,7 @@ python scripts/release_pipeline.py --tier 100K --publish
 ✅ **Scale**: 1K/25K/100K tier testing with drift detection  
 ✅ **Quality**: 15+ metrics at dataset level  
 ✅ **Regression**: 200-core golden set  
-✅ **Exports**: 3 formats (debug/Nemotron/extended)  
+✅ **Exports**: 3 formats (debug/schema-compat/extended)  
 ✅ **Safety**: 3 gates (claims/determinism/distribution)  
 ✅ **Release**: Complete checklist + commands  
 ✅ **Metrics**: Structured logging + aggregation rules  

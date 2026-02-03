@@ -1,6 +1,6 @@
 # Moldova Personas Generator
 
-[![Tests](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fexample%2Fmoldova-personas%2Fmain%2Fbadges%2Ftests.json&query=message&label=tests&color=brightgreen)](tests/)
+[![CI](https://github.com/synesthesia-wav/moldova-personas/actions/workflows/ci.yml/badge.svg)](https://github.com/synesthesia-wav/moldova-personas/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
@@ -25,6 +25,9 @@ cd moldova-personas
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Install the local package (monorepo)
+pip install -e .
 ```
 
 ### Basic Usage
@@ -57,6 +60,18 @@ print(f"{persona.name}, {persona.age}, {persona.city}")
 personas = gen.generate_with_ethnicity_correction(n=1000)
 ```
 
+## 🧭 Repository Layout
+
+```
+packages/core/            # Library package (moldova_personas)
+apps/demos/               # Runnable demos and examples
+tools/scripts/            # One-off utilities and scale tests
+tests/                    # Test suite
+docs/                     # Documentation and archives
+config/                   # Census data + lookup tables
+artifacts/                # Generated outputs, caches, logs
+```
+
 ## 📊 Data Sources
 
 ### Live NBS PxWeb API (Real-time)
@@ -85,7 +100,7 @@ personas = gen.generate_with_ethnicity_correction(n=1000)
 ## 🏗️ Architecture
 
 ```
-moldova_personas/
+packages/core/moldova_personas/
 ├── pxweb_fetcher.py          # NBS PxWeb API integration
 ├── census_data.py            # Census distributions with provenance
 ├── generator.py              # PGM-based persona generation
@@ -119,6 +134,20 @@ PersonaGenerator (PGM + IPF)
 Persona with full provenance
 ```
 
+### Narrative Pipeline (When `--narratives`)
+
+When narratives are enabled, the generator follows a single unified pipeline:
+
+```
+PGM demographics + OCEAN traits
+    ↓
+LLM A → Cultural Background, Skills & Expertise, Goals & Ambitions, Hobbies & Interests
+    ↓
+LLM B → Overall / Professional / Arts / Sports / Travel / Culinary personas
+```
+
+This matches the diagram workflow and is the only narrative path.
+
 ## 🧪 Testing
 
 ```bash
@@ -141,7 +170,6 @@ python -m pytest tests/test_pxweb_fetcher.py -v
 | [PLAN.md](PLAN.md) | Project planning and roadmap |
 | [IMPLEMENTATION.md](IMPLEMENTATION.md) | Implementation guide and architecture |
 | [PROTOTYPE.md](PROTOTYPE.md) | Prototype development history |
-| [NEMOTRON.md](NEMOTRON.md) | Comparison with NVIDIA Nemotron-4 |
 | [NBS_2024_REPORT.md](NBS_2024_REPORT.md) | NBS 2024 Census integration report |
 | [TODO.md](TODO.md) | Project TODO and 100K generation roadmap |
 | [ASSESSMENT.md](ASSESSMENT.md) | Assessment and quality reports |
@@ -160,6 +188,16 @@ Every distribution includes:
 - **Confidence score**: 0.0-1.0 reliability metric
 - **Methodology**: Derivation method description
 - **Limitations**: Known constraints (for estimates)
+
+### Run Manifest
+
+Each generation writes `metadata.json` in the output directory with:
+- seed and configuration hash
+- strict-geo flag
+- provenance and cache timestamps
+- output file list and runtime metadata
+
+Disable with `--no-manifest` if needed.
 
 ### Statistical Methods
 
@@ -191,6 +229,13 @@ export QWEN_MODEL_PATH="/path/to/qwen-model"
 ### Cache Location
 
 PxWeb data is cached in `~/.moldova_personas/cache/` with 30-day freshness checking.
+Override per run with `--cache-dir` or set `MOLDOVA_PERSONAS_CACHE_DIR`.
+
+### Cache Refresh
+
+```bash
+python -m moldova_personas cache refresh
+```
 
 ## 📝 Output Formats
 
@@ -209,7 +254,24 @@ python -m moldova_personas generate --count 1000 --format csv
 
 # All formats
 python -m moldova_personas generate --count 1000 --format all
+
+# Partitioned Parquet
+python -m moldova_personas generate --count 1000 --format parquet --partition-by region,sex
+
+# Drop narrative fields
+python -m moldova_personas generate --count 1000 --format parquet --drop-fields descriere_generala,profil_profesional
 ```
+
+### Streaming Large Runs
+
+```bash
+# Stream to Parquet without holding all personas in memory
+python -m moldova_personas generate --count 1000000 --format parquet --stream --batch-size 50000 --output ./output
+```
+
+Notes:
+- Streaming supports `parquet`, `jsonl`, or `csv`.
+- Streaming skips validation and narratives (use non-streaming for full validation).
 
 ## 🎭 Persona Schema
 
@@ -235,6 +297,24 @@ Each persona includes:
     "occupation_sector": "Servicii",
     "employment_status": "employed",
     "marital_status": "Căsătorit",
+    # Persona variants (LLM B)
+    "persona": "...",
+    "professional_persona": "...",
+    "sports_persona": "...",
+    "arts_persona": "...",
+    "travel_persona": "...",
+    "culinary_persona": "...",
+    # Context fields (LLM A)
+    "cultural_background": "...",
+    "skills_and_expertise": "...",
+    "hobbies_and_interests": "...",
+    "career_goals_and_ambitions": "...",
+    # OCEAN traits (0-100)
+    "ocean_openness": 62,
+    "ocean_conscientiousness": 55,
+    "ocean_extraversion": 41,
+    "ocean_agreeableness": 58,
+    "ocean_neuroticism": 49,
     # Optional narrative fields (LLM-generated)
     "descriere_generala": "...",
     "profil_profesional": "...",
@@ -242,9 +322,7 @@ Each persona includes:
     "hobby_arta_cultura": "...",
     "hobby_calatorii": "...",
     "hobby_culinar": "...",
-    "career_goals_and_ambitions": "...",
     "persona_summary": "...",
-    "cultural_background": "...",
 }
 ```
 
@@ -252,8 +330,9 @@ Each persona includes:
 
 1. **PxWeb Coverage**: Only 3/10 distributions available via live API (NBS hasn't published complete 2024 ethnicity/religion/education data yet)
 2. **IPF Cross-tabs**: Derived from marginals, not observed joint distributions (documented with lower confidence 0.85)
-3. **Cache Location**: Fixed to `~/.moldova_personas/cache/` (not configurable per-project)
-4. **Names**: First/last name lists are synthetic placeholders (not official frequency lists)
+3. **OCEAN Traits**: Synthetic personality traits are estimated (not from NBS) and tracked as such
+4. **Cache Location**: Defaults to `~/.moldova_personas/cache/` (override via `--cache-dir` or `MOLDOVA_PERSONAS_CACHE_DIR`)
+5. **Names**: First/last name lists are synthetic placeholders (not official frequency lists)
 
 ## 🤝 Contributing
 

@@ -47,13 +47,13 @@
   - [ ] Trace IDs present
   - [ ] Prompt hashes recorded
 
-- [ ] **nemotron_compat.jsonl** generated
-  - [ ] Exact Nemotron-Brazil field set
+- [ ] **schema_compat.jsonl** generated
+  - [ ] Exact reference schema field set
   - [ ] No internal fields leaked
   - [ ] OCEAN in NeMo format
 
 - [ ] **moldova_extended_public.jsonl** generated
-  - [ ] Nemotron fields + Moldova extensions
+  - [ ] Reference schema fields + Moldova extensions
   - [ ] Ethnicity/religion included (if publishing)
   - [ ] No internal fields
 
@@ -119,7 +119,7 @@ output_release/
 ├── README.md                    # Dataset card
 ├── metadata.json                # Generation metadata
 ├── internal_full.jsonl          # Debug format (optional)
-├── nemotron_compat.jsonl        # Nemotron-Brazil compatible
+├── schema_compat.jsonl          # Reference schema compatible
 ├── moldova_extended_public.jsonl # Extended public format
 ├── quality_report.json          # Quality metrics
 ├── safety_report.json           # Safety gate results
@@ -136,14 +136,14 @@ pip install huggingface-hub
 huggingface-cli login
 
 # Upload dataset
-huggingface-cli upload your-org/nemotron-personas-moldova \
+huggingface-cli upload your-org/moldova-personas \
     ./output_release/*.jsonl \
     ./output_release/*.json \
     ./output_release/README.md \
     --repo-type dataset
 
 # Upload notebook separately
-huggingface-cli upload your-org/nemotron-personas-moldova \
+huggingface-cli upload your-org/moldova-personas \
     ./output_release/quickstart.ipynb \
     --repo-type dataset
 ```
@@ -154,7 +154,7 @@ huggingface-cli upload your-org/nemotron-personas-moldova \
 from datasets import load_dataset
 
 # Load and verify
-dataset = load_dataset("your-org/nemotron-personas-moldova", split="train")
+dataset = load_dataset("your-org/moldova-personas", split="train")
 
 # Check record count
 assert len(dataset) == 100000, f"Expected 100K, got {len(dataset)}"

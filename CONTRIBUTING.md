@@ -58,7 +58,7 @@ pytest tests/test_generator.py -v
 
 We use mypy for static type checking:
 ```bash
-mypy moldova_personas/ --ignore-missing-imports
+mypy packages/core/moldova_personas/ --ignore-missing-imports
 ```
 
 ### Linting
@@ -66,20 +66,20 @@ mypy moldova_personas/ --ignore-missing-imports
 We use ruff for linting and formatting:
 ```bash
 # Check code
-ruff check moldova_personas/
+ruff check packages/core/moldova_personas/
 
 # Auto-fix issues
-ruff check --fix moldova_personas/
+ruff check --fix packages/core/moldova_personas/
 
 # Format code
-ruff format moldova_personas/
+ruff format packages/core/moldova_personas/
 ```
 
 ## Project Structure
 
 ```
 moldova-personas/
-├── moldova_personas/     # Main package
+├── packages/core/moldova_personas/     # Main package
 │   ├── __init__.py
 │   ├── cli.py           # Command-line interface
 │   ├── generator.py     # Core generation engine

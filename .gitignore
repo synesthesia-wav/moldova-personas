@@ -78,6 +78,7 @@ monitor_*.log
 # Uncomment if you don't want to commit generated datasets
 # output_*/
 # demo_output*/
+artifacts/
 
 # =============================================================================
 # CHECKPOINTS (Large binary files)

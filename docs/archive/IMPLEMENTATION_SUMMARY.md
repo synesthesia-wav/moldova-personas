@@ -30,10 +30,10 @@ Successfully transformed the Moldova Personas pipeline from a **Grade B prototyp
 - `pytest.ini`
 - `tests/test_generator.py`
 - `tests/test_validators.py`
-- `moldova_personas/exceptions.py`
-- `moldova_personas/llm_client.py` (major refactor)
-- `moldova_personas/cli.py`
-- `moldova_personas/narrative_generator.py`
+- `packages/core/moldova_personas/exceptions.py`
+- `packages/core/moldova_personas/llm_client.py` (major refactor)
+- `packages/core/moldova_personas/cli.py`
+- `packages/core/moldova_personas/narrative_generator.py`
 
 ### Week 2: Type Safety & Structure ✅
 
@@ -47,12 +47,12 @@ Successfully transformed the Moldova Personas pipeline from a **Grade B prototyp
 
 **Files Created/Modified:**
 - `pyproject.toml`
-- `moldova_personas/py.typed`
+- `packages/core/moldova_personas/py.typed`
 - `.env.example`
 - `config/` directory with JSON configs
-- `moldova_personas/generator.py` (load from JSON)
-- `moldova_personas/exceptions.py` (type fixes)
-- `moldova_personas/exporters.py` (type fixes)
+- `packages/core/moldova_personas/generator.py` (load from JSON)
+- `packages/core/moldova_personas/exceptions.py` (type fixes)
+- `packages/core/moldova_personas/exporters.py` (type fixes)
 
 ### Week 3: CI/CD & Polish ✅
 
@@ -68,7 +68,7 @@ Successfully transformed the Moldova Personas pipeline from a **Grade B prototyp
 - `CHANGELOG.md`
 - `CONTRIBUTING.md`
 - `MANIFEST.in`
-- `moldova_personas/__init__.py` (version bump)
+- `packages/core/moldova_personas/__init__.py` (version bump)
 
 ---
 
@@ -140,7 +140,7 @@ moldova-personas/
 │   ├── __init__.py
 │   ├── cities_by_region.json   # Extracted config
 │   └── districts_by_region.json
-├── moldova_personas/
+├── packages/core/moldova_personas/
 │   ├── __init__.py
 │   ├── cli.py                  # Logging added
 │   ├── exceptions.py           # NEW: Custom exceptions
@@ -208,7 +208,7 @@ $ python3 -m moldova_personas generate --count 10
 ✓ Generates and validates personas
 
 # Type checking (90% clean)
-$ mypy moldova_personas/ --ignore-missing-imports
+$ mypy packages/core/moldova_personas/ --ignore-missing-imports
 # ~10 errors in optional dependency imports
 ```
 

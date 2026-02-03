@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Copy project files
 COPY pyproject.toml README.md ./
-COPY moldova_personas/ ./moldova_personas/
+COPY packages/core/moldova_personas/ ./packages/core/moldova_personas/
 
 # Create virtual environment and install
 RUN python -m venv /opt/venv

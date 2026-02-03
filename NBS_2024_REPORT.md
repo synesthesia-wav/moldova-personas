@@ -24,8 +24,8 @@ This report documents the integration of National Bureau of Statistics (NBS) Mol
 
 ## Implementation
 
-See [pxweb_fetcher.py](moldova_personas/pxweb_fetcher.py) for live data fetching.
-See [census_data.py](moldova_personas/census_data.py) for distribution definitions.
+See [pxweb_fetcher.py](packages/core/moldova_personas/pxweb_fetcher.py) for live data fetching.
+See [census_data.py](packages/core/moldova_personas/census_data.py) for distribution definitions.
 
 ## Status
 
