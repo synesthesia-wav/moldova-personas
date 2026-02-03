@@ -16,6 +16,7 @@ This module enables "computed trust" by measuring and reporting:
 
 import json
 import hashlib
+import math
 import re
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timedelta
@@ -25,7 +26,9 @@ from enum import Enum
 import numpy as np
 
 from .pxweb_fetcher import DataProvenance, Distribution
-from .models import Persona
+from .statistical_tests import calculate_adaptive_tolerance
+from .narrative_contract import NARRATIVE_JSON_SCHEMA
+from .models import Persona, PopulationMode
 from .geo_tables import (
     get_district_distribution,
     get_region_distribution_from_district,
@@ -172,6 +175,21 @@ class IPFMetrics:
     
     correction_iterations: int = 1
     """Number of IPF iterations performed"""
+
+    raking_fields: Optional[List[str]] = None
+    """Marginals used for raking (if applicable)"""
+
+    raking_converged: Optional[bool] = None
+    """Whether raking converged within tolerance"""
+
+    max_marginal_error: Optional[float] = None
+    """Maximum marginal error after raking"""
+
+    marginal_error_by_field: Optional[Dict[str, float]] = None
+    """Per-field marginal errors after raking"""
+
+    weight_cap: Optional[Tuple[float, float]] = None
+    """(min, max) weight cap applied during raking"""
     
     @property
     def information_loss(self) -> float:
@@ -202,6 +220,18 @@ class IPFMetrics:
             result["weight_concentration"] = round(self.weight_concentration, 4)
         if self.top_5_weight_share is not None:
             result["top_5_weight_share"] = round(self.top_5_weight_share, 4)
+        if self.raking_fields is not None:
+            result["raking_fields"] = self.raking_fields
+        if self.raking_converged is not None:
+            result["raking_converged"] = self.raking_converged
+        if self.max_marginal_error is not None:
+            result["max_marginal_error"] = round(self.max_marginal_error, 6)
+        if self.marginal_error_by_field is not None:
+            result["marginal_error_by_field"] = {
+                k: round(v, 6) for k, v in self.marginal_error_by_field.items()
+            }
+        if self.weight_cap is not None:
+            result["weight_cap"] = self.weight_cap
         return result
 
 
@@ -234,6 +264,15 @@ class NarrativeQualityMetrics:
     # Language validation (Romanian check)
     romanian_valid_count: int = 0
     romanian_invalid_count: int = 0
+
+    # Per-field coverage (required narrative sections)
+    required_fields_present: int = 0
+    required_fields_missing: int = 0
+    required_fields_length_valid: int = 0
+    required_fields_language_valid: int = 0
+    required_fields_schema_valid: int = 0
+    any_field_valid_count: int = 0
+    field_failure_counts: Dict[str, Dict[str, int]] = field(default_factory=dict)
     
     # PII/Realism heuristics
     potential_pii_count: int = 0  # Contains specific employer/school names
@@ -272,6 +311,13 @@ class NarrativeQualityMetrics:
         if self.generated_count == 0:
             return 1.0
         return self.romanian_valid_count / self.generated_count
+
+    @property
+    def any_field_valid_ratio(self) -> float:
+        """Fraction of generated narratives with at least one valid field."""
+        if self.generated_count == 0:
+            return 1.0
+        return self.any_field_valid_count / self.generated_count
     
     @property
     def length_valid_ratio(self) -> float:
@@ -300,6 +346,14 @@ class NarrativeQualityMetrics:
             "romanian_invalid_count": self.romanian_invalid_count,
             "romanian_valid_ratio": round(self.romanian_valid_ratio, 4),
             "potential_pii_count": self.potential_pii_count,
+            "required_fields_present": self.required_fields_present,
+            "required_fields_missing": self.required_fields_missing,
+            "required_fields_length_valid": self.required_fields_length_valid,
+            "required_fields_language_valid": self.required_fields_language_valid,
+            "required_fields_schema_valid": self.required_fields_schema_valid,
+            "any_field_valid_count": self.any_field_valid_count,
+            "any_field_valid_ratio": round(self.any_field_valid_ratio, 4),
+            "field_failure_counts": self.field_failure_counts,
         }
 
 
@@ -392,6 +446,9 @@ class TrustReport:
 
     marginal_checks_skipped: Dict[str, str] = field(default_factory=dict)
     """Marginal checks skipped due to missing targets or data"""
+
+    distribution_test_results: Dict[str, Dict[str, float]] = field(default_factory=dict)
+    """Per-field JS divergence and chi-square results for sample-size-aware gating"""
     
     # Error metric interpretation
     targets_source: str = "unknown"  # pxweb_live, hardcoded_fallback, mixed
@@ -418,12 +475,18 @@ class TrustReport:
     # Use-case gating
     use_case_profile: UseCaseProfile = UseCaseProfile.NARRATIVE_REQUIRED
     """Profile used for gating decisions"""
+
+    population_mode: PopulationMode = PopulationMode.ADULT_18
+    """Population mode used for generation/validation"""
     
     hard_gate_triggered: bool = False
     """True if dataset should be rejected for this use case"""
     
     gate_reasons: List[str] = field(default_factory=list)
     """Actionable reasons for hard/soft gate activation with thresholds"""
+
+    preflight_gate_reasons: List[str] = field(default_factory=list)
+    """Gate reasons detected before drift calculations"""
     
     # Narrative status
     narrative_mock_count: int = 0
@@ -559,6 +622,7 @@ class TrustReport:
             "estimated_fields_critical": self.estimated_fields_critical,
             "marginal_errors": [e.to_dict() for e in self.marginal_errors],
             "marginal_checks_skipped": self.marginal_checks_skipped,
+            "distribution_test_results": self.distribution_test_results,
             "mean_l1_error": round(self.mean_l1_error, 4),
             "max_l1_error": round(self.max_l1_error, 4),
             "max_category_error": round(self.max_category_error, 4),
@@ -571,7 +635,9 @@ class TrustReport:
             "overall_tier_reasoning": self.overall_tier_reasoning,
             "trust_decision": self.trust_decision.to_dict() if self.trust_decision else None,
             "use_case_profile": self.use_case_profile.value,
+            "population_mode": self.population_mode.value,
             "hard_gate_triggered": self.hard_gate_triggered,
+            "preflight_gate_reasons": self.preflight_gate_reasons,
             "gate_reasons": self.gate_reasons,
             "narrative_mock_count": self.narrative_mock_count,
             "narrative_mock_ratio": round(self.narrative_mock_ratio, 4),
@@ -661,7 +727,8 @@ class TrustReportGenerator:
     def __init__(
         self, 
         census_distributions: Optional[Any] = None,
-        use_case: UseCaseProfile = UseCaseProfile.NARRATIVE_REQUIRED
+        use_case: UseCaseProfile = UseCaseProfile.NARRATIVE_REQUIRED,
+        population_mode: PopulationMode = PopulationMode.ADULT_18,
     ):
         """
         Initialize report generator.
@@ -673,6 +740,7 @@ class TrustReportGenerator:
         self.census = census_distributions
         self.use_case = use_case
         self.thresholds = USE_CASE_THRESHOLDS[use_case]
+        self.population_mode = population_mode
     
     def generate_report(
         self,
@@ -708,6 +776,7 @@ class TrustReportGenerator:
         report = TrustReport(
             persona_count=len(personas),
             use_case_profile=self.use_case,
+            population_mode=self.population_mode,
             random_seed=random_seed,
             generator_version=generator_version,
             ipf_metrics=ipf_metrics,
@@ -765,11 +834,23 @@ class TrustReportGenerator:
             # Determine targets source and set interpretation
             report.targets_source = self._determine_targets_source(provenance_info)
             report.metric_interpretation = self._get_metric_interpretation(report.targets_source)
-        
-        # Calculate marginal errors
-        report.marginal_errors, report.marginal_checks_skipped = self._calculate_marginal_errors(
-            personas, report.targets_source
+
+        # Preflight: if super-critical targets fallback, skip drift calculation
+        supercritical_target_fallback = any(
+            f in {"region", "ethnicity"} for f in report.fallback_fields_super_critical
         )
+        if supercritical_target_fallback and self.use_case != UseCaseProfile.ANALYSIS_ONLY:
+            report.preflight_gate_reasons.append(
+                "Super-critical target fallback detected: region/ethnicity"
+            )
+            report.marginal_checks_skipped = {
+                "all": "skipped due to super-critical target fallback"
+            }
+        else:
+            # Calculate marginal errors
+            report.marginal_errors, report.marginal_checks_skipped = self._calculate_marginal_errors(
+                personas, report.targets_source
+            )
         
         # Analyze narrative status
         self._analyze_narratives(personas, report)
@@ -897,6 +978,18 @@ class TrustReportGenerator:
                 skipped[field] = "no target distribution available"
                 return
             actual = compute_dist(personas, extractor)
+            # Detect category mismatches and treat as schema mismatch instead of drift
+            target_keys = set(target.keys())
+            actual_keys = set(actual.keys())
+            if field == "employment_status":
+                extra_actual = sorted(actual_keys - target_keys)
+                extra_target = sorted(target_keys - actual_keys)
+                if extra_actual or extra_target:
+                    skipped[field] = (
+                        f"category mismatch (actual-only: {extra_actual}; "
+                        f"target-only: {extra_target})"
+                    )
+                    return
             errors.append(MarginalError(field, target, actual, targets_source))
         
         # Sex distribution
@@ -905,9 +998,9 @@ class TrustReportGenerator:
         except Exception:
             pass
         
-        # Age group distribution (adult-only)
+        # Age group distribution (mode-specific)
         try:
-            add_error("age_group", self.census.ADULT_AGE_GROUP_DISTRIBUTION, lambda p: p.age_group)
+            add_error("age_group", self.census.age_group_distribution(self.population_mode), lambda p: p.age_group)
         except Exception:
             pass
         
@@ -936,13 +1029,15 @@ class TrustReportGenerator:
 
         # Education
         try:
-            add_error("education", self.census.EDUCATION_DISTRIBUTION, lambda p: p.education_level)
+            education_target = self.census.education_distribution(self.population_mode).values
+            add_error("education", education_target, lambda p: p.education_level)
         except Exception:
             pass
 
         # Marital status
         try:
-            add_error("marital_status", self.census.MARITAL_STATUS_DISTRIBUTION, lambda p: p.marital_status)
+            marital_target = self.census.marital_status_distribution(self.population_mode).values
+            add_error("marital_status", marital_target, lambda p: p.marital_status)
         except Exception:
             pass
 
@@ -960,7 +1055,8 @@ class TrustReportGenerator:
 
         # Employment status
         try:
-            add_error("employment_status", self.census.EMPLOYMENT_STATUS_DISTRIBUTION, lambda p: p.employment_status)
+            employment_target = self.census.employment_status_distribution(self.population_mode).values
+            add_error("employment_status", employment_target, lambda p: p.employment_status)
         except Exception:
             pass
 
@@ -1023,90 +1119,113 @@ class TrustReportGenerator:
             return
         
         for p in generated_personas:
-            # Collect all narrative fields to check
-            narrative_fields = [
-                getattr(p, 'descriere_generala', None),
-                getattr(p, 'profil_profesional', None),
-                getattr(p, 'hobby_sport', None),
-                getattr(p, 'hobby_arta_cultura', None),
-                getattr(p, 'hobby_calatorii', None),
-                getattr(p, 'hobby_culinar', None),
-                getattr(p, 'career_goals_and_ambitions', None),
-                getattr(p, 'cultural_background', None),
+            required_fields = [
+                "descriere_generala",
+                "profil_profesional",
+                "hobby_sport",
+                "hobby_arta_cultura",
+                "hobby_calatorii",
+                "hobby_culinar",
+                "career_goals_and_ambitions",
+                "persona_summary",
             ]
-            
-            # Use first non-empty narrative field, or empty string
-            narrative_text = ""
-            for field in narrative_fields:
-                if field and str(field).strip():
-                    narrative_text = str(field)
-                    break
-            
+
             # Mark that we attempted to parse this narrative
             metrics.parse_attempted_count += 1
-            
-            # Length validation
-            length = len(narrative_text)
-            is_valid_length = True
-            if length < NARRATIVE_QUALITY_THRESHOLDS["min_narrative_length"]:
+
+            all_fields_valid = True
+            all_length_ok = True
+            all_language_ok = True
+            any_field_valid = False
+            any_too_short = False
+            any_too_long = False
+
+            pii_hits = 0
+
+            for field_name in required_fields:
+                metrics.field_failure_counts.setdefault(
+                    field_name,
+                    {"missing": 0, "too_short": 0, "too_long": 0, "language_fail": 0}
+                )
+                text = getattr(p, field_name, "") or ""
+                text = str(text).strip()
+                present = bool(text)
+                if present:
+                    metrics.required_fields_present += 1
+                else:
+                    metrics.required_fields_missing += 1
+                    metrics.field_failure_counts[field_name]["missing"] += 1
+                    all_fields_valid = False
+                    all_length_ok = False
+                    all_language_ok = False
+                    continue
+
+                length = len(text)
+                schema = NARRATIVE_JSON_SCHEMA.get("properties", {}).get(field_name, {})
+                min_len = schema.get("minLength", NARRATIVE_QUALITY_THRESHOLDS["min_narrative_length"])
+                max_len = schema.get("maxLength", NARRATIVE_QUALITY_THRESHOLDS["max_narrative_length"])
+                length_ok = min_len <= length <= max_len
+                if length_ok:
+                    metrics.required_fields_length_valid += 1
+                else:
+                    all_fields_valid = False
+                    all_length_ok = False
+                    if length < min_len:
+                        any_too_short = True
+                        metrics.field_failure_counts[field_name]["too_short"] += 1
+                    else:
+                        any_too_long = True
+                        metrics.field_failure_counts[field_name]["too_long"] += 1
+
+                romanian_markers = re.findall(r'[ăâîșțĂÂÎȘȚ]', text)
+                romanian_words = re.findall(
+                    r'\b(sunt|și|pentru|din|cu|care|mai|să|mă|te|se|în|la|pe|o|un|o)\b',
+                    text.lower()
+                )
+                language_ok = len(romanian_markers) >= 2 or len(romanian_words) >= 3
+                if language_ok:
+                    metrics.required_fields_language_valid += 1
+                else:
+                    all_fields_valid = False
+                    all_language_ok = False
+                    metrics.field_failure_counts[field_name]["language_fail"] += 1
+
+                field_valid = length_ok and language_ok
+                if field_valid:
+                    metrics.required_fields_schema_valid += 1
+                    any_field_valid = True
+                else:
+                    all_fields_valid = False
+
+                # PII/Realism heuristic - check for specific patterns that might indicate
+                # real institution names (simplified check)
+                pii_hits += len(re.findall(
+                    r'\b[A-Z][a-z]+\s+(?:SRL|SA|Institut|Spital|Școală|Liceul|Universitate)\b',
+                    text
+                ))
+
+            if any_too_short:
                 metrics.too_short_count += 1
-                is_valid_length = False
-            elif length > NARRATIVE_QUALITY_THRESHOLDS["max_narrative_length"]:
+            if any_too_long:
                 metrics.too_long_count += 1
-                is_valid_length = False
-            else:
+            if all_length_ok:
                 metrics.length_valid_count += 1
-            
-            # Basic schema validation (check for expected structure)
-            # This is a heuristic - can be expanded with actual schema checks
-            has_structure = (
-                len(narrative_text) > 0 and
-                any(marker in narrative_text.lower() for marker in [
-                    "mă numesc", "sunt", "locuiesc", "lucrez", "studiez",
-                    "am", "îmi place", "fac", "profesor", "medic", "inginer"
-                ])
-            )
-            
-            # Determine if this is a parse failure
-            # A narrative fails parsing if:
-            # 1. Length is invalid (too short or too long), OR
-            # 2. Length is valid but structure is missing
-            is_parse_failure = False
-            if not is_valid_length:
-                is_parse_failure = True
-            elif not has_structure:
-                is_parse_failure = True
-            
-            if is_parse_failure:
-                metrics.parse_failed_count += 1
-            
-            # Schema validity requires both valid length AND structure
-            if is_valid_length and has_structure:
-                metrics.schema_valid_count += 1
-            else:
-                metrics.schema_invalid_count += 1
-            
-            # Romanian language check (basic heuristic)
-            # Check for common Romanian diacritics and words
-            romanian_markers = re.findall(r'[ăâîșțĂÂÎȘȚ]', narrative_text)
-            romanian_words = re.findall(
-                r'\b(sunt|și|pentru|din|cu|care|mai|să|mă|te|se|în|la|pe|o|un|o)\b',
-                narrative_text.lower()
-            )
-            # Consider valid if has diacritics OR common Romanian words
-            if len(romanian_markers) >= 2 or len(romanian_words) >= 3:
+
+            if all_language_ok:
                 metrics.romanian_valid_count += 1
             else:
                 metrics.romanian_invalid_count += 1
-            
-            # PII/Realism heuristic - check for specific patterns that might indicate
-            # real institution names (simplified check)
-            # Look for capitalized words that might be specific institutions
-            potential_pii_patterns = re.findall(
-                r'\b[A-Z][a-z]+\s+(?:SRL|SA|Institut|Spital|Școală|Liceul|Universitate)\b',
-                narrative_text
-            )
-            if len(potential_pii_patterns) > 3:  # More than 3 specific names is suspicious
+
+            if any_field_valid:
+                metrics.any_field_valid_count += 1
+
+            if all_fields_valid:
+                metrics.schema_valid_count += 1
+            else:
+                metrics.schema_invalid_count += 1
+                metrics.parse_failed_count += 1
+
+            if pii_hits > 3:
                 metrics.potential_pii_count += 1
         
         report.narrative_quality_metrics = metrics
@@ -1258,6 +1377,113 @@ class TrustReportGenerator:
                 decision.coherence_notes = f"Expected overall tier to be min(structured, narrative)"
         
         return decision
+
+    def _js_divergence(self, p: Dict[str, float], q: Dict[str, float]) -> float:
+        """Compute Jensen-Shannon divergence (log2)."""
+        keys = set(p.keys()) | set(q.keys())
+        if not keys:
+            return 0.0
+        p_norm = {k: p.get(k, 0.0) for k in keys}
+        q_norm = {k: q.get(k, 0.0) for k in keys}
+        p_total = sum(p_norm.values())
+        q_total = sum(q_norm.values())
+        if p_total <= 0 or q_total <= 0:
+            return 0.0
+        p_norm = {k: v / p_total for k, v in p_norm.items()}
+        q_norm = {k: v / q_total for k, v in q_norm.items()}
+        m = {k: 0.5 * (p_norm[k] + q_norm[k]) for k in keys}
+
+        def kl_div(a: Dict[str, float], b: Dict[str, float]) -> float:
+            total = 0.0
+            for k, v in a.items():
+                if v <= 0:
+                    continue
+                if b[k] <= 0:
+                    continue
+                total += v * math.log2(v / b[k])
+            return total
+
+        return 0.5 * (kl_div(p_norm, m) + kl_div(q_norm, m))
+
+    def _chi2_sf(self, x: float, k: int) -> float:
+        """Survival function for chi-square distribution."""
+        if x <= 0 or k <= 0:
+            return 1.0
+        if k > 30:
+            z = math.pow(x / k, 1/3) - (1 - 2/(9*k))
+            z = z / math.sqrt(2/(9*k))
+            return self._normal_sf(z)
+        try:
+            return math.exp(-x/2) * sum(
+                (x/2) ** i / math.factorial(i)
+                for i in range(k // 2)
+            )
+        except (OverflowError, ValueError):
+            return 0.0 if x > k else 1.0
+
+    def _normal_sf(self, z: float) -> float:
+        """Standard normal survival function approximation."""
+        if z < 0:
+            return 1 - self._normal_sf(-z)
+        b1 = 0.319381530
+        b2 = -0.356563782
+        b3 = 1.781477937
+        b4 = -1.821255978
+        b5 = 1.330274429
+        p = 0.2316419
+        c = 0.39894228
+        if z > 6:
+            return 0.0
+        t = 1.0 / (1.0 + p * z)
+        phi = c * math.exp(-z * z / 2.0)
+        return phi * t * (b1 + t * (b2 + t * (b3 + t * (b4 + t * b5))))
+
+    def _chi_square_p_value(
+        self,
+        actual: Dict[str, float],
+        target: Dict[str, float],
+        n: int,
+    ) -> float:
+        """Chi-square goodness-of-fit p-value with low-count guard."""
+        keys = set(actual.keys()) | set(target.keys())
+        if not keys or n <= 0:
+            return 1.0
+        observed = {k: int(round(actual.get(k, 0.0) * n)) for k in keys}
+        diff = n - sum(observed.values())
+        if diff != 0:
+            # Adjust the largest bin to ensure totals match
+            if observed:
+                max_key = max(observed.keys(), key=lambda k: observed[k])
+                observed[max_key] += diff
+        chi2 = 0.0
+        df = 0
+        for k in keys:
+            exp = target.get(k, 0.0) * n
+            obs = observed.get(k, 0)
+            if exp < 5:
+                continue
+            chi2 += ((obs - exp) ** 2) / exp
+            df += 1
+        if df <= 1:
+            return 1.0
+        return self._chi2_sf(chi2, df - 1)
+
+    def _js_threshold(self, field: str, report: TrustReport) -> float:
+        """Compute JS divergence threshold with sample-size adjustment."""
+        if self.use_case == UseCaseProfile.HIGH_STAKES:
+            base = 0.03
+        elif self.use_case == UseCaseProfile.NARRATIVE_REQUIRED:
+            base = 0.04
+        else:
+            base = 0.06
+        if field in HIGH_STAKES_CRITICAL_FIELDS:
+            base *= 0.8
+        elif field in CRITICAL_FIELDS:
+            base *= 0.9
+        if field in report.estimated_fields:
+            base *= 1.5
+        tol = calculate_adaptive_tolerance(report.persona_count, confidence=0.95)
+        return min(1.0, max(base, 2 * tol))
     
     def _apply_gates(self, report: TrustReport) -> Tuple[bool, List[str]]:
         """
@@ -1269,20 +1495,51 @@ class TrustReportGenerator:
         reasons = []
         hard_gate = False
         thresholds = self.thresholds
-        
-        # Hard gate: excessive mean error
-        if report.mean_l1_error > thresholds["max_mean_l1_error"]:
+
+        if report.preflight_gate_reasons:
+            reasons.extend(report.preflight_gate_reasons)
             hard_gate = True
+        
+        # Soft gate: excessive mean error (legacy fixed threshold)
+        if report.mean_l1_error > thresholds["max_mean_l1_error"]:
             reasons.append(
                 f"Mean L1 error {report.mean_l1_error:.2%} > threshold {thresholds['max_mean_l1_error']:.0%}"
             )
         
-        # Hard gate: any category way off
+        # Soft gate: any category way off (legacy fixed threshold)
         if report.max_category_error > thresholds["max_category_error"]:
-            hard_gate = True
             reasons.append(
                 f"Max category error {report.max_category_error:.2%} > threshold {thresholds['max_category_error']:.0%}"
             )
+
+        # Sample-size-aware gates using JS divergence + chi-square p-values
+        if report.marginal_errors_available:
+            distribution_results: Dict[str, Dict[str, float]] = {}
+            for err in report.marginal_errors:
+                js = self._js_divergence(err.actual_dist, err.target_dist)
+                p_value = self._chi_square_p_value(
+                    err.actual_dist, err.target_dist, report.persona_count
+                )
+                js_threshold = self._js_threshold(err.field, report)
+                distribution_results[err.field] = {
+                    "js_divergence": js,
+                    "js_threshold": js_threshold,
+                    "chi2_p_value": p_value,
+                }
+
+                both_fail = js > js_threshold and p_value < 0.001
+                either_fail = js > js_threshold or p_value < 0.001
+                if both_fail:
+                    if err.field in CRITICAL_FIELDS or self.use_case == UseCaseProfile.HIGH_STAKES:
+                        hard_gate = True
+                    reasons.append(
+                        f"{err.field} drift: JS {js:.4f} > {js_threshold:.4f} and p={p_value:.4f} < 0.001"
+                    )
+                elif either_fail:
+                    reasons.append(
+                        f"{err.field} drift warning: JS {js:.4f} (thr {js_threshold:.4f}) or p={p_value:.4f} < 0.001"
+                    )
+            report.distribution_test_results = distribution_results
         
         # Hard gate: too many critical fallbacks
         if report.fallback_ratio_critical > thresholds["max_fallback_ratio_critical"]:

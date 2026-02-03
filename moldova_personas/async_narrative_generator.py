@@ -7,7 +7,7 @@ to significantly speed up narrative generation for large batches.
 import logging
 import time
 import threading
-from typing import List, Optional, Callable
+from typing import List, Optional, Callable, Dict, Tuple
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from tqdm import tqdm
@@ -17,13 +17,41 @@ from .llm_client import LLMClient, create_llm_client, GenerationConfig
 from .exceptions import LLMGenerationError
 from .prompts import (
     generate_full_prompt,
-    parse_narrative_response,
+    parse_json_narrative_response_strict,
     extract_skills_from_text,
-    extract_hobbies_from_text
+    extract_hobbies_from_text,
+    generate_repair_prompt,
 )
+from .narrative_contract import NARRATIVE_JSON_SCHEMA
 
 
 logger = logging.getLogger(__name__)
+
+
+def _get_required_fields_and_lengths() -> Tuple[List[str], Dict[str, int]]:
+    """Load required narrative keys and min lengths from JSON schema."""
+    required_fields = NARRATIVE_JSON_SCHEMA.get("required", [])
+    properties = NARRATIVE_JSON_SCHEMA.get("properties", {})
+    min_lengths = {
+        field: properties.get(field, {}).get("minLength", 1)
+        for field in required_fields
+    }
+    return required_fields, min_lengths
+
+
+def _missing_fields(
+    narratives: Dict[str, str],
+    required_fields: List[str],
+    min_lengths: Dict[str, int],
+) -> List[str]:
+    """Return fields that are missing or shorter than required min length."""
+    missing = []
+    for field in required_fields:
+        value = narratives.get(field, "")
+        min_len = min_lengths.get(field, 1)
+        if not isinstance(value, str) or len(value.strip()) < min_len:
+            missing.append(field)
+    return missing
 
 
 @dataclass
@@ -59,6 +87,7 @@ class AsyncNarrativeGenerator:
         config: Optional[GenerationConfig] = None,
         max_workers: int = 10,
         rate_limit_per_second: Optional[float] = None,
+        allow_mock_narratives: bool = True,
         **llm_kwargs
     ):
         """
@@ -83,6 +112,7 @@ class AsyncNarrativeGenerator:
         )
         self.max_workers = max_workers
         self.rate_limit = rate_limit_per_second
+        self.allow_mock_narratives = allow_mock_narratives
         
         # Rate limiting state
         self._last_request_time = 0
@@ -129,26 +159,101 @@ class AsyncNarrativeGenerator:
         start_time = time.time()
         
         try:
-            # Generate prompt
-            prompt = generate_full_prompt(persona)
+            required_fields, min_lengths = _get_required_fields_and_lengths()
+            prompt = generate_full_prompt(
+                persona,
+                required_keys=required_fields,
+                min_lengths=min_lengths,
+            )
             
             # Generate with LLM (rate limited)
             response = self._rate_limited_generate(prompt)
             
             # Check if response is empty (mock mode)
             if not response or not response.strip():
-                # Mock mode - all fields remain empty
-                persona.narrative_status = "mock"
-                latency_ms = (time.time() - start_time) * 1000
-                
-                return GenerationResult(
-                    persona=persona,
-                    success=True,  # Not a failure, just mock mode
-                    latency_ms=latency_ms
-                )
+                if self.allow_mock_narratives:
+                    persona.narrative_status = "mock"
+                    latency_ms = (time.time() - start_time) * 1000
+                    
+                    return GenerationResult(
+                        persona=persona,
+                        success=True,  # Not a failure, just mock mode
+                        latency_ms=latency_ms
+                    )
+                response = ""
             
-            # Parse response
-            narratives = parse_narrative_response(response)
+            # Parse response (strict JSON-only)
+            try:
+                narratives = parse_json_narrative_response_strict(
+                    response,
+                    required_fields,
+                    require_all=True,
+                )
+            except Exception as e:
+                logger.warning(f"Strict JSON parse failed for {persona.uuid}: {e}")
+                narratives = {}
+
+            missing_fields = _missing_fields(narratives, required_fields, min_lengths)
+            if missing_fields:
+                try:
+                    repair_prompt = generate_repair_prompt(
+                        persona,
+                        missing_fields,
+                        existing_sections=narratives,
+                        min_lengths=min_lengths,
+                        force_fill_all=False,
+                    )
+                    repair_response = self._rate_limited_generate(repair_prompt)
+                    if repair_response and repair_response.strip():
+                        try:
+                            repaired = parse_json_narrative_response_strict(
+                                repair_response,
+                                missing_fields,
+                                require_all=False,
+                            )
+                        except Exception as e:
+                            logger.warning(f"Repair parse failed for {persona.uuid}: {e}")
+                            repaired = {}
+                        for field in missing_fields:
+                            candidate = repaired.get(field, "")
+                            min_len = min_lengths.get(field, 1)
+                            if isinstance(candidate, str) and len(candidate.strip()) >= min_len:
+                                narratives[field] = candidate.strip()
+                except Exception as e:
+                    logger.warning(f"Repair prompt failed for {persona.uuid}: {e}")
+
+            missing_fields = _missing_fields(narratives, required_fields, min_lengths)
+            if missing_fields:
+                try:
+                    repair_prompt = generate_repair_prompt(
+                        persona,
+                        missing_fields,
+                        existing_sections=narratives,
+                        min_lengths=min_lengths,
+                        force_fill_all=True,
+                    )
+                    repair_response = self._rate_limited_generate(repair_prompt)
+                    if repair_response and repair_response.strip():
+                        try:
+                            repaired = parse_json_narrative_response_strict(
+                                repair_response,
+                                missing_fields,
+                                require_all=False,
+                            )
+                        except Exception as e:
+                            logger.warning(f"Repair-2 parse failed for {persona.uuid}: {e}")
+                            repaired = {}
+                        for field in missing_fields:
+                            candidate = repaired.get(field, "")
+                            min_len = min_lengths.get(field, 1)
+                            if isinstance(candidate, str) and len(candidate.strip()) >= min_len:
+                                narratives[field] = candidate.strip()
+                except Exception as e:
+                    logger.warning(f"Repair-2 prompt failed for {persona.uuid}: {e}")
+
+            missing_fields = _missing_fields(narratives, required_fields, min_lengths)
+            if missing_fields:
+                persona.narrative_status = "failed"
             
             # Update persona
             persona.descriere_generala = narratives.get("descriere_generala", "")
@@ -178,7 +283,8 @@ class AsyncNarrativeGenerator:
                 persona.cultural_background = ""
             
             # Mark as successfully generated
-            persona.narrative_status = "generated"
+            if persona.narrative_status != "failed":
+                persona.narrative_status = "generated"
             
             latency_ms = (time.time() - start_time) * 1000
             
@@ -298,7 +404,8 @@ def enrich_personas_parallel(
     model: Optional[str] = None,
     max_workers: int = 10,
     rate_limit_per_second: Optional[float] = None,
-    show_progress: bool = True
+    show_progress: bool = True,
+    allow_mock_narratives: bool = True,
 ) -> List[Persona]:
     """
     Convenience function to enrich personas with parallel narrative generation.
@@ -336,6 +443,7 @@ def enrich_personas_parallel(
         provider=provider,
         max_workers=max_workers,
         rate_limit_per_second=rate_limit_per_second,
+        allow_mock_narratives=allow_mock_narratives,
         **kwargs
     )
     

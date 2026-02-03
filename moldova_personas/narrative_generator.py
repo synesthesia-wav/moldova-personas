@@ -6,7 +6,7 @@ structured skill/hobby lists.
 """
 
 import logging
-from typing import List, Optional, Callable
+from typing import List, Optional, Callable, Dict, Tuple
 from tqdm import tqdm
 
 from .models import Persona
@@ -14,13 +14,41 @@ from .llm_client import LLMClient, create_llm_client, GenerationConfig
 from .exceptions import LLMGenerationError
 from .prompts import (
     generate_full_prompt,
-    parse_narrative_response,
+    parse_json_narrative_response_strict,
     extract_skills_from_text,
-    extract_hobbies_from_text
+    extract_hobbies_from_text,
+    generate_repair_prompt,
 )
+from .narrative_contract import NARRATIVE_JSON_SCHEMA
 
 
 logger = logging.getLogger(__name__)
+
+
+def _get_required_fields_and_lengths() -> Tuple[List[str], Dict[str, int]]:
+    """Load required narrative keys and min lengths from JSON schema."""
+    required_fields = NARRATIVE_JSON_SCHEMA.get("required", [])
+    properties = NARRATIVE_JSON_SCHEMA.get("properties", {})
+    min_lengths = {
+        field: properties.get(field, {}).get("minLength", 1)
+        for field in required_fields
+    }
+    return required_fields, min_lengths
+
+
+def _missing_fields(
+    narratives: Dict[str, str],
+    required_fields: List[str],
+    min_lengths: Dict[str, int],
+) -> List[str]:
+    """Return fields that are missing or shorter than required min length."""
+    missing = []
+    for field in required_fields:
+        value = narratives.get(field, "")
+        min_len = min_lengths.get(field, 1)
+        if not isinstance(value, str) or len(value.strip()) < min_len:
+            missing.append(field)
+    return missing
 
 
 class NarrativeGenerator:
@@ -32,6 +60,7 @@ class NarrativeGenerator:
                  llm_client: Optional[LLMClient] = None,
                  provider: str = "mock",
                  config: Optional[GenerationConfig] = None,
+                 allow_mock_narratives: bool = True,
                  **llm_kwargs):
         """
         Initialize narrative generator.
@@ -51,6 +80,7 @@ class NarrativeGenerator:
             temperature=0.7,
             max_tokens=600,  # Increased for 6 sections
         )
+        self.allow_mock_narratives = allow_mock_narratives
     
     def generate_for_persona(self, persona: Persona) -> Persona:
         """
@@ -62,8 +92,12 @@ class NarrativeGenerator:
         Returns:
             Persona with narrative fields populated
         """
-        # Generate prompt
-        prompt = generate_full_prompt(persona)
+        required_fields, min_lengths = _get_required_fields_and_lengths()
+        prompt = generate_full_prompt(
+            persona,
+            required_keys=required_fields,
+            min_lengths=min_lengths,
+        )
         
         # Generate with LLM
         try:
@@ -76,12 +110,83 @@ class NarrativeGenerator:
         
         # Check if response is empty (mock mode)
         if not response or not response.strip():
-            # Mock mode - all fields remain empty, mark as mock
-            persona.narrative_status = "mock"
-            return persona
+            if self.allow_mock_narratives:
+                persona.narrative_status = "mock"
+                return persona
+            response = ""
         
-        # Parse response
-        narratives = parse_narrative_response(response)
+        # Parse response (strict JSON-only)
+        try:
+            narratives = parse_json_narrative_response_strict(
+                response,
+                required_fields,
+                require_all=True,
+            )
+        except Exception as e:
+            logger.warning(f"Strict JSON parse failed for {persona.uuid}: {e}")
+            narratives = {}
+
+        missing_fields = _missing_fields(narratives, required_fields, min_lengths)
+        if missing_fields:
+            try:
+                repair_prompt = generate_repair_prompt(
+                    persona,
+                    missing_fields,
+                    existing_sections=narratives,
+                    min_lengths=min_lengths,
+                    force_fill_all=False,
+                )
+                repair_response = self.client.generate(repair_prompt, self.config)
+                if repair_response and repair_response.strip():
+                    try:
+                        repaired = parse_json_narrative_response_strict(
+                            repair_response,
+                            missing_fields,
+                            require_all=False,
+                        )
+                    except Exception as e:
+                        logger.warning(f"Repair parse failed for {persona.uuid}: {e}")
+                        repaired = {}
+                    for field in missing_fields:
+                        candidate = repaired.get(field, "")
+                        min_len = min_lengths.get(field, 1)
+                        if isinstance(candidate, str) and len(candidate.strip()) >= min_len:
+                            narratives[field] = candidate.strip()
+            except Exception as e:
+                logger.warning(f"Repair prompt failed for {persona.uuid}: {e}")
+
+        missing_fields = _missing_fields(narratives, required_fields, min_lengths)
+        if missing_fields:
+            try:
+                repair_prompt = generate_repair_prompt(
+                    persona,
+                    missing_fields,
+                    existing_sections=narratives,
+                    min_lengths=min_lengths,
+                    force_fill_all=True,
+                )
+                repair_response = self.client.generate(repair_prompt, self.config)
+                if repair_response and repair_response.strip():
+                    try:
+                        repaired = parse_json_narrative_response_strict(
+                            repair_response,
+                            missing_fields,
+                            require_all=False,
+                        )
+                    except Exception as e:
+                        logger.warning(f"Repair-2 parse failed for {persona.uuid}: {e}")
+                        repaired = {}
+                    for field in missing_fields:
+                        candidate = repaired.get(field, "")
+                        min_len = min_lengths.get(field, 1)
+                        if isinstance(candidate, str) and len(candidate.strip()) >= min_len:
+                            narratives[field] = candidate.strip()
+            except Exception as e:
+                logger.warning(f"Repair-2 prompt failed for {persona.uuid}: {e}")
+
+        missing_fields = _missing_fields(narratives, required_fields, min_lengths)
+        if missing_fields:
+            persona.narrative_status = "failed"
         
         # Update persona
         persona.descriere_generala = narratives.get("descriere_generala", "")
@@ -112,7 +217,8 @@ class NarrativeGenerator:
             persona.cultural_background = ""
         
         # Mark as successfully generated
-        persona.narrative_status = "generated"
+        if persona.narrative_status != "failed":
+            persona.narrative_status = "generated"
         
         return persona
     
@@ -159,7 +265,8 @@ def enrich_personas_with_narratives(
     provider: str = "mock",
     api_key: Optional[str] = None,
     model: Optional[str] = None,
-    delay: float = 0.0
+    delay: float = 0.0,
+    allow_mock_narratives: bool = True,
 ) -> List[Persona]:
     """
     Convenience function to enrich personas with narratives.
@@ -180,5 +287,9 @@ def enrich_personas_with_narratives(
     if model:
         kwargs['model'] = model
     
-    generator = NarrativeGenerator(provider=provider, **kwargs)
+    generator = NarrativeGenerator(
+        provider=provider,
+        allow_mock_narratives=allow_mock_narratives,
+        **kwargs,
+    )
     return generator.generate_batch(personas, delay=delay)

@@ -27,7 +27,7 @@ __author__ = "AI Assistant"
 from .generator import PersonaGenerator
 from .validators import ValidationPipeline
 from .exporters import ParquetExporter, export_all_formats
-from .models import Persona, AgeConstraints
+from .models import Persona, AgeConstraints, PopulationMode
 from .statistical_tests import StatisticalValidator, calculate_adaptive_tolerance
 from .async_narrative_generator import (
     AsyncNarrativeGenerator,

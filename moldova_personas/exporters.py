@@ -155,6 +155,20 @@ class StatisticsExporter:
             PersonaStatistics object
         """
         n = len(personas)
+        if n == 0:
+            return PersonaStatistics(
+                total_count=0,
+                sex_distribution={},
+                age_distribution={},
+                region_distribution={},
+                ethnicity_distribution={},
+                education_distribution={},
+                marital_status_distribution={},
+                urban_rural_distribution={},
+                employment_status_distribution={},
+                validation_errors=0,
+                validation_warnings=0,
+            )
         
         # Calculate distributions
         from collections import Counter

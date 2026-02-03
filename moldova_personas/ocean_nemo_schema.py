@@ -21,29 +21,42 @@ class OCEANTrait:
     t_score: int = 50
     label: str = "average"
     description: str = ""
+    score_0_100: Optional[int] = None
     
     def to_dict(self) -> Dict[str, any]:
-        return {
+        data = {
             "t_score": self.t_score,
             "label": self.label,
             "description": self.description
         }
+        if self.score_0_100 is not None:
+            data["score_0_100"] = self.score_0_100
+        return data
     
     @classmethod
     def from_raw_score(cls, score: int, trait_name: str) -> "OCEANTrait":
         """Create from raw 0-100 score with auto-generated label and description."""
-        # Determine label
-        if score >= 70:
+        t_score = cls._to_t_score(score)
+
+        # Determine label from t-score (mean 50, SD 10)
+        if t_score >= 60:
             label = "high"
-        elif score >= 40:
+        elif t_score >= 40:
             label = "average"
         else:
             label = "low"
         
         # Generate description based on trait and label
-        description = cls._generate_description(trait_name, score, label)
+        description = cls._generate_description(trait_name, t_score, label)
         
-        return cls(t_score=score, label=label, description=description)
+        return cls(t_score=t_score, label=label, description=description, score_0_100=score)
+
+    @staticmethod
+    def _to_t_score(raw_score: int, mean: int = 50, std: int = 15) -> int:
+        """Convert raw 0-100 score to T-score (mean 50, SD 10)."""
+        z = (raw_score - mean) / std if std else 0.0
+        t_score = int(round(50 + 10 * z))
+        return max(0, min(100, t_score))
     
     @staticmethod
     def _generate_description(trait: str, score: int, label: str) -> str:
